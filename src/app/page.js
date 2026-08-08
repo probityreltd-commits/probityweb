@@ -6,6 +6,6 @@ export default function Home() {
     return <UnderConstruction></UnderConstruction>;
   }
   return (
-    <div className="text-2xl font-bold text-red-700">This is Home page</div>
+    <div className="text-2xl font-bold text-red-700">This is Home page now</div>
   );
 }
