@@ -14,25 +14,23 @@ import {
 import { TbCompass } from "react-icons/tb";
 
 /* ---------------------------------------------------------------------- */
-/*  Configuration — edit these to fit the real project                    */
+/*  Configuration                                                         */
 /* ---------------------------------------------------------------------- */
 
-const LAUNCH_DATE = new Date("2026-12-21T00:00:00+06:00"); // winter solstice, Dhaka time
+const LAUNCH_DATE = new Date("2026-12-21T00:00:00+06:00");
 
 const SPECS = [
-  { label: "Location", value: "Dhaka, Bangladesh" },
-  { label: "Residences", value: "48 Sky Villas" },
-  { label: "Elevation", value: "32 Floors" },
-  { label: "Handover", value: "Q4 2027" },
+  { label: "Location", value: "Jaleswaritola, Bogura" },
+  { label: "Projects", value: "6 Ongoing Projects" },
+  { label: "Address", value: "Rakhi Mansion, Level-5" },
+  { label: "Status", value: "Under Construction" },
 ];
 
 /* ---------------------------------------------------------------------- */
-/*  Countdown hook                                                        */
+/*  Countdown Hook                                                       */
 /* ---------------------------------------------------------------------- */
 
 function useCountdown(target) {
-  // start at 0 so the very first client render matches the server-rendered
-  // HTML exactly — Date.now() is never evaluated during SSR/hydration
   const [remaining, setRemaining] = useState(0);
 
   useEffect(() => {
@@ -53,7 +51,7 @@ function useCountdown(target) {
 }
 
 /* ---------------------------------------------------------------------- */
-/*  Signature element — an architectural elevation that draws itself in   */
+/*  Blueprint Vector Graphic                                              */
 /* ---------------------------------------------------------------------- */
 
 function BlueprintTower({ reduceMotion }) {
@@ -73,7 +71,6 @@ function BlueprintTower({ reduceMotion }) {
     }),
   };
 
-  // window grid: 5 columns x 8 rows within the tower body
   const windows = [];
   let wi = 0;
   for (let row = 0; row < 8; row++) {
@@ -92,8 +89,8 @@ function BlueprintTower({ reduceMotion }) {
       initial="hidden"
       animate="visible"
       className="w-full h-auto max-w-md mx-auto"
+      aria-hidden="true"
     >
-      {/* ground / site line */}
       <motion.line
         x1={40}
         y1={560}
@@ -104,8 +101,6 @@ function BlueprintTower({ reduceMotion }) {
         custom={0}
         variants={draw}
       />
-
-      {/* roof apex lines */}
       <motion.line
         x1={100}
         y1={80}
@@ -136,8 +131,6 @@ function BlueprintTower({ reduceMotion }) {
         custom={3}
         variants={draw}
       />
-
-      {/* main tower outline */}
       <motion.rect
         x={100}
         y={80}
@@ -150,7 +143,6 @@ function BlueprintTower({ reduceMotion }) {
         variants={draw}
       />
 
-      {/* floor divider lines */}
       {Array.from({ length: 10 }).map((_, i) => (
         <motion.line
           key={`floor-${i}`}
@@ -165,7 +157,6 @@ function BlueprintTower({ reduceMotion }) {
         />
       ))}
 
-      {/* window grid */}
       {windows.map((w) => (
         <motion.rect
           key={`w-${w.i}`}
@@ -181,7 +172,6 @@ function BlueprintTower({ reduceMotion }) {
         />
       ))}
 
-      {/* dimension marker + label */}
       <motion.line
         x1={330}
         y1={80}
@@ -223,19 +213,17 @@ function BlueprintTower({ reduceMotion }) {
         animate={{ opacity: reduceMotion ? 1 : [0, 1] }}
         transition={{ delay: 2.1, duration: 0.6 }}
       >
-        EL. 482 FT
+        PROBITY REAL ESTATE
       </motion.text>
     </motion.svg>
   );
 }
 
 /* ---------------------------------------------------------------------- */
-/*  Ambient floating gold motes                                           */
+/*  Ambient Floating Motes                                                */
 /* ---------------------------------------------------------------------- */
 
 function FloatingMotes() {
-  // start empty so server HTML and the first client render match exactly;
-  // Math.random() only runs after mount, which is safe (post-hydration update)
   const [motes, setMotes] = useState([]);
 
   useEffect(() => {
@@ -251,7 +239,10 @@ function FloatingMotes() {
   }, []);
 
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+      aria-hidden="true"
+    >
       {motes.map((m) => (
         <motion.span
           key={m.id}
@@ -262,7 +253,7 @@ function FloatingMotes() {
             height: m.size,
             bottom: -10,
           }}
-          animate={{ y: [-0, -700], opacity: [0, 0.6, 0] }}
+          animate={{ y: [0, -700], opacity: [0, 0.6, 0] }}
           transition={{
             delay: m.delay,
             duration: m.duration,
@@ -276,14 +267,19 @@ function FloatingMotes() {
 }
 
 /* ---------------------------------------------------------------------- */
-/*  Main page                                                              */
+/*  Main View                                                             */
 /* ---------------------------------------------------------------------- */
 
 export default function ComingSoon() {
   const reduceMotion = useReducedMotion();
   const { days, hours, minutes, seconds } = useCountdown(LAUNCH_DATE);
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState("idle"); // idle | loading | success
+  const [status, setStatus] = useState("idle");
+  const [year, setYear] = useState(null);
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
 
   const timeUnits = [
     { label: "Days", value: days },
@@ -296,22 +292,20 @@ export default function ComingSoon() {
     e.preventDefault();
     if (!email || status === "loading") return;
     setStatus("loading");
-    // simulate a network call — wire this up to your real waitlist endpoint
     setTimeout(() => setStatus("success"), 900);
   }
 
   return (
     <main className="relative min-h-screen bg-[#120B23] text-[#F3F0FA] overflow-hidden">
-      {/* ambient gold glow + grid backdrop */}
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage:
             "radial-gradient(circle at 50% 50%, rgba(142,111,209,0.16) 0%, rgba(142,111,209,0) 60%)",
         }}
       />
       <div
-        className="absolute inset-0 opacity-[0.04]"
+        className="absolute inset-0 opacity-[0.04] pointer-events-none"
         style={{
           backgroundImage:
             "linear-gradient(#8E6FD1 1px, transparent 1px), linear-gradient(90deg, #8E6FD1 1px, transparent 1px)",
@@ -321,15 +315,14 @@ export default function ComingSoon() {
       <FloatingMotes />
 
       <div className="relative z-10 flex flex-col min-h-screen">
-        {/* top bar */}
-        <header className="flex items-center justify-between px-6 sm:px-10 py-7">
+        <header className="flex items-center justify-between px-6 sm:px-10 py-7 max-w-7xl mx-auto w-full">
           <div className="flex items-center gap-3">
             <span className="font-[family-name:var(--font-display)] text-xl tracking-[0.2em] text-[#F3F0FA]">
               PROBITY
             </span>
             <span className="hidden sm:inline-block h-4 w-px bg-[#9089A8]/40" />
             <span className="hidden sm:inline text-[11px] tracking-[0.35em] uppercase text-[#9089A8] font-[family-name:var(--font-mono)]">
-              Dhaka
+              Bogura
             </span>
           </div>
 
@@ -352,9 +345,7 @@ export default function ComingSoon() {
           </motion.div>
         </header>
 
-        {/* hero */}
         <section className="flex-1 grid lg:grid-cols-2 gap-10 lg:gap-12 items-center px-6 sm:px-10 py-8 max-w-7xl mx-auto w-full">
-          {/* left: copy + form */}
           <div className="order-2 lg:order-1">
             <motion.p
               initial={{ opacity: 0, y: 12 }}
@@ -369,33 +360,31 @@ export default function ComingSoon() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1 }}
-              className="font-[family-name:var(--font-display)] leading-[1.05] text-5xl sm:text-6xl xl:text-7xl text-[#F3F0FA]"
+              className="font-[family-name:var(--font-display)] leading-[1.08] text-4xl sm:text-5xl xl:text-6xl text-[#F3F0FA]"
             >
-              A new skyline
-              <br />
-              <span className="text-[#8E6FD1]">is rising in Dhaka.</span>
+              A New Digital Landmark <br />
+              <span className="text-[#8E6FD1]">is in the Making.</span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.22 }}
-              className="mt-6 text-lg text-[#F3F0FA]/90 font-[family-name:var(--font-body)]"
+              className="mt-6 text-lg sm:text-xl text-[#F3F0FA]/90 font-[family-name:var(--font-body)] leading-relaxed"
             >
-              ঢাকায় নির্মিত হচ্ছে ভবিষ্যতের ঠিকানা — প্রোবিটি।
+              নির্মিত হচ্ছে প্রবিটির নতুন ডিজিটাল ল্যান্ডমার্ক
             </motion.p>
             <motion.p
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="mt-3 max-w-md text-[#9089A8] leading-relaxed"
+              className="mt-3 max-w-lg text-[#9089A8] leading-relaxed text-sm sm:text-base"
             >
-              A private collection of sky residences, drawn by hand before a
-              single wall is raised. Registration for pre-launch access opens
-              now — final plans are shared only with those on the list.
+              আমরা আমাদের ওয়েবসাইটটিকে নতুনভাবে সাজাচ্ছি যেন আপনি আপনার
+              স্বপ্নের ঘর খুঁজে পেতে আরও সহজ এবং আধুনিক অভিজ্ঞতা পান। নির্মাণ
+              কাজ শেষ না হওয়া পর্যন্ত আমাদের সাথেই থাকুন।
             </motion.p>
 
-            {/* countdown */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -417,7 +406,6 @@ export default function ComingSoon() {
               ))}
             </motion.div>
 
-            {/* access form */}
             <motion.form
               onSubmit={handleSubmit}
               initial={{ opacity: 0, y: 16 }}
@@ -472,15 +460,13 @@ export default function ComingSoon() {
                 </button>
               </div>
               <p className="mt-3 text-xs text-[#9089A8]">
-                লঞ্চের আগে বিশেষ মূল্য ও অগ্রাধিকার বুকিং সুবিধা পেতে নিবন্ধন
-                করুন।
+                লঞ্চের আগে বিশেষ আপডেট ও তথ্য পেতে আপনার ইমেইল দিয়ে যুক্ত থাকুন।
               </p>
             </motion.form>
           </div>
 
-          {/* right: blueprint reveal */}
           <div className="hidden lg:block lg:order-2 relative max-w-sm mx-auto lg:max-w-none">
-            <div className="absolute -inset-10 bg-[#8E6FD1]/5 blur-3xl rounded-full" />
+            <div className="absolute -inset-10 bg-[#8E6FD1]/5 blur-3xl rounded-full pointer-events-none" />
             <BlueprintTower reduceMotion={reduceMotion} />
             <motion.div
               className="absolute bottom-2 right-2 sm:bottom-6 sm:right-6 text-[#8E6FD1]/70"
@@ -493,7 +479,6 @@ export default function ComingSoon() {
           </div>
         </section>
 
-        {/* spec strip */}
         <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -514,23 +499,22 @@ export default function ComingSoon() {
           </div>
         </motion.section>
 
-        {/* footer */}
         <footer className="border-t border-[#8E6FD1]/10 px-6 sm:px-10 py-8">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
             <p className="text-xs text-[#9089A8] text-center sm:text-left">
-              © {new Date().getFullYear()} Probity Real Estate Ltd. Dhaka,
-              Bangladesh, 5800.
+              © {year ?? "2026"} Probity Real Estate Ltd. Rakhi Mansion,
+              Level-5, Jaleswaritola, Bogura.
             </p>
             <div className="flex items-center gap-5 text-[#9089A8]">
               <a
-                href="mailto:hello@probityrealestate.com"
+                href="mailto:rezace75@gmail.com"
                 aria-label="Email"
                 className="hover:text-[#8E6FD1] transition-colors"
               >
                 <FiMail size={17} />
               </a>
               <a
-                href="tel:+8800000000"
+                href="tel:+8801710762576"
                 aria-label="Phone"
                 className="hover:text-[#8E6FD1] transition-colors"
               >
@@ -546,6 +530,8 @@ export default function ComingSoon() {
               <a
                 href="https://www.facebook.com/profile.php?id=100057347864072"
                 aria-label="Facebook"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="hover:text-[#8E6FD1] transition-colors"
               >
                 <FiFacebook size={17} />
