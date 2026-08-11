@@ -17,7 +17,7 @@ import { TbCompass } from "react-icons/tb";
 /*  Configuration                                                         */
 /* ---------------------------------------------------------------------- */
 
-const LAUNCH_DATE = new Date("2026-12-21T00:00:00+06:00");
+const LAUNCH_DATE = new Date("2026-09-11T00:00:00+06:00");
 
 const SPECS = [
   { label: "Location", value: "Jaleswaritola, Bogura" },
