@@ -168,13 +168,11 @@ const Portfolio = () => {
   return (
     <section className="bg-[#eaf5ff] dark:bg-[#070e17] py-16 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
-        {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-8">
-          {/* Section Title -> font-serif (Playfair Display) */}
           <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
             Our Premium Portfolio
           </h2>
-          {/* Paragraph -> font-sans (Manrope automatically from layout body) */}
+
           <p className="mt-3 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal">
             Discover our collection of ongoing residential landmarks in Dhaka.
             Every site is engineered to deliver pristine acoustic peace, elite
@@ -228,10 +226,9 @@ const Portfolio = () => {
             transition={{ duration: 0.35, ease: "easeOut" }}
             className="relative bg-white dark:bg-zinc-900 rounded-3xl shadow-xl border border-zinc-100 dark:border-zinc-800 overflow-hidden"
           >
-            {/* Slider Navigation Buttons */}
             <button
               onClick={handlePrevImage}
-              className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/90 dark:bg-zinc-800/90 text-zinc-800 dark:text-white flex items-center justify-center shadow-lg hover:bg-white transition-all active:scale-95 border border-zinc-200 dark:border-zinc-700"
+              className="absolute left-3 top-1/4 lg:top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/90 dark:bg-zinc-800/90 text-zinc-800 dark:text-white flex items-center justify-center shadow-lg hover:bg-white transition-all active:scale-95 border border-zinc-200 dark:border-zinc-700"
               aria-label="Previous image"
             >
               <ChevronLeft className="w-5 h-5" />
@@ -239,7 +236,7 @@ const Portfolio = () => {
 
             <button
               onClick={handleNextImage}
-              className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/90 dark:bg-zinc-800/90 text-zinc-800 dark:text-white flex items-center justify-center shadow-lg hover:bg-white transition-all active:scale-95 border border-zinc-200 dark:border-zinc-700"
+              className="absolute right-3 top-1/4 lg:top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/90 dark:bg-zinc-800/90 text-zinc-800 dark:text-white flex items-center justify-center shadow-lg hover:bg-white transition-all active:scale-95 border border-zinc-200 dark:border-zinc-700"
               aria-label="Next image"
             >
               <ChevronRight className="w-5 h-5" />
