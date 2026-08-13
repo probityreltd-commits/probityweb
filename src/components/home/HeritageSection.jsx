@@ -174,7 +174,7 @@ const HeritageSection = () => {
         >
           {/* Architectural Landmark Image */}
           <img
-            src="https://images.unsplash.com/photo-1541888946425-d0fbb186a5b3?q=80&w=1000&auto=format&fit=crop"
+            src="https://i.ibb.co.com/TD3Djqzy/Screenshot-2026-08-14-000804.png"
             alt="Acoustic Damping Architectural Landmark"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
           />
