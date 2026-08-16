@@ -2,17 +2,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Building2,
-  ChevronDown,
-  Heart,
-  LogOut,
-  Menu,
-  Phone,
-  Settings,
-  User,
-  X,
-} from "lucide-react";
+import { Building2, ChevronDown, LogOut, Menu, Phone, X } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const navLinks = [
   { name: "Home", href: "/", active: true },
@@ -22,11 +13,11 @@ const navLinks = [
 ];
 
 const Navbar = () => {
-  // Simulating User Login & Dropdown states
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  const { user, isLoading } = useAuth();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -82,81 +73,68 @@ const Navbar = () => {
           ))}
         </nav>
 
-        {/* 3. Phone Number & Auth Action Section */}
         <div className="flex items-center gap-4">
-          {/* Phone Number with Vertical Separator */}
           <div className="hidden lg:flex items-center gap-4 text-slate-700 dark:text-slate-300 text-sm font-medium border-r border-slate-300 dark:border-zinc-700 pr-4">
             <Phone className="w-4 h-4 text-[#3b1a83] dark:text-amber-400" />
             <span>+880 1700-000000</span>
           </div>
 
-          {/* Conditional Auth Button / Profile Dropdown */}
-          {isLoggedIn ? (
+          {isLoading ? (
+            <button
+              disabled
+              className="flex items-center justify-center gap-2 bg-zinc-400 dark:bg-zinc-700 text-white px-6 py-2 rounded-full font-semibold text-sm cursor-not-allowed shadow-md"
+            >
+              <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+              Loading...
+            </button>
+          ) : user ? (
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center gap-2 p-1.5 pl-3 rounded-full bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-700 hover:shadow-md transition-all duration-200 text-slate-800 dark:text-white text-sm font-medium"
+                className="w-10 h-10 rounded-full overflow-hidden border-2 border-white dark:border-zinc-700 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
               >
-                <span>John Doe</span>
-                <div className="w-8 h-8 rounded-full bg-[#3b1a83] text-white flex items-center justify-center font-bold text-xs">
-                  JD
-                </div>
-                <ChevronDown
-                  className={`w-4 h-4 text-slate-500 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}
-                />
+                {user.image ? (
+                  <img
+                    src={user.image}
+                    alt={user.name || "Profile"}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-[#3b1a83] text-white flex items-center justify-center font-bold text-sm">
+                    {user.name?.charAt(0).toUpperCase()}
+                  </div>
+                )}
               </button>
 
-              {/* Custom Animated Dropdown Menu (No shadcn) */}
+              {/* Dropdown */}
               <AnimatePresence>
                 {dropdownOpen && (
                   <motion.div
                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
-                    className="absolute right-0 mt-3 w-56 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-slate-100 dark:border-zinc-800 py-2 z-50 text-slate-700 dark:text-slate-200 text-sm overflow-hidden"
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-0 mt-3 w-56 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-slate-100 dark:border-zinc-800 py-2 z-50 overflow-hidden"
                   >
-                    <div className="px-4 py-2 border-b border-slate-100 dark:border-zinc-800">
-                      <p className="font-semibold text-slate-900 dark:text-white">
-                        John Doe
+                    <div className="px-4 py-2.5 border-b border-slate-100 dark:border-zinc-800">
+                      <p className="font-semibold text-slate-900 dark:text-white truncate">
+                        {user.name}
                       </p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
-                        john@probiti.com
+
+                      <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                        {user.email}
                       </p>
                     </div>
 
-                    {/* <Link
-                      href="/profile"
-                      onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-zinc-800/60 transition-colors"
-                    >
-                      <User className="w-4 h-4 text-slate-500" /> My Profile
-                    </Link>
-                    <Link
-                      href="/saved-properties"
-                      onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-zinc-800/60 transition-colors"
-                    >
-                      <Heart className="w-4 h-4 text-slate-500" /> Saved Homes
-                    </Link>
-                    <Link
-                      href="/settings"
-                      onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-zinc-800/60 transition-colors"
-                    >
-                      <Settings className="w-4 h-4 text-slate-500" /> Settings
-                    </Link> */}
-
-                    {/* <div className="my-1 border-t border-slate-100 dark:border-zinc-800" /> */}
-
                     <button
                       onClick={() => {
-                        setIsLoggedIn(false);
                         setDropdownOpen(false);
+                        // signOut()
                       }}
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors text-left"
                     >
-                      <LogOut className="w-4 h-4" /> Sign Out
+                      <LogOut className="w-4 h-4" />
+                      Sign Out
                     </button>
                   </motion.div>
                 )}
@@ -164,10 +142,7 @@ const Navbar = () => {
             </div>
           ) : (
             <Link href="/auth/signin">
-              <button
-                // onClick={() => setIsLoggedIn(true)}
-                className="bg-[#3b1a83] hover:bg-[#2e1467] text-white px-6 py-2 rounded-full font-semibold text-sm transition-all duration-300 shadow-md hover:shadow-lg active:scale-95"
-              >
+              <button className="bg-[#3b1a83] hover:bg-[#2e1467] text-white px-6 py-2 rounded-full font-semibold text-sm transition-all duration-300 shadow-md hover:shadow-lg active:scale-95">
                 Sign In
               </button>
             </Link>
@@ -187,7 +162,6 @@ const Navbar = () => {
         </div>
       </motion.div>
 
-      {/* 4. Mobile Navigation Drawer (No shadcn) */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div

@@ -21,7 +21,7 @@ const SignUp = () => {
     name: "",
     email: "",
     password: "",
-    imageUrl: "",
+    image: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -32,7 +32,7 @@ const SignUp = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    if (name === "imageUrl") {
+    if (name === "image") {
       setImageError("");
     }
   };
@@ -46,12 +46,12 @@ const SignUp = () => {
     setIsLoading(true);
 
     try {
-      const { email, imageUrl, name, password } = formData;
+      const { email, image, name, password } = formData;
       const { data, error } = await authClient.signUp.email({
         name,
         email,
         password,
-        imageUrl,
+        image,
       });
       if (error) {
         let message = "Unable to create your account. Please try again.";
@@ -195,8 +195,8 @@ const SignUp = () => {
                   </div>
                   <input
                     type="text"
-                    name="imageUrl"
-                    value={formData.imageUrl}
+                    name="image"
+                    value={formData.image}
                     onChange={handleChange}
                     placeholder="https://example.com/avatar.jpg"
                     className={`w-full pl-10 pr-4 py-3 bg-zinc-50 dark:bg-zinc-800/60 border ${
@@ -215,9 +215,9 @@ const SignUp = () => {
 
                 {/* Avatar Preview */}
                 <div className="w-11 h-11 rounded-2xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 overflow-hidden flex items-center justify-center shrink-0 relative">
-                  {formData.imageUrl ? (
+                  {formData.image ? (
                     <img
-                      src={formData.imageUrl}
+                      src={formData.image}
                       alt="Avatar Preview"
                       className="w-full h-full object-cover"
                       onError={(e) => {
