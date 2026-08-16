@@ -211,7 +211,7 @@ const SignUp = () => {
             <p className="text-xs text-zinc-600 dark:text-zinc-400">
               Already have an account?{" "}
               <Link
-                href="/signin"
+                href="/auth/signin"
                 className="font-bold text-[#3b1a83] dark:text-indigo-400 hover:underline inline-flex items-center gap-1 ml-1"
               >
                 Sign In
