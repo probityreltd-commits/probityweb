@@ -10,7 +10,7 @@ import { LiaLinkedin } from "react-icons/lia";
 const Footer = () => {
   return (
     <footer className="relative bg-white dark:bg-[#070913] text-zinc-800 dark:text-zinc-200 pt-16 pb-8 px-4 sm:px-6 lg:px-8 overflow-hidden transition-colors duration-300">
-      {/* Background PROBITY Watermark Overlay Image (2nd Reference Image) */}
+      {/* Background PROBITY Watermark Overlay */}
       <div className="absolute inset-0 flex items-end justify-center pointer-events-none select-none opacity-[0.03] dark:opacity-[0.05] pb-4 mt-20">
         <h1 className="font-serif text-[16vw] font-black tracking-widest text-[#3b1a83] dark:text-white leading-none uppercase">
           PROBITY
