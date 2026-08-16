@@ -106,29 +106,7 @@ const PropertiesSection = () => {
           {/* Left Navigation Arrow */}
           <button
             onClick={() => swiperRef.current?.slidePrev()}
-            className="
-      flex
-      absolute
-      left-0
-      top-1/2
-      -translate-y-1/2
-      -translate-x-1/6
-      md:translate-x-1/2
-      z-30
-      w-12 h-12
-     rounded-full
-      bg-[#3b1a83]/50
-      text-white
-      items-center
-      justify-center
-      border
-      border-[#3b1a83]
-      shadow-xl
-      hover:bg-[#2c1363]
-      transition-all
-      duration-300
-      active:scale-95
-    "
+            className="flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-30 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-zinc-800 text-[#3b1a83] dark:text-white items-center justify-center border border-zinc-200 dark:border-zinc-700 shadow-xl hover:bg-[#3b1a83] hover:text-white transition-all duration-300 active:scale-95"
             aria-label="Previous slide"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -137,29 +115,7 @@ const PropertiesSection = () => {
           {/* Right Navigation Arrow */}
           <button
             onClick={() => swiperRef.current?.slideNext()}
-            className="
-      flex
-      absolute
-      right-0
-      top-1/2
-      -translate-y-1/2
-      translate-x-1/6
-      md:translate-x-1/2
-      z-30
-      w-12 h-12
-      rounded-full
-      bg-[#3b1a83]/50
-      text-white
-      items-center
-      justify-center
-      border
-      border-[#3b1a83]
-      shadow-xl
-      hover:bg-[#2c1363]
-      transition-all
-      duration-300
-      active:scale-95
-    "
+            className="flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-30 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#3b1a83] text-white items-center justify-center border border-[#3b1a83] shadow-xl hover:bg-[#2c1363] transition-all duration-300 active:scale-95"
             aria-label="Next slide"
           >
             <ChevronRight className="w-6 h-6" />

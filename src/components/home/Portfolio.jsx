@@ -21,7 +21,7 @@ const portfolioData = [
     projects: [
       {
         id: "proj-1",
-        title: "Nestora Dokkhina Lake",
+        title: "Probity Dokkhina Lake",
         status: "ONGOING PROJECT",
         location: "Block A (Plot 287, Road 12), Bashundhara R/A, Dhaka",
         typeTag: "4 BHK",
@@ -166,7 +166,7 @@ const Portfolio = () => {
   };
 
   return (
-    <section className="bg-[#eaf5ff] dark:bg-[#070e17] py-16 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+    <section className="bg-[#f5f1ff] dark:bg-[#070913] py-16 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-8">
           <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
@@ -182,7 +182,7 @@ const Portfolio = () => {
 
         {/* Location Tabs */}
         <div className="flex justify-center mb-10">
-          <div className="inline-flex flex-wrap items-center justify-center p-1.5 bg-[#d4e9fc] dark:bg-zinc-800/80 rounded-full gap-1 shadow-inner">
+          <div className="inline-flex flex-wrap items-center justify-center p-1.5 bg-[#eee9f8] dark:bg-zinc-800/80 rounded-full gap-1 shadow-inner">
             {portfolioData.map((tab) => {
               const isActive = activeTab === tab.id;
               return (
@@ -201,7 +201,7 @@ const Portfolio = () => {
                   {isActive && (
                     <motion.div
                       layoutId="activeTabPill"
-                      className="absolute inset-0 bg-[#002b5b] dark:bg-[#1a4b84] rounded-full z-0"
+                      className="absolute inset-0 bg-[#3b1a83] dark:bg-[#2c1363] rounded-full z-0"
                       transition={{
                         type: "spring",
                         stiffness: 400,
@@ -247,7 +247,7 @@ const Portfolio = () => {
               <div className="lg:col-span-6 relative min-h-[320px] sm:min-h-[420px] overflow-hidden bg-zinc-100 dark:bg-zinc-800">
                 {/* Status Badge */}
                 <div className="absolute top-4 left-4 z-10">
-                  <span className="bg-[#ff5a5f] text-white text-[10px] sm:text-xs uppercase font-extrabold px-3 py-1.5 rounded-full shadow-sm tracking-wider">
+                  <span className="bg-[#3b1a83] text-white text-[10px] sm:text-xs uppercase font-extrabold px-3 py-1.5 rounded-full shadow-sm tracking-wider">
                     {activeProject.status}
                   </span>
                 </div>
@@ -273,7 +273,7 @@ const Portfolio = () => {
                         onClick={() => setCurrentImageIndex(idx)}
                         className={`transition-all duration-300 rounded-full ${
                           idx === currentImageIndex
-                            ? "w-5 h-2 bg-amber-400"
+                            ? "w-5 h-2 bg-[#ffb703]"
                             : "w-2 h-2 bg-white/60 hover:bg-white"
                         }`}
                       />
@@ -363,12 +363,12 @@ const Portfolio = () => {
                 {/* Footer CTAs & Handover */}
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-2 border-t border-zinc-100 dark:border-zinc-800">
                   <div className="flex items-center gap-2">
-                    <button className="bg-[#0066ff] hover:bg-[#0052cc] text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow-md transition-all active:scale-95 flex items-center justify-center gap-1.5">
+                    <button className="bg-[#3b1a83] hover:bg-[#2c1363] text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow-md transition-all active:scale-95 flex items-center justify-center gap-1.5">
                       <span>View Details</span>
                       <ArrowUpRight className="w-3.5 h-3.5" />
                     </button>
 
-                    <button className="bg-[#dbeafe] dark:bg-zinc-800 hover:bg-[#bfdbfe] text-[#0052cc] dark:text-blue-300 font-semibold text-xs px-4 py-2.5 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-1.5">
+                    <button className="bg-[#eee9f8] dark:bg-zinc-800 hover:bg-[#e3dafa] text-[#3b1a83] dark:text-[#ffb703] font-semibold text-xs px-4 py-2.5 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-1.5">
                       <FileText className="w-3.5 h-3.5" />
                       <span>Request Floor Plan</span>
                     </button>
