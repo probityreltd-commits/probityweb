@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   User,
@@ -13,6 +12,9 @@ import {
   EyeOff,
   ArrowRight,
 } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -24,22 +26,54 @@ const SignUp = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [imageError, setImageError] = useState("");
+  const router = useRouter();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    if (name === "imageUrl") {
+      setImageError("");
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (imageError) {
+      toast.error("Please enter a valid profile image URL.");
+      return;
+    }
     setIsLoading(true);
 
-    // Simulate Registration API Call
-    console.log("User Data Submitted:", formData);
+    try {
+      const { email, imageUrl, name, password } = formData;
+      const { data, error } = await authClient.signUp.email({
+        name,
+        email,
+        password,
+        imageUrl,
+      });
+      if (error) {
+        let message = "Unable to create your account. Please try again.";
 
-    setTimeout(() => {
+        if (error.message?.toLocaleLowerCase().includes("email")) {
+          message = "This email address may already be registered.";
+        }
+        toast.error(error.message);
+        return;
+      }
+      if (data) {
+        toast.success("Account created successfully!");
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("Sign up error:", error);
+      toast.error(
+        "Something went wrong. Please check your connection and try again.",
+      );
+    } finally {
       setIsLoading(false);
-      alert("Account created successfully!");
-    }, 1500);
+    }
   };
 
   return (
@@ -154,32 +188,46 @@ const SignUp = () => {
               <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2">
                 Profile Image URL
               </label>
-              <div className="relative flex items-center gap-3">
+              <div className="relative flex items-start gap-3">
                 <div className="relative flex-1">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-400">
                     <ImageIcon className="w-4 h-4" />
                   </div>
                   <input
-                    type="url"
+                    type="text"
                     name="imageUrl"
                     value={formData.imageUrl}
                     onChange={handleChange}
                     placeholder="https://example.com/avatar.jpg"
-                    className="w-full pl-10 pr-4 py-3 bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/80 rounded-2xl text-xs sm:text-sm text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3b1a83] focus:border-transparent transition-all"
+                    className={`w-full pl-10 pr-4 py-3 bg-zinc-50 dark:bg-zinc-800/60 border ${
+                      imageError
+                        ? "border-red-400 focus:ring-red-400"
+                        : "border-zinc-200 dark:border-zinc-700/80 focus:ring-[#3b1a83]"
+                    } rounded-2xl text-xs sm:text-sm text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all`}
                   />
+                  {imageError && (
+                    <p className="mt-2 text-xs text-red-500 flex items-center gap-1">
+                      <span>⚠</span>
+                      {imageError}
+                    </p>
+                  )}
                 </div>
 
                 {/* Avatar Preview */}
                 <div className="w-11 h-11 rounded-2xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 overflow-hidden flex items-center justify-center shrink-0 relative">
                   {formData.imageUrl ? (
-                    <Image
+                    <img
                       src={formData.imageUrl}
                       alt="Avatar Preview"
-                      fill
-                      className="object-cover"
+                      className="w-full h-full object-cover"
                       onError={(e) => {
-                        // Fallback handling
-                        e.target.style.display = "none";
+                        e.currentTarget.style.display = "none";
+                        setImageError(
+                          "Invalid image URL. Please enter a valid image URL.",
+                        );
+                      }}
+                      onLoad={() => {
+                        setImageError("");
                       }}
                     />
                   ) : (
