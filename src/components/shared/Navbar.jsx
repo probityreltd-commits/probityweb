@@ -163,12 +163,14 @@ const Navbar = () => {
               </AnimatePresence>
             </div>
           ) : (
-            <button
-              onClick={() => setIsLoggedIn(true)}
-              className="bg-[#3b1a83] hover:bg-[#2e1467] text-white px-6 py-2 rounded-full font-semibold text-sm transition-all duration-300 shadow-md hover:shadow-lg active:scale-95"
-            >
-              Sign In
-            </button>
+            <Link href="/auth/signin">
+              <button
+                // onClick={() => setIsLoggedIn(true)}
+                className="bg-[#3b1a83] hover:bg-[#2e1467] text-white px-6 py-2 rounded-full font-semibold text-sm transition-all duration-300 shadow-md hover:shadow-lg active:scale-95"
+              >
+                Sign In
+              </button>
+            </Link>
           )}
 
           {/* Mobile Menu Toggle Button */}
