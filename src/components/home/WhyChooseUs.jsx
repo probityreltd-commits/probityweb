@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ShieldCheck, UserCheck, Tag, MapPin, Handshake } from "lucide-react";
 
@@ -11,7 +12,7 @@ const features = [
       "Browse carefully verified properties with accurate information, high-quality photos, and transparent pricing.",
     icon: ShieldCheck,
     iconBg:
-      "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400",
+      "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400",
   },
   {
     id: 2,
@@ -20,7 +21,7 @@ const features = [
       "Our experienced agents provide personalized guidance to help you make confident property decisions.",
     icon: UserCheck,
     iconBg:
-      "bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400",
+      "bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400",
   },
   {
     id: 3,
@@ -29,7 +30,7 @@ const features = [
       "No hidden fees or unexpected costs. We believe in honest pricing and complete transparency.",
     icon: Tag,
     iconBg:
-      "bg-orange-50 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400",
+      "bg-orange-50 text-orange-600 dark:bg-orange-950/40 dark:text-orange-400",
   },
   {
     id: 4,
@@ -37,7 +38,7 @@ const features = [
     description:
       "Explore homes and commercial spaces in carefully selected neighborhoods with excellent connectivity and amenities.",
     icon: MapPin,
-    iconBg: "bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400",
+    iconBg: "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400",
   },
   {
     id: 5,
@@ -53,13 +54,13 @@ const features = [
       "From property search to final handover, our dedicated team is with you every step of the way.",
     icon: Handshake,
     iconBg:
-      "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400",
+      "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400",
   },
 ];
 
 const WhyChooseUs = () => {
   return (
-    <section className="bg-[#f8fafc] dark:bg-[#070913] py-20 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+    <section className="bg-[#f5f1ff] dark:bg-[#070913] py-20 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
@@ -89,9 +90,9 @@ const WhyChooseUs = () => {
             transition={{ delay: 0.2 }}
             className="mt-4 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal"
           >
-            We're committed to making your real estate journey simple,
-            transparent, and stress-free. Whether you're buying, selling, or
-            renting, our experienced team provides trusted guidance, verified
+            We&apos;re committed to making your real estate journey simple,
+            transparent, and stress-free. Whether you&apos;re buying, selling,
+            or renting, our experienced team provides trusted guidance, verified
             listings, and personalized support every step of the way.
           </motion.p>
         </div>
@@ -109,12 +110,15 @@ const WhyChooseUs = () => {
                   transition={{ delay: index * 0.1, duration: 0.5 }}
                   className="relative h-64 md:h-full min-h-[220px] rounded-2xl overflow-hidden shadow-sm group border border-zinc-200/80 dark:border-zinc-800"
                 >
-                  <img
+                  {/* Next.js Image Component */}
+                  <Image
                     src={item.imageSrc}
                     alt={item.alt}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#3b1a83]/30 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#3b1a83]/30 via-transparent to-transparent z-10" />
                 </motion.div>
               );
             }
@@ -128,7 +132,7 @@ const WhyChooseUs = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1, duration: 0.5 }}
-                className="bg-white dark:bg-zinc-900/90 rounded-2xl p-8 text-center flex flex-col items-center justify-center border border-zinc-100 dark:border-zinc-800/80 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
+                className="bg-white dark:bg-zinc-900/90 rounded-2xl p-8 text-center flex flex-col items-center justify-center border border-zinc-200/60 dark:border-zinc-800/80 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
               >
                 {/* Icon Container */}
                 <div

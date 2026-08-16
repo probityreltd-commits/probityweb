@@ -2,6 +2,7 @@ import { Inter, Manrope, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/shared/Navbar";
 import UnderConstruction from "@/components/underConstruction/UnderConstruction";
+import Footer from "@/components/shared/Footer";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -34,6 +35,7 @@ export default function RootLayout({ children }) {
           <>
             <Navbar></Navbar>
             {children}
+            <Footer></Footer>
           </>
         )}
       </body>
