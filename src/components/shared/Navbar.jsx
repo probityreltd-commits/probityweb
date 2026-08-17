@@ -7,13 +7,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { authClient } from "@/lib/auth-client";
 import { usePathname, useRouter } from "next/navigation";
 
-const navLinks = [
-  { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
-  { name: "Properties", href: "/properties" },
-  { name: "Contact", href: "/contact" },
-];
-
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -22,6 +15,19 @@ const Navbar = () => {
   const pathname = usePathname();
 
   const { user, isLoading } = useAuth();
+
+  const isAdmin = user?.role === "admin";
+
+  const baseLinks = [
+    { name: "Home", href: "/" },
+    { name: "About", href: "/about" },
+    { name: "Properties", href: "/properties" },
+    { name: "Contact", href: "/contact" },
+  ];
+
+  const navLinks = isAdmin
+    ? [...baseLinks, { name: "Dashboard", href: "/dashboard" }]
+    : baseLinks;
 
   // Close dropdown when clicking outside
   useEffect(() => {
