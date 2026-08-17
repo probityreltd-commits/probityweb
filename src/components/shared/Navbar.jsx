@@ -2,13 +2,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Building2, ChevronDown, LogOut, Menu, Phone, X } from "lucide-react";
+import { Building2, LogOut, Menu, Phone, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const navLinks = [
-  { name: "Home", href: "/", active: true },
+  { name: "Home", href: "/" },
   { name: "About", href: "/about" },
   { name: "Properties", href: "/properties" },
   { name: "Contact", href: "/contact" },
@@ -19,6 +19,7 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   const { user, isLoading } = useAuth();
 
@@ -45,7 +46,6 @@ const Navbar = () => {
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 px-4 md:px-8 py-4">
-      {/* Outer Floating Card Container matching Image UI */}
       <motion.div
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -64,26 +64,37 @@ const Navbar = () => {
 
         {/* 2. Desktop Navigation Links */}
         <nav className="hidden xl:flex items-center gap-6 text-sm font-medium">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className={`relative py-1 transition-colors duration-200 ${
-                link.active
-                  ? "text-amber-600 dark:text-amber-400 font-semibold"
-                  : "text-slate-700 dark:text-slate-300 hover:text-[#3b1a83] dark:hover:text-white"
-              }`}
-            >
-              {link.name}
-              {link.active && (
-                <motion.span
-                  layoutId="activeIndicator"
-                  className="absolute bottom-0 left-0 w-full h-[2px] bg-amber-500 rounded-full"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive =
+              pathname === link.href ||
+              (link.href !== "/" && pathname.startsWith(link.href));
+
+            return (
+              <Link
+                key={link.name}
+                href={link.href}
+                className={`relative py-1 transition-colors duration-200 ${
+                  isActive
+                    ? "text-amber-600 dark:text-amber-400 font-semibold"
+                    : "text-slate-700 dark:text-slate-300 hover:text-[#3b1a83] dark:hover:text-white"
+                }`}
+              >
+                {link.name}
+
+                {isActive && (
+                  <motion.span
+                    layoutId="activeIndicator"
+                    className="absolute bottom-0 left-0 w-full h-[2px] bg-amber-500 rounded-full"
+                    transition={{
+                      type: "spring",
+                      stiffness: 380,
+                      damping: 30,
+                    }}
+                  />
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-4">
@@ -185,20 +196,25 @@ const Navbar = () => {
             className="xl:hidden max-w-7xl mx-auto mt-2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-lg rounded-2xl border border-slate-200 dark:border-zinc-800 p-5 shadow-xl overflow-hidden"
           >
             <div className="flex flex-col gap-3">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                    link.active
-                      ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 font-semibold"
-                      : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-zinc-800"
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                const isActive =
+                  pathname === link.href ||
+                  (link.href !== "/" && pathname.startsWith(link.href));
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                      isActive
+                        ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 font-semibold"
+                        : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-zinc-800"
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                );
+              })}
               <div className="pt-2 border-t border-slate-100 dark:border-zinc-800 flex items-center gap-3 px-4 py-2 text-slate-700 dark:text-slate-300 text-sm">
                 <Phone className="w-4 h-4 text-[#3b1a83] dark:text-amber-400" />
                 <span>+880 1700-000000</span>
