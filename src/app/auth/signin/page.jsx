@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -18,17 +20,32 @@ const SignIn = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      setIsLoading(true);
+      const { email, password } = formData;
+      const { data, error } = await authClient.signIn.email({
+        email,
+        password,
+        callbackURL: "/",
+        rememberMe: true,
+      });
 
-    // Simulate Sign In API Call
-    console.log("Sign In Data:", formData);
-
-    setTimeout(() => {
+      if (data) {
+        toast.success("Signed in successfully!");
+      }
+      if (error) {
+        toast.error(error.message);
+      }
+    } catch (error) {
+      console.error("Sign In error:", error);
+      toast.error(
+        "Something went wrong. Please check your connection and try again.",
+      );
+    } finally {
       setIsLoading(false);
-      alert("Signed in successfully!");
-    }, 1500);
+    }
   };
 
   return (

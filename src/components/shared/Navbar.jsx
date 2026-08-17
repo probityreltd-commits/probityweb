@@ -4,6 +4,8 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Building2, ChevronDown, LogOut, Menu, Phone, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 const navLinks = [
   { name: "Home", href: "/", active: true },
@@ -16,6 +18,7 @@ const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const router = useRouter();
 
   const { user, isLoading } = useAuth();
 
@@ -29,6 +32,16 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const signOut = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/");
+        },
+      },
+    });
+  };
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 px-4 md:px-8 py-4">
@@ -129,7 +142,7 @@ const Navbar = () => {
                     <button
                       onClick={() => {
                         setDropdownOpen(false);
-                        // signOut()
+                        signOut();
                       }}
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors text-left"
                     >
