@@ -26,7 +26,7 @@ const Navbar = () => {
   ];
 
   const navLinks = isAdmin
-    ? [...baseLinks, { name: "Dashboard", href: "/dashboard" }]
+    ? [...baseLinks, { name: "Dashboard", href: "/admin/dashboard" }]
     : baseLinks;
 
   // Close dropdown when clicking outside

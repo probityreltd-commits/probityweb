@@ -1,8 +1,8 @@
-import { Inter, Manrope, Playfair_Display } from "next/font/google";
+import { Manrope, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/shared/Navbar";
+
 import UnderConstruction from "@/components/underConstruction/UnderConstruction";
-import Footer from "@/components/shared/Footer";
+
 import { Toaster } from "sonner";
 
 const manrope = Manrope({
@@ -34,9 +34,8 @@ export default function RootLayout({ children }) {
           <UnderConstruction />
         ) : (
           <>
-            <Navbar></Navbar>
             {children}
-            <Footer></Footer>
+
             <Toaster position="top-right" richColors closeButton />
           </>
         )}
