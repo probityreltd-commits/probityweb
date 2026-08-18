@@ -33,7 +33,6 @@ const PropertiesClient = ({ properties }) => {
     <div className="space-y-8">
       {/* Search & Filter Bar */}
       <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md p-4 sm:p-6 rounded-3xl border border-zinc-200/80 dark:border-zinc-800 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
-        {/* Search Input */}
         <div className="relative w-full md:w-96">
           <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
           <input
@@ -47,7 +46,6 @@ const PropertiesClient = ({ properties }) => {
 
         {/* Category Pills & View Switcher */}
         <div className="flex flex-wrap items-center justify-between md:justify-end gap-3 w-full md:w-auto">
-          {/* Type Filters */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none max-w-full">
             {propertyTypes.map((type) => (
               <button
@@ -64,7 +62,6 @@ const PropertiesClient = ({ properties }) => {
             ))}
           </div>
 
-          {/* Grid/List View Toggle */}
           <div className="hidden sm:flex items-center bg-[#f5f1ff] dark:bg-zinc-800 p-1 rounded-2xl border border-zinc-200 dark:border-zinc-700">
             <button
               onClick={() => setViewMode("grid")}
@@ -92,7 +89,6 @@ const PropertiesClient = ({ properties }) => {
         </div>
       </div>
 
-      {/* Properties Display Area */}
       {filteredProperties.length > 0 ? (
         <div
           className={
@@ -106,7 +102,6 @@ const PropertiesClient = ({ properties }) => {
           ))}
         </div>
       ) : (
-        /* Empty State */
         <div className="bg-white/60 dark:bg-zinc-900/60 rounded-3xl p-12 text-center border border-zinc-200 dark:border-zinc-800 my-12">
           <div className="w-12 h-12 rounded-2xl bg-[#3b1a83]/10 text-[#3b1a83] dark:text-indigo-400 flex items-center justify-center mx-auto mb-4">
             <SlidersHorizontal className="w-6 h-6" />
