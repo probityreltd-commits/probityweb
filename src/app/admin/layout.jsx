@@ -1,9 +1,9 @@
 "use client";
 
+import AdminFooter from "@/components/admin/AdminFooter";
+import AdminNavbar from "@/components/admin/AdminNavbar";
+import DashboardSidbar from "@/components/admin/DashboardSidbar";
 import React, { useState } from "react";
-import AdminFooter from "@/components/dashboard/AdminFooter";
-import AdminNavbar from "@/components/dashboard/AdminNavbar";
-import DashboardSidbar from "@/components/dashboard/DashboardSidbar";
 
 export default function DashboardLayout({ children }) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
