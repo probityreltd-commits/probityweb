@@ -1,17 +1,28 @@
-import Footer from "@/components/shared/Footer";
-import Navbar from "@/components/shared/Navbar";
+"use client";
+
+import React, { useState } from "react";
+import AdminFooter from "@/components/dashboard/AdminFooter";
+import AdminNavbar from "@/components/dashboard/AdminNavbar";
+import DashboardSidbar from "@/components/dashboard/DashboardSidbar";
 
 export default function DashboardLayout({ children }) {
-  return (
-    <section className="min-h-screen bg-zinc-50">
-      <aside></aside>
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-      {/* Main content */}
-      <div className="flex-1 flex flex-col min-h-screen min-w-0">
-        <Navbar />
-        <main className="flex-1 overflow-y-auto ">{children}</main>
-        <Footer />
+  return (
+    <div className="min-h-screen bg-[#f8f7fc] dark:bg-[#090a0f] flex flex-col lg:flex-row transition-colors duration-300">
+      <DashboardSidbar
+        isMobileOpen={isMobileOpen}
+        setIsMobileOpen={setIsMobileOpen}
+      />
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
+        <AdminNavbar onMenuClick={() => setIsMobileOpen((prev) => !prev)} />
+
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+          {children}
+        </main>
+
+        <AdminFooter />
       </div>
-    </section>
+    </div>
   );
 }
