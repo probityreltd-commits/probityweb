@@ -3,25 +3,29 @@
 import React, { useState } from "react";
 import { MapPin, Bed, Bath, Maximize2 } from "lucide-react";
 import CloudinaryImageUploader from "@/hooks/CloudinaryImageUploader";
+import { createProperty } from "@/services/action/add-property";
+import { toast } from "sonner";
 
-const AddProjectPage = () => {
-  // Form State
-  const [formData, setFormData] = useState({
-    title: "",
-    slug: "",
-    locationName: "",
-    propertyType: "",
-    address: "",
-    description: "",
-    status: "UNDER CONSTRUCTION",
-    handoverDate: "",
-    bedrooms: "", // Stored as Number
-    bathrooms: "", // Stored as Number
-    flatSize: "",
-    orientation: "South Facing",
-  });
+const initialFormData = {
+  title: "",
+  slug: "",
+  locationName: "",
+  propertyType: "",
+  address: "",
+  description: "",
+  status: "UNDER CONSTRUCTION",
+  handoverDate: "",
+  bedrooms: "",
+  bathrooms: "",
+  flatSize: "",
+  orientation: "South Facing",
+};
+
+const AddProperty = () => {
+  const [formData, setFormData] = useState(initialFormData);
 
   const [uploadedImages, setUploadedImages] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Helper: Format string to URL-safe slug (e.g., "Bashundhara Green Tower" -> "bashundhara-green-tower")
   const formatSlug = (text) => {
@@ -61,22 +65,47 @@ const AddProjectPage = () => {
   };
 
   // Submit Handler
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const finalProjectData = {
-      ...formData,
-      bedrooms: Number(formData.bedrooms) || 0,
-      bathrooms: Number(formData.bathrooms) || 0,
-      images: uploadedImages.map((img) => img.url),
-      coverImage: uploadedImages[0]?.url || "",
-      createdAt: new Date().toISOString(),
-    };
 
-    console.log("=== PUBLISH PROJECT DATA ===");
-    console.log(JSON.stringify(finalProjectData, null, 2));
-    alert(
-      "Project details and Cloudinary URLs logged to console successfully!",
-    );
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
+    try {
+      const finalProjectData = {
+        ...formData,
+        bedrooms: Number(formData.bedrooms) || 0,
+        bathrooms: Number(formData.bathrooms) || 0,
+        images: uploadedImages.map((img) => img.url),
+        coverImage: uploadedImages[0]?.url || "",
+        createdAt: new Date().toISOString(),
+      };
+
+      const result = await createProperty(finalProjectData);
+      if (result?.success) {
+        toast.success("Project published successfully!", {
+          description: `${formData.title} has been added to your projects.`,
+        });
+        setFormData(initialFormData);
+
+        setUploadedImages([]);
+        return;
+      }
+
+      toast.error("Failed to publish project", {
+        description:
+          result?.message || "Something went wrong. Please try again.",
+      });
+    } catch (error) {
+      console.error("Publish Project Error:", error);
+
+      toast.error("Failed to publish project", {
+        description: "Something went wrong. Please try again.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -368,6 +397,10 @@ const AddProjectPage = () => {
         <div className="lg:col-span-3 flex items-center justify-between pt-6 border-t border-zinc-200 dark:border-zinc-800">
           <button
             type="button"
+            onClick={() => {
+              setFormData(initialFormData);
+              setUploadedImages([]);
+            }}
             className="text-xs font-bold text-zinc-500 hover:text-zinc-800 dark:hover:text-white"
           >
             Cancel
@@ -376,9 +409,21 @@ const AddProjectPage = () => {
           <div className="flex items-center gap-3">
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-xl bg-[#3b1a83] hover:bg-[#2e1467] text-white text-xs font-bold shadow-md transition-transform active:scale-95"
+              disabled={isSubmitting}
+              className={`px-6 py-2.5 rounded-xl text-white text-xs font-bold shadow-md transition-all flex items-center justify-center gap-2 ${
+                isSubmitting
+                  ? "bg-zinc-400 dark:bg-zinc-700 cursor-not-allowed"
+                  : "bg-[#3b1a83] hover:bg-[#2e1467] active:scale-95"
+              }`}
             >
-              Publish Project
+              {isSubmitting ? (
+                <>
+                  <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                  Publishing...
+                </>
+              ) : (
+                "Publish Project"
+              )}
             </button>
           </div>
         </div>
@@ -387,4 +432,4 @@ const AddProjectPage = () => {
   );
 };
 
-export default AddProjectPage;
+export default AddProperty;
