@@ -2,28 +2,31 @@
 
 import React, { useState, useMemo } from "react";
 import { Search, SlidersHorizontal, Grid, List } from "lucide-react";
-import PropertyCard from "@/components/ui/PropertyCard";
+import { PropertyCard } from "@/components/ui/PropertyCard";
 
-const PropertiesClient = ({ properties }) => {
+const PropertiesClient = ({ properties = [] }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState("All");
-  const [viewMode, setViewMode] = useState("grid"); // 'grid' or 'list'
+  const [viewMode, setViewMode] = useState("grid");
 
-  // Extract unique property types dynamically
+  // Extract unique property types dynamically using 'propertyType' field
   const propertyTypes = useMemo(() => {
-    const types = properties.map((item) => item.typeTag).filter(Boolean);
+    const types = properties.map((item) => item.propertyType).filter(Boolean);
     return ["All", ...Array.from(new Set(types))];
   }, [properties]);
 
   // Filter properties based on search term & selected type tag
   const filteredProperties = useMemo(() => {
     return properties.filter((property) => {
+      const searchLower = searchTerm.toLowerCase();
       const matchesSearch =
-        property.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        property.location?.toLowerCase().includes(searchTerm.toLowerCase());
+        property.title?.toLowerCase().includes(searchLower) ||
+        property.locationName?.toLowerCase().includes(searchLower) ||
+        property.address?.toLowerCase().includes(searchLower) ||
+        property.description?.toLowerCase().includes(searchLower);
 
       const matchesType =
-        selectedType === "All" || property.typeTag === selectedType;
+        selectedType === "All" || property.propertyType === selectedType;
 
       return matchesSearch && matchesType;
     });
@@ -37,7 +40,7 @@ const PropertiesClient = ({ properties }) => {
           <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
           <input
             type="text"
-            placeholder="Search by title or location..."
+            placeholder="Search by title, location, or address..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-11 pr-4 py-3 bg-[#f5f1ff] dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700/80 rounded-2xl text-xs sm:text-sm text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3b1a83] transition-all"
@@ -89,6 +92,7 @@ const PropertiesClient = ({ properties }) => {
         </div>
       </div>
 
+      {/* Property Cards Grid/List */}
       {filteredProperties.length > 0 ? (
         <div
           className={
@@ -98,7 +102,11 @@ const PropertiesClient = ({ properties }) => {
           }
         >
           {filteredProperties.map((property) => (
-            <PropertyCard key={property.id} property={property} />
+            <PropertyCard
+              key={property._id}
+              property={property}
+              viewMode={viewMode}
+            />
           ))}
         </div>
       ) : (

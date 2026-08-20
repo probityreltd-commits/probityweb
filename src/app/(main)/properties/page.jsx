@@ -1,6 +1,7 @@
 import React from "react";
 import PropertiesClient from "./PropertiesClient"; // Adjust import path if needed
 import { demoProperties } from "../../../../public/data";
+import { getPropertys } from "@/services/api/property";
 
 export const metadata = {
   title: "All Properties | Probity Holdings",
@@ -10,8 +11,9 @@ export const metadata = {
 
 const PropertiesPage = async () => {
   // If fetching from API in future:
-  // const properties = await fetchProperties();
-  const properties = demoProperties || [];
+  const data = await getPropertys();
+  const properties = data.data;
+  // const properties = demoProperties || [];
 
   return (
     <main className="min-h-screen bg-[#f5f1ff] dark:bg-[#070913] text-zinc-800 dark:text-zinc-100 py-16 px-4 sm:px-6 lg:px-8 transition-colors duration-300">

@@ -6,8 +6,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 
 import "swiper/css";
-import PropertyCard from "../ui/PropertyCard";
 import { demoProperties } from "../../../public/data";
+import { PropertyCard } from "../ui/PropertyCard";
 
 const PropertiesSection = () => {
   const swiperRef = useRef(null);

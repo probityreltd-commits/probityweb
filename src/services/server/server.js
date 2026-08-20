@@ -15,3 +15,14 @@ export const serverMutation = async (path, data, token, method = "POST") => {
   }
   return res.json();
 };
+
+export const serverFetch = async (path, token = null) => {
+  const res = await fetch(`${baseUrl}${path}`, {
+    headers: {
+      ...(token && { authorization: `Bearer ${token}` }),
+    },
+  });
+
+  const data = await res.json();
+  return data;
+};
