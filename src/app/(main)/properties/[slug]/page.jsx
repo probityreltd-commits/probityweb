@@ -1,36 +1,62 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import PropertyDetailsClient from "@/components/propertyPage/PropertyDetailsPage/PropertyDetailsClient";
-import { demoProperties } from "@/data/data";
+import { getPropertyBySlug } from "@/services/api/property";
 
 // Generate Dynamic Metadata for SEO
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const property = demoProperties.find(
-    (item) => item.slug === slug || item.id === slug,
-  );
 
-  if (!property) {
+  try {
+    const result = await getPropertyBySlug(slug);
+    const property = result?.data;
+
+    if (!property) {
+      return {
+        title: "Property Not Found | Probity Holdings",
+        description: "The requested property could not be found.",
+      };
+    }
+
+    return {
+      title: `${property.title} | Probity Holdings`,
+      description: property.description || "",
+      openGraph: {
+        title: `${property.title} | Probity Holdings`,
+        description: property.description || "",
+        images: property.coverImage
+          ? [
+              {
+                url: property.coverImage,
+              },
+            ]
+          : [],
+      },
+    };
+  } catch (error) {
+    console.error("Metadata error:", error);
+
     return {
       title: "Property Not Found | Probity Holdings",
+      description: "The requested property could not be found.",
     };
   }
-
-  return {
-    title: `${property.title} | Probity Holdings`,
-    description: property.description,
-  };
 }
 
 const PropertyDetailsPage = async ({ params }) => {
   const { slug } = await params;
 
-  // Find matching property using slug or id
-  const property = demoProperties.find(
-    (item) => item.slug === slug || item.id === slug,
-  );
+  let property;
 
-  // Trigger 404 if property not found
+  try {
+    const result = await getPropertyBySlug(slug);
+
+    property = result?.data;
+  } catch (error) {
+    console.error("Failed to fetch property:", error);
+    notFound();
+  }
+
   if (!property) {
     notFound();
   }

@@ -1,6 +1,5 @@
 import React from "react";
-import PropertiesClient from "./PropertiesClient"; // Adjust import path if needed
-import { demoProperties } from "../../../../public/data";
+import PropertiesClient from "./PropertiesClient";
 import { getPropertys } from "@/services/api/property";
 
 export const metadata = {
