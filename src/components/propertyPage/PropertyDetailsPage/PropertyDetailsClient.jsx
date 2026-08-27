@@ -66,6 +66,53 @@ const PropertyDetailsClient = ({ property }) => {
   const [tourType, setTourType] = useState("In Person");
   const [activeTab, setActiveTab] = useState("schedule");
   const [imgErrors, setImgErrors] = useState({});
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    message: "",
+  });
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleFieldChange = (field) => (e) => {
+    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+  };
+
+  // Builds the exact object to send to your API/DB later.
+  // Swap the console.log below for your POST call, e.g.:
+  //   await fetch("/api/leads", { method: "POST", body: JSON.stringify(payload) })
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+
+    const payload = {
+      // Which widget this came from + what the user chose
+      requestType: activeTab === "schedule" ? "SCHEDULE_TOUR" : "REQUEST_INFO",
+      tourType: activeTab === "schedule" ? tourType : null, // "In Person" | "Video Chat"
+
+      // Contact details
+      name: formData.name.trim(),
+      phone: formData.phone.trim(),
+      email: formData.email.trim(),
+      message: formData.message.trim(),
+
+      // Which property this lead is about (for a foreign key / reference)
+      property: {
+        id: property?._id || null,
+        slug: property?.slug || null,
+        title: property?.title || null,
+      },
+
+      // When the lead was created
+      createdAt: new Date().toISOString(),
+    };
+
+    console.log("Lead submission payload:", payload);
+    console.log(JSON.stringify(payload, null, 2));
+
+    setSubmitted(true);
+    setFormData({ name: "", phone: "", email: "", message: "" });
+    setTimeout(() => setSubmitted(false), 3000);
+  };
 
   const rawImages =
     property?.images?.length > 0
@@ -423,7 +470,7 @@ const PropertyDetailsClient = ({ property }) => {
               </div>
             </div>
 
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-3.5">
+            <form onSubmit={handleFormSubmit} className="space-y-3.5">
               {activeTab === "schedule" && (
                 <div>
                   <label className="block text-[10px] font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-2">
@@ -462,23 +509,31 @@ const PropertyDetailsClient = ({ property }) => {
                 type="text"
                 placeholder="Your name"
                 required
+                value={formData.name}
+                onChange={handleFieldChange("name")}
                 className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all"
               />
               <input
                 type="tel"
                 placeholder="Phone number"
                 required
+                value={formData.phone}
+                onChange={handleFieldChange("phone")}
                 className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all"
               />
               <input
                 type="email"
                 placeholder="Email address"
                 required
+                value={formData.email}
+                onChange={handleFieldChange("email")}
                 className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all"
               />
               <textarea
                 rows={3}
                 placeholder="Preferred date or message..."
+                value={formData.message}
+                onChange={handleFieldChange("message")}
                 className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all resize-none"
               />
 
@@ -491,6 +546,12 @@ const PropertyDetailsClient = ({ property }) => {
                   ? "Submit tour request"
                   : "Send inquiry"}
               </button>
+
+              {submitted && (
+                <p className="text-[11px] text-emerald-600 dark:text-emerald-400 text-center font-medium">
+                  Logged to console — check DevTools.
+                </p>
+              )}
 
               <p className="text-[10px] text-zinc-400 dark:text-zinc-500 text-center">
                 By submitting this form you agree to the Terms of Service.

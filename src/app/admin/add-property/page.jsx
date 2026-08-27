@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { MapPin, Bed, Bath, Maximize2 } from "lucide-react";
 import CloudinaryImageUploader from "@/hooks/CloudinaryImageUploader";
-import { createProperty } from "@/services/action/add-property";
 import { toast } from "sonner";
+import { createProperty } from "@/services/action/property";
 
 const initialFormData = {
   title: "",
