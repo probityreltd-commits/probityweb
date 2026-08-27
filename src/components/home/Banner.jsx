@@ -13,6 +13,7 @@ import {
   Landmark,
   Target,
 } from "lucide-react";
+import Link from "next/link";
 
 // Array of properties for falling stars
 const fallingStarsData = [
@@ -181,10 +182,12 @@ const Banner = () => {
               variants={itemVariants}
               className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 justify-center lg:justify-start pt-2"
             >
-              <button className="w-full sm:w-auto bg-[#3b1a83] hover:bg-[#2e1467] text-white px-7 py-3 rounded-full font-bold text-xs sm:text-sm transition-all duration-300 shadow-xl hover:shadow-2xl active:scale-95 flex items-center justify-center gap-2.5 border border-white/10">
-                <span>Explore Properties</span>
-                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </button>
+              <Link href={"/properties"}>
+                <button className="w-full sm:w-auto bg-[#3b1a83] hover:bg-[#2e1467] text-white px-7 py-3 rounded-full font-bold text-xs sm:text-sm transition-all duration-300 shadow-xl hover:shadow-2xl active:scale-95 flex items-center justify-center gap-2.5 border border-white/10">
+                  <span>Explore Properties</span>
+                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </button>
+              </Link>
 
               {/* <button className="flex items-center gap-3 group px-4 py-2.5 rounded-full hover:bg-white/5 transition-colors">
                 <div className="w-9 h-9 rounded-full bg-white/10 text-amber-300 flex items-center justify-center border border-white/20 group-hover:border-amber-400 shadow-md">

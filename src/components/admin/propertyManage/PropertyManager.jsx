@@ -2,10 +2,11 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { Plus, Edit2, Trash2, Image as ImageIcon } from "lucide-react";
+import { Plus, Trash2, Image as ImageIcon } from "lucide-react";
 import { deleteProperty } from "@/services/action/property";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import EditPropertyModal from "./EditPropertyModal";
 
 const PropertyManagerClient = ({ initialProperties = [] }) => {
   const [properties, setProperties] = useState(initialProperties);
@@ -14,7 +15,6 @@ const PropertyManagerClient = ({ initialProperties = [] }) => {
   const [typeFilter, setTypeFilter] = useState("All");
   const router = useRouter();
 
-  // Dynamic filter dropdown options
   const statuses = useMemo(() => {
     const list = properties.map((p) => p.status).filter(Boolean);
     return ["All", ...Array.from(new Set(list))];
@@ -30,7 +30,6 @@ const PropertyManagerClient = ({ initialProperties = [] }) => {
     return ["All", ...Array.from(new Set(list))];
   }, [properties]);
 
-  // Filtered Properties Logic
   const filteredProperties = useMemo(() => {
     return properties.filter((item) => {
       const matchStatus =
@@ -60,7 +59,6 @@ const PropertyManagerClient = ({ initialProperties = [] }) => {
     }
   };
 
-  // Status Badge Colors
   const getStatusBadge = (status) => {
     switch (status?.toUpperCase()) {
       case "ACTIVE":
@@ -100,7 +98,6 @@ const PropertyManagerClient = ({ initialProperties = [] }) => {
 
       {/* Filter Toolbar Container */}
       <div className="bg-white dark:bg-zinc-900 rounded-2xl p-4 border border-zinc-200/80 dark:border-zinc-800 shadow-sm flex flex-wrap items-center gap-4">
-        {/* Status Filter */}
         <div className="w-full sm:w-48">
           <select
             value={statusFilter}
@@ -118,7 +115,6 @@ const PropertyManagerClient = ({ initialProperties = [] }) => {
           </select>
         </div>
 
-        {/* Location Filter */}
         <div className="w-full sm:w-48">
           <select
             value={locationFilter}
@@ -136,7 +132,6 @@ const PropertyManagerClient = ({ initialProperties = [] }) => {
           </select>
         </div>
 
-        {/* Type Filter */}
         <div className="w-full sm:w-48">
           <select
             value={typeFilter}
@@ -176,7 +171,6 @@ const PropertyManagerClient = ({ initialProperties = [] }) => {
                     key={item._id}
                     className="hover:bg-zinc-50/80 dark:hover:bg-zinc-800/40 transition-colors"
                   >
-                    {/* Cover Image & Project Details */}
                     <td className="py-4 px-6">
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-12 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200/80 dark:border-zinc-700/60 overflow-hidden shrink-0 flex items-center justify-center">
@@ -203,17 +197,14 @@ const PropertyManagerClient = ({ initialProperties = [] }) => {
                       </div>
                     </td>
 
-                    {/* Location Name */}
                     <td className="py-4 px-6 font-medium text-zinc-600 dark:text-zinc-400">
                       {item.locationName || "N/A"}
                     </td>
 
-                    {/* Property Type */}
                     <td className="py-4 px-6 font-medium text-zinc-600 dark:text-zinc-400">
                       {item.propertyType || "N/A"}
                     </td>
 
-                    {/* Status Pill */}
                     <td className="py-4 px-6">
                       <span
                         className={`inline-block px-3 py-1 rounded-full text-[10px] font-bold capitalize ${getStatusBadge(
@@ -224,16 +215,9 @@ const PropertyManagerClient = ({ initialProperties = [] }) => {
                       </span>
                     </td>
 
-                    {/* Action Controls */}
                     <td className="py-4 px-6 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <Link
-                          href={`/dashboard/edit-project/${item._id}`}
-                          className="p-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
-                          title="Edit"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </Link>
+                        <EditPropertyModal property={item} />
                         <button
                           onClick={() => handleDelete(item._id)}
                           className="p-2 text-zinc-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors"
@@ -256,7 +240,6 @@ const PropertyManagerClient = ({ initialProperties = [] }) => {
           </table>
         </div>
 
-        {/* Footer Counter Info */}
         <div className="py-3.5 px-6 border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/30 text-xs font-medium text-zinc-500 dark:text-zinc-400">
           Showing {filteredProperties.length} of {properties.length} results
         </div>

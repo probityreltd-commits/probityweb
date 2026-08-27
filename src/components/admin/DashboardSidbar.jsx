@@ -16,7 +16,7 @@ const navItems = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutGrid },
   { name: "Property", href: "/admin/property", icon: Building2 },
   { name: "Add Property", href: "/admin/add-property", icon: PlusSquare },
-  { name: "Clients", href: "/admin/clients", icon: Users },
+  // { name: "Clients", href: "/admin/clients", icon: Users },
   { name: "Inquiries", href: "/admin/inquiries", icon: MessageSquare },
 ];
 

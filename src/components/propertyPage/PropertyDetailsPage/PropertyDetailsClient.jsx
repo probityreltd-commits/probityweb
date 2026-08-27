@@ -23,23 +23,8 @@ import {
   X,
   Expand,
 } from "lucide-react";
-
-/**
- * Design system for this page ("Estate Ledger")
- * ------------------------------------------------
- * Brand accent : #431780  (your brand purple — the one accent color)
- * Surfaces     : zinc-50/zinc-900 scale, matching the page wrapper
- *                (bg-[#f5f1ff] light / bg-[#070913] dark)
- *
- * Display face: Fraunces (characterful serif, does the talking)
- * Body face:    Inter (quiet, does the reading)
- * Utility face: IBM Plex Mono (blueprint annotations, specs, refs)
- *
- * Signature element: the property is presented like a surveyor's
- * document — a status stamp on the hero, and a floating "spec
- * ledger" strip with dotted leader lines, like annotations on an
- * architectural drawing.
- */
+import { toast } from "sonner";
+import { addInquiries } from "@/services/action/inquiries";
 
 const FONT_IMPORTS = `
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
@@ -78,40 +63,39 @@ const PropertyDetailsClient = ({ property }) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
-  // Builds the exact object to send to your API/DB later.
-  // Swap the console.log below for your POST call, e.g.:
-  //   await fetch("/api/leads", { method: "POST", body: JSON.stringify(payload) })
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
     const payload = {
-      // Which widget this came from + what the user chose
       requestType: activeTab === "schedule" ? "SCHEDULE_TOUR" : "REQUEST_INFO",
       tourType: activeTab === "schedule" ? tourType : null, // "In Person" | "Video Chat"
 
-      // Contact details
       name: formData.name.trim(),
       phone: formData.phone.trim(),
       email: formData.email.trim(),
       message: formData.message.trim(),
 
-      // Which property this lead is about (for a foreign key / reference)
       property: {
         id: property?._id || null,
         slug: property?.slug || null,
         title: property?.title || null,
       },
 
-      // When the lead was created
       createdAt: new Date().toISOString(),
     };
 
-    console.log("Lead submission payload:", payload);
-    console.log(JSON.stringify(payload, null, 2));
+    try {
+      const body = await addInquiries(payload);
+      toast.success("Sent your text, Thank You!");
+      if (!body.success) throw new Error(body.message);
 
-    setSubmitted(true);
-    setFormData({ name: "", phone: "", email: "", message: "" });
-    setTimeout(() => setSubmitted(false), 3000);
+      setSubmitted(true);
+      setFormData({ name: "", phone: "", email: "", message: "" });
+      setTimeout(() => setSubmitted(false), 3000);
+    } catch (err) {
+      console.error(err);
+      toast.error("Could not submit. Please try again.");
+    }
   };
 
   const rawImages =
@@ -121,8 +105,6 @@ const PropertyDetailsClient = ({ property }) => {
         ? [property.coverImage]
         : [];
 
-  // Filter out any image URL that failed to load so the gallery
-  // never gets stuck on a broken slide.
   const images = rawImages.filter((_, idx) => !imgErrors[idx]);
   const safeIndex = Math.min(activeImageIndex, Math.max(images.length - 1, 0));
 
