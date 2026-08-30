@@ -8,7 +8,6 @@ import {
   Building,
   DollarSign,
   ArrowRight,
-  Play,
   Home,
   Landmark,
   Target,
@@ -188,15 +187,6 @@ const Banner = () => {
                   <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </button>
               </Link>
-
-              {/* <button className="flex items-center gap-3 group px-4 py-2.5 rounded-full hover:bg-white/5 transition-colors">
-                <div className="w-9 h-9 rounded-full bg-white/10 text-amber-300 flex items-center justify-center border border-white/20 group-hover:border-amber-400 shadow-md">
-                  <Play className="w-3.5 h-3.5 fill-amber-300 ml-0.5" />
-                </div>
-                <span className="text-xs sm:text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors">
-                  Watch Video
-                </span>
-              </button> */}
             </motion.div>
           </div>
         </motion.div>

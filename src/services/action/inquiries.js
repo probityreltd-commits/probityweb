@@ -19,15 +19,8 @@ export const addInquiryNote = async (id, text) => {
   );
 };
 
-export const deleteInquiry = async (id) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/admin/inquiries/${id}`,
-    {
-      method: "DELETE",
-    },
-  );
-  const data = await res.json();
-  return data;
+export const deleteInquiry = async (id, token) => {
+  return serverMutation(`/api/admin/inquiries/${id}`, null, token, "DELETE");
 };
 
 export const bulkUpdateStatus = async (ids, status) => {
@@ -39,20 +32,6 @@ export const bulkUpdateStatus = async (ids, status) => {
   );
 };
 
-export const bulkDeleteInquiries = async (ids) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/admin/inquiries/bulk`,
-    {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ ids }),
-    },
-  );
-  const data = await res.json();
-  if (!res.ok) {
-    throw new Error(data.message || "Bulk delete failed");
-  }
-  return data;
+export const bulkDeleteInquiries = async (ids, token) => {
+  return serverMutation(`/api/admin/inquiries/bulk`, { ids }, token, "DELETE");
 };

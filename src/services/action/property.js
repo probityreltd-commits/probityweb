@@ -2,8 +2,8 @@
 
 import { serverMutation } from "../server/server";
 
-export const createProperty = async (data) => {
-  return serverMutation("/api/property", data);
+export const createProperty = async (data, token) => {
+  return serverMutation("/api/property", data, token);
 };
 
 export const updateProperty = async (id, data) => {

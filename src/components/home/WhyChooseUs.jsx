@@ -62,7 +62,6 @@ const WhyChooseUs = () => {
   return (
     <section className="bg-[#f5f1ff] dark:bg-[#070913] py-20 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
-        {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <motion.span
             initial={{ opacity: 0, y: 15 }}

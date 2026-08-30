@@ -9,7 +9,7 @@ import {
   Image as ImageIcon,
 } from "lucide-react";
 
-const CloudinaryImageUploader = ({ images = [], setImages }) => {
+const CloudinaryImageUploader = ({ images = [], setImages = () => {} }) => {
   const [uploading, setUploading] = useState(false);
 
   const CLOUD_NAME =

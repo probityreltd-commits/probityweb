@@ -5,16 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   MapPin,
-  Heart,
-  Share2,
-  Printer,
   ChevronLeft,
   ChevronRight,
   Bed,
   Bath,
   Maximize2,
   Calendar,
-  Compass,
   Building2,
   User,
   Send,
@@ -22,6 +18,7 @@ import {
   UserCheck,
   X,
   Expand,
+  Download,
 } from "lucide-react";
 import { toast } from "sonner";
 import { addInquiries } from "@/services/action/inquiries";
@@ -49,7 +46,6 @@ const PropertyDetailsClient = ({ property }) => {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [tourType, setTourType] = useState("In Person");
-  const [activeTab, setActiveTab] = useState("schedule");
   const [imgErrors, setImgErrors] = useState({});
   const [formData, setFormData] = useState({
     name: "",
@@ -67,8 +63,8 @@ const PropertyDetailsClient = ({ property }) => {
     e.preventDefault();
 
     const payload = {
-      requestType: activeTab === "schedule" ? "SCHEDULE_TOUR" : "REQUEST_INFO",
-      tourType: activeTab === "schedule" ? tourType : null, // "In Person" | "Video Chat"
+      requestType: "SCHEDULE_TOUR",
+      tourType: tourType,
 
       name: formData.name.trim(),
       phone: formData.phone.trim(),
@@ -95,6 +91,21 @@ const PropertyDetailsClient = ({ property }) => {
     } catch (err) {
       console.error(err);
       toast.error("Could not submit. Please try again.");
+    }
+  };
+
+  const handleBrochureDownload = () => {
+    if (property?.projectBrochure) {
+      const link = document.createElement("a");
+      link.href = property.projectBrochure;
+      link.download = `${property?.title || "project"}-brochure`;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      toast.error("Project brochure is currently unavailable.");
     }
   };
 
@@ -131,32 +142,54 @@ const PropertyDetailsClient = ({ property }) => {
   const listedLabel = formatDate(property?.createdAt);
 
   const stats = [
-    property?.bedrooms != null && {
+    property?.landArea != null && {
       icon: Bed,
-      label: "Bedrooms",
-      value: `${property.bedrooms}`,
+      label: "Land",
+      value: `${property.landArea}`,
     },
-    property?.bathrooms != null && {
+    property?.buildingHeight != null && {
       icon: Bath,
-      label: "Bathrooms",
-      value: `${property.bathrooms}`,
+      label: "Building Height",
+      value: `${property.buildingHeight}`,
     },
-    property?.flatSize && {
+    property?.apartments && {
       icon: Maximize2,
-      label: "Area",
-      value: property.flatSize,
-    },
-    property?.orientation && {
-      icon: Compass,
-      label: "Facing",
-      value: property.orientation,
+      label: "Apartments",
+      value: property.apartments,
     },
     handoverLabel && {
       icon: Calendar,
-      label: "Handover",
-      value: handoverLabel,
+      label: "carParking",
+      value: property.carParking,
     },
   ].filter(Boolean);
+
+  // Consolidated Key Details Dataset
+  const keyDetailsList = [
+    { label: "Property Title", value: property?.title },
+    { label: "Location", value: property?.locationName },
+    { label: "Property Type", value: property?.propertyType },
+    { label: "Address", value: property?.address },
+    { label: "Status", value: property?.status },
+    { label: "Handover Date", value: handoverLabel },
+    { label: "Bedrooms", value: property?.bedrooms },
+    { label: "Bathrooms", value: property?.bathrooms },
+    { label: "Flat Size", value: property?.flatSize },
+    { label: "Orientation", value: property?.orientation },
+    { label: "Price Per Sqft", value: property?.pricePerSqft },
+    { label: "Building Height", value: property?.buildingHeight },
+    { label: "Land Area", value: property?.landArea },
+    { label: "Apartments", value: property?.apartments },
+    { label: "Apartment Sizes", value: property?.apartmentSizes },
+    { label: "Units Per Floor", value: property?.unitsPerFloor },
+    { label: "Car Parking", value: property?.carParking },
+    { label: "Motorbike Parking", value: property?.motorbikeParking },
+  ].filter(
+    (item) =>
+      item.value !== undefined &&
+      item.value !== null &&
+      String(item.value).trim() !== "",
+  );
 
   return (
     <div style={{ fontFamily: "'Inter', sans-serif" }}>
@@ -199,28 +232,6 @@ const PropertyDetailsClient = ({ property }) => {
           <span className="text-zinc-800 dark:text-zinc-100 normal-case tracking-normal truncate max-w-[160px] sm:max-w-xs">
             {property.title}
           </span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            aria-label="Save property"
-            className="w-9 h-9 rounded-full border border-zinc-300/70 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 flex items-center justify-center hover:border-[#431780] hover:text-[#431780] transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#431780] bg-white/70 dark:bg-zinc-900/70"
-          >
-            <Heart className="w-4 h-4" />
-          </button>
-          <button
-            aria-label="Share property"
-            className="w-9 h-9 rounded-full border border-zinc-300/70 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 flex items-center justify-center hover:border-[#431780] hover:text-[#431780] transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#431780] bg-white/70 dark:bg-zinc-900/70"
-          >
-            <Share2 className="w-4 h-4" />
-          </button>
-          <button
-            aria-label="Print page"
-            onClick={() => window.print()}
-            className="w-9 h-9 rounded-full border border-zinc-300/70 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 flex items-center justify-center hover:border-[#431780] hover:text-[#431780] transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#431780] bg-white/70 dark:bg-zinc-900/70"
-          >
-            <Printer className="w-4 h-4" />
-          </button>
         </div>
       </div>
 
@@ -337,7 +348,7 @@ const PropertyDetailsClient = ({ property }) => {
           </div>
         )}
 
-        {/* ============ SPEC LEDGER (signature element) ============ */}
+        {/* ============ SPEC LEDGER ============ */}
         <div className="relative sm:-mt-10 mt-4 mx-auto sm:mx-6 rounded-3xl border border-zinc-200/80 dark:border-zinc-800 shadow-2xl px-5 sm:px-8 py-6 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md">
           <div className="flex items-center justify-between mb-4">
             <span className="ledger-font text-[10px] uppercase tracking-[0.25em] text-[#431780] dark:text-violet-300">
@@ -349,7 +360,7 @@ const PropertyDetailsClient = ({ property }) => {
               </span>
             )}
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-x-4 gap-y-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-6">
             {stats.map(({ icon: Icon, label, value }) => (
               <div key={label} className="flex flex-col">
                 <div className="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400">
@@ -370,15 +381,41 @@ const PropertyDetailsClient = ({ property }) => {
 
       {/* ============ MAIN CONTENT ============ */}
       <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left column */}
-        <div className="lg:col-span-8 space-y-6">
+        {/* Left column — Key Details */}
+        <div className="lg:col-span-8">
           <div className="rounded-3xl p-6 sm:p-8 border border-zinc-200/80 dark:border-zinc-800 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md shadow-sm">
-            <h2 className="display-font text-xl sm:text-2xl font-semibold text-zinc-900 dark:text-white pb-4 mb-5 border-b border-zinc-200/80 dark:border-zinc-800">
-              About this estate
+            <h2 className="display-font text-xl sm:text-2xl font-semibold text-zinc-900 dark:text-white pb-4 mb-6 border-b border-zinc-200/80 dark:border-zinc-800">
+              Key Details
             </h2>
-            <p className="text-sm sm:text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed">
-              {property.description}
-            </p>
+
+            {/* Existing description incorporated directly */}
+            {property.description && (
+              <div className="mb-6 pb-6 border-b border-zinc-200/80 dark:border-zinc-800">
+                <span className="ledger-font text-[10px] uppercase tracking-widest text-zinc-400 dark:text-zinc-500 block mb-2">
+                  Overview
+                </span>
+                <p className="text-sm sm:text-[15px] text-zinc-600 dark:text-zinc-300 leading-relaxed">
+                  {property.description}
+                </p>
+              </div>
+            )}
+
+            {/* Clean Table-Style Specification List */}
+            <div className="divide-y divide-zinc-200/60 dark:divide-zinc-800/60 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 overflow-hidden bg-zinc-50/40 dark:bg-zinc-900/40">
+              {keyDetailsList.map((item, index) => (
+                <div
+                  key={index}
+                  className="grid grid-cols-1 sm:grid-cols-12 px-5 py-3.5 hover:bg-zinc-100/50 dark:hover:bg-zinc-800/50 transition-colors gap-1 sm:gap-4 items-center"
+                >
+                  <span className="sm:col-span-5 ledger-font text-[11px] uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                    {item.label}
+                  </span>
+                  <span className="sm:col-span-7 text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                    {item.value}
+                  </span>
+                </div>
+              ))}
+            </div>
 
             {property.address && (
               <div className="flex items-start gap-2.5 mt-6 pt-5 border-t border-zinc-200/80 dark:border-zinc-800">
@@ -402,29 +439,20 @@ const PropertyDetailsClient = ({ property }) => {
           </div>
         </div>
 
-        {/* Right column — tour / inquiry card */}
+        {/* Right column — Action Card */}
         <div className="lg:col-span-4 lg:sticky lg:top-6">
           <div className="rounded-3xl p-6 sm:p-7 border border-zinc-200/80 dark:border-zinc-800 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl shadow-xl space-y-6">
-            <div className="flex items-center p-1 bg-[#431780]/5 dark:bg-zinc-800 rounded-2xl border border-zinc-200 dark:border-zinc-700">
-              <button
-                onClick={() => setActiveTab("schedule")}
-                className={`flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all ${
-                  activeTab === "schedule"
-                    ? "bg-[#431780] text-white shadow-md"
-                    : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
-                }`}
-              >
+            <div className="grid grid-cols-2 gap-2 p-1 bg-[#431780]/5 dark:bg-zinc-800 rounded-2xl border border-zinc-200 dark:border-zinc-700">
+              <div className="py-2.5 text-xs font-semibold rounded-xl bg-[#431780] text-white shadow-md text-center flex items-center justify-center">
                 Schedule a tour
-              </button>
+              </div>
               <button
-                onClick={() => setActiveTab("request")}
-                className={`flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all ${
-                  activeTab === "request"
-                    ? "bg-[#431780] text-white shadow-md"
-                    : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
-                }`}
+                type="button"
+                onClick={handleBrochureDownload}
+                className="py-2.5 text-xs font-semibold rounded-xl text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-all flex items-center justify-center gap-1.5"
               >
-                Request info
+                <Download className="w-3.5 h-3.5" />
+                Download Brochure
               </button>
             </div>
 
@@ -453,39 +481,37 @@ const PropertyDetailsClient = ({ property }) => {
             </div>
 
             <form onSubmit={handleFormSubmit} className="space-y-3.5">
-              {activeTab === "schedule" && (
-                <div>
-                  <label className="block text-[10px] font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-2">
-                    Tour type
-                  </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setTourType("In Person")}
-                      className={`py-2 px-3 rounded-xl text-xs font-semibold border flex items-center justify-center gap-1.5 transition-all ${
-                        tourType === "In Person"
-                          ? "border-[#431780] bg-[#431780]/10 text-[#431780] dark:text-violet-300"
-                          : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400"
-                      }`}
-                    >
-                      <User className="w-3.5 h-3.5" />
-                      In person
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setTourType("Video Chat")}
-                      className={`py-2 px-3 rounded-xl text-xs font-semibold border flex items-center justify-center gap-1.5 transition-all ${
-                        tourType === "Video Chat"
-                          ? "border-[#431780] bg-[#431780]/10 text-[#431780] dark:text-violet-300"
-                          : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400"
-                      }`}
-                    >
-                      <Video className="w-3.5 h-3.5" />
-                      Video chat
-                    </button>
-                  </div>
+              <div>
+                <label className="block text-[10px] font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-2">
+                  Tour type
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setTourType("In Person")}
+                    className={`py-2 px-3 rounded-xl text-xs font-semibold border flex items-center justify-center gap-1.5 transition-all ${
+                      tourType === "In Person"
+                        ? "border-[#431780] bg-[#431780]/10 text-[#431780] dark:text-violet-300"
+                        : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400"
+                    }`}
+                  >
+                    <User className="w-3.5 h-3.5" />
+                    In person
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTourType("Video Chat")}
+                    className={`py-2 px-3 rounded-xl text-xs font-semibold border flex items-center justify-center gap-1.5 transition-all ${
+                      tourType === "Video Chat"
+                        ? "border-[#431780] bg-[#431780]/10 text-[#431780] dark:text-violet-300"
+                        : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400"
+                    }`}
+                  >
+                    <Video className="w-3.5 h-3.5" />
+                    Video chat
+                  </button>
                 </div>
-              )}
+              </div>
 
               <input
                 type="text"
@@ -524,9 +550,7 @@ const PropertyDetailsClient = ({ property }) => {
                 className="w-full bg-[#431780] hover:bg-[#341160] text-white text-xs font-semibold py-3.5 px-6 rounded-2xl transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 group"
               >
                 <Send className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                {activeTab === "schedule"
-                  ? "Submit tour request"
-                  : "Send inquiry"}
+                Submit tour request
               </button>
 
               {submitted && (
