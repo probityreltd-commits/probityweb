@@ -1,13 +1,31 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { Search, Bell, HelpCircle, Menu, X } from "lucide-react";
+import { Search, Bell, HelpCircle, LogOut, Menu, X } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+
+import { motion, AnimatePresence } from "framer-motion";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 const AdminNavbar = ({ onMenuClick }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const { user, isLoading } = useAuth();
+  const dropdownRef = useRef(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const router = useRouter();
+
+  const signOut = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/");
+        },
+      },
+    });
+  };
 
   return (
     <header className="sticky top-0 z-30 w-full bg-[#f8f7fc]/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-200/80 dark:border-zinc-800/80 transition-colors duration-300">
@@ -81,15 +99,74 @@ const AdminNavbar = ({ onMenuClick }) => {
               <HelpCircle className="w-5 h-5" />
             </button>
 
-            <div className="relative w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-full overflow-hidden border-2 border-zinc-200 dark:border-zinc-700 hover:border-[#3b1a83] transition-all cursor-pointer shrink-0 shadow-sm">
-              <Image
-                src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop"
-                alt="Admin Profile"
-                fill
-                sizes="40px"
-                className="object-cover"
-              />
-            </div>
+            {isLoading ? (
+              <button
+                disabled
+                className="flex items-center justify-center gap-2 bg-zinc-400 dark:bg-zinc-700 text-white px-6 py-2 rounded-full font-semibold text-sm cursor-not-allowed shadow-md"
+              >
+                <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                Loading...
+              </button>
+            ) : user ? (
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="w-10 h-10 rounded-full overflow-hidden border-2 border-white dark:border-zinc-700 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
+                >
+                  {user.image ? (
+                    <img
+                      src={user.image}
+                      alt={user.name || "Profile"}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-[#3b1a83] text-white flex items-center justify-center font-bold text-sm">
+                      {user.name?.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                </button>
+
+                {/* Dropdown */}
+                <AnimatePresence>
+                  {dropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute right-0 mt-3 w-56 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-slate-100 dark:border-zinc-800 py-2 z-50 overflow-hidden"
+                    >
+                      <div className="px-4 py-2.5 border-b border-slate-100 dark:border-zinc-800">
+                        <p className="font-semibold text-slate-900 dark:text-white truncate">
+                          {user.name}
+                        </p>
+
+                        <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                          {user.email}
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          setDropdownOpen(false);
+                          signOut();
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors text-left"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Sign Out
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <Link href="/auth/signin">
+                <button className="bg-[#3b1a83] hover:bg-[#2e1467] text-white px-6 py-2 rounded-full font-semibold text-sm transition-all duration-300 shadow-md hover:shadow-lg active:scale-95">
+                  Sign In
+                </button>
+              </Link>
+            )}
           </div>
         </div>
 

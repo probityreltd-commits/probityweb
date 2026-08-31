@@ -1,45 +1,74 @@
 "use client";
 
-import React from "react";
-import { Plus } from "lucide-react";
-import Link from "next/link";
-import DashboardStats from "@/components/admin/dashboard/DashboardStats";
-import RevenueOverview from "@/components/admin/dashboard/RevenueOverview";
-import RecentActivity from "@/components/admin/dashboard/RecentActivity";
+import DashboardHeader from "@/components/admin/dashboard/DashboardHeader";
+import InquiryOverview from "@/components/admin/dashboard/InquiryOverview";
+import PropertyOverview from "@/components/admin/dashboard/PropertyOverview";
+import QuickActions from "@/components/admin/dashboard/QuickActions";
+import StatsOverview from "@/components/admin/dashboard/StatsOverview";
+import { fetchInquiries } from "@/services/api/inquiries";
+import { getPropertys } from "@/services/api/property";
+import React, { useEffect, useState, useCallback } from "react";
 
 const DashboardPage = () => {
+  const [properties, setProperties] = useState([]);
+  const [inquiries, setInquiries] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const loadDashboardData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const [propRes, inqRes] = await Promise.all([
+        getPropertys(),
+        fetchInquiries(),
+      ]);
+
+      if (propRes?.data) setProperties(propRes.data);
+      if (inqRes?.data) setInquiries(inqRes.data);
+    } catch (err) {
+      console.error("Error loading dashboard metrics:", err);
+      setError(
+        "Failed to fetch dashboard records. Please check your connection.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadDashboardData();
+  }, [loadDashboardData]);
+
   return (
-    <div className="space-y-8">
-      {/* Top Banner & Quick Actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
-            Admin Overview
-          </h1>
-          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1">
-            Welcome back! Here is what's happening with Probity Real Estate
-            today.
-          </p>
+    <div className="space-y-8 pb-10">
+      <DashboardHeader onRefresh={loadDashboardData} loading={loading} />
+
+      {/* Error Alert Box */}
+      {error && (
+        <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-400 text-xs flex justify-between items-center">
+          <span>{error}</span>
+          <button
+            onClick={loadDashboardData}
+            className="font-bold underline ml-4 hover:text-rose-900"
+          >
+            Retry
+          </button>
         </div>
+      )}
 
-        {/* Add Project Quick CTA */}
-        <Link
-          href="/admin/add-project"
-          className="inline-flex items-center justify-center gap-2 bg-[#3b1a83] hover:bg-[#2e1467] text-white text-xs sm:text-sm font-bold py-3 px-5 rounded-2xl transition-all shadow-md active:scale-95 shrink-0"
-        >
-          <Plus className="w-4 h-4 stroke-[2.5]" />
-          <span>Add New Project</span>
-        </Link>
-      </div>
+      <StatsOverview
+        properties={properties}
+        inquiries={inquiries}
+        loading={loading}
+      />
 
-      {/* 1. Statistics Cards Section */}
-      <DashboardStats />
+      <PropertyOverview properties={properties} loading={loading} />
 
-      {/* 2. Charts & Analytics Overview */}
-      <RevenueOverview />
+      <InquiryOverview inquiries={inquiries} loading={loading} />
 
-      {/* 3. Recent Activity & Inquiry Table */}
-      <RecentActivity />
+      <QuickActions properties={properties} inquiries={inquiries} />
     </div>
   );
 };

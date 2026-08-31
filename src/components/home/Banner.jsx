@@ -1,20 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import {
-  Search,
-  MapPin,
-  Building,
-  DollarSign,
-  ArrowRight,
-  Home,
-  Landmark,
-  Target,
-} from "lucide-react";
+import { Building, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-// Array of properties for falling stars
+import PropertySearch from "./PropertySearch"; // Path dynamically adjust করে নেবেন
+
 const fallingStarsData = [
   { id: 1, left: "10%", duration: 4, delay: 0, size: 2 },
   { id: 2, left: "25%", duration: 6, delay: 1.5, size: 3 },
@@ -26,8 +18,6 @@ const fallingStarsData = [
 ];
 
 const Banner = () => {
-  const [activeTab, setActiveTab] = useState("buy");
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -58,17 +48,10 @@ const Banner = () => {
     },
   };
 
-  const searchTabs = [
-    { id: "buy", name: "Buy", icon: Home },
-    { id: "rent", name: "Rent", icon: Landmark },
-    { id: "commercial", name: "Commercial", icon: Target },
-  ];
-
-  const searchFields = [
-    { name: "Location", icon: MapPin, placeholder: "Enter City or Zip" },
-    { name: "Property Type", icon: Building, placeholder: "Apartment / Villa" },
-    { name: "Price Range", icon: DollarSign, placeholder: "$350k - $550k" },
-  ];
+  const handleSearchSubmit = (searchParams) => {
+    // পরবর্তীতে Real Backend API বা Filter Functionality বসানোর জন্য
+    console.log("Search parameters received in Banner:", searchParams);
+  };
 
   return (
     <section className="relative w-full min-h-screen lg:h-screen overflow-hidden bg-[#0a0518] transition-colors duration-300 flex flex-col justify-between py-12 lg:py-0">
@@ -118,12 +101,12 @@ const Banner = () => {
           animate="visible"
           className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center w-full"
         >
-          {/* --- Left Side: Image Showcase (Hidden on Mobile/Tablet for vertical rhythm) --- */}
+          {/* Left Side: Image Showcase */}
           <motion.div
             variants={buildingVariants}
-            className=" relative hidden lg:block order-last lg:order-first"
+            className="relative hidden lg:block order-last lg:order-first"
           >
-            <div className=" relative group overflow-hidden rounded-[2rem] h-[calc(100vh-220px)] min-h-[500px] max-h-[720px] shadow-2xl border-2 border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:border-[#d4af37]/40">
+            <div className="relative group overflow-hidden rounded-[2rem] h-[calc(100vh-220px)] min-h-[500px] max-h-[720px] shadow-2xl border-2 border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:border-[#d4af37]/40">
               <Image
                 src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=800&auto=format&fit=crop"
                 alt="Probiti Luxury Real Estate"
@@ -131,7 +114,7 @@ const Banner = () => {
                 height={600}
                 priority
                 quality={80}
-                className="w-full h-full  object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
+                className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-70 transition-opacity duration-500 group-hover:opacity-85" />
 
@@ -146,7 +129,7 @@ const Banner = () => {
             </div>
           </motion.div>
 
-          {/* --- Right Side: Headline & CTA --- */}
+          {/* Right Side: Headline & CTA */}
           <div className="space-y-5 sm:space-y-6 lg:pl-6 flex flex-col justify-center text-center lg:text-left h-full">
             <motion.div
               variants={itemVariants}
@@ -192,61 +175,8 @@ const Banner = () => {
         </motion.div>
       </div>
 
-      {/* 3. Advanced Property Search Option */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6, duration: 0.5 }}
-        className="relative lg:absolute lg:bottom-6 left-0 lg:left-1/2 lg:-translate-x-1/2 w-full max-w-7xl px-4 sm:px-6 z-30 mb-10 lg:mt-0"
-      >
-        <div className="bg-zinc-950/85 rounded-2xl sm:rounded-[2rem] shadow-2xl border border-white/10 backdrop-blur-xl transition-colors duration-300">
-          {/* Tabs - Scrollable on small screens */}
-          <div className="flex items-center gap-2 sm:gap-4 px-4 sm:px-6 pt-4 sm:pt-5 pb-2 border-b border-white/10 overflow-x-auto no-scrollbar">
-            {searchTabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`shrink-0 px-4 sm:px-6 py-2 rounded-full flex items-center gap-2 text-xs sm:text-sm font-bold transition-all duration-300 ${
-                  activeTab === tab.id
-                    ? "bg-[#3b1a83] text-white shadow-lg border border-white/10"
-                    : "text-zinc-400 hover:bg-white/5"
-                }`}
-              >
-                <tab.icon
-                  className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${
-                    activeTab === tab.id ? "text-white" : "text-amber-400"
-                  }`}
-                />
-                <span>{tab.name}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Form Fields */}
-          <div className="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 items-center">
-            {searchFields.map((field) => (
-              <div key={field.name} className="space-y-1 sm:space-y-1.5">
-                <label className="text-[10px] sm:text-[11px] uppercase tracking-widest font-bold text-zinc-400 flex items-center gap-1.5">
-                  <field.icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400" />
-                  {field.name}
-                </label>
-                <input
-                  type="text"
-                  placeholder={field.placeholder}
-                  className="w-full bg-white/5 px-3.5 py-2 sm:py-2.5 rounded-xl border border-white/10 text-xs sm:text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-[#3b1a83] transition-all"
-                />
-              </div>
-            ))}
-
-            <div className="pt-2 xl:pt-5">
-              <button className="w-full bg-[#3b1a83] hover:bg-[#2e1467] text-white px-6 py-2.5 sm:py-3 rounded-xl font-extrabold text-xs sm:text-sm transition-all duration-300 shadow-xl hover:shadow-2xl active:scale-95 flex items-center justify-center gap-2 group border border-white/10">
-                <Search className="w-4 h-4 transition-transform group-hover:scale-110" />
-                <span>Search Properties</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </motion.div>
+      {/* 3. Reusable Property Search Component */}
+      <PropertySearch onSearch={handleSearchSubmit} />
     </section>
   );
 };

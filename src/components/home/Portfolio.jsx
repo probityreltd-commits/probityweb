@@ -64,7 +64,7 @@ const Portfolio = () => {
       .replace(/\b\w/g, (char) => char.toUpperCase());
   };
 
-  // Dynamic Status Tabs from Real Data
+  // Dynamic Status Tabs from Data
   const statusTabs = useMemo(() => {
     const uniqueStatuses = Array.from(
       new Set(properties.map((p) => p.status).filter(Boolean)),
