@@ -2,18 +2,16 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { Plus, Trash2, Image as ImageIcon } from "lucide-react";
-import { deleteProperty } from "@/services/action/property";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { Plus, Image as ImageIcon } from "lucide-react";
+
 import EditPropertyModal from "./EditPropertyModal";
+import AlertDialogProperty from "./AlertDialogProperty";
 
 const PropertyManagerClient = ({ initialProperties = [] }) => {
   const [properties, setProperties] = useState(initialProperties);
   const [statusFilter, setStatusFilter] = useState("All");
   const [locationFilter, setLocationFilter] = useState("All");
   const [typeFilter, setTypeFilter] = useState("All");
-  const router = useRouter();
 
   const statuses = useMemo(() => {
     const list = properties.map((p) => p.status).filter(Boolean);
@@ -41,23 +39,6 @@ const PropertyManagerClient = ({ initialProperties = [] }) => {
       return matchStatus && matchLocation && matchType;
     });
   }, [properties, statusFilter, locationFilter, typeFilter]);
-
-  const handleDelete = async (id) => {
-    try {
-      const result = await deleteProperty(id);
-
-      if (result?.success) {
-        setProperties((prev) => prev.filter((property) => property._id !== id));
-        toast.success("Property deleted successfully!");
-        router.refresh();
-      } else {
-        toast.error(result?.message || "Failed to delete property");
-      }
-    } catch (error) {
-      console.error("Delete error:", error);
-      toast.error("Something went wrong while deleting the property.");
-    }
-  };
 
   const getStatusBadge = (status) => {
     switch (status?.toUpperCase()) {
@@ -217,14 +198,28 @@ const PropertyManagerClient = ({ initialProperties = [] }) => {
 
                     <td className="py-4 px-6 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <EditPropertyModal property={item} />
-                        <button
-                          onClick={() => handleDelete(item._id)}
-                          className="p-2 text-zinc-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors"
-                          title="Delete"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        <EditPropertyModal
+                          property={item}
+                          onUpdated={(updatedProperty) => {
+                            setProperties((prev) =>
+                              prev.map((property) =>
+                                property._id === updatedProperty._id
+                                  ? updatedProperty
+                                  : property,
+                              ),
+                            );
+                          }}
+                        />
+                        <AlertDialogProperty
+                          property={item}
+                          onDeleted={(deletedId) => {
+                            setProperties((prev) =>
+                              prev.filter(
+                                (property) => property._id !== deletedId,
+                              ),
+                            );
+                          }}
+                        ></AlertDialogProperty>
                       </div>
                     </td>
                   </tr>

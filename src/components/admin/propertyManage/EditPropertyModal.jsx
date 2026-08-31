@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import { Button, Modal } from "@heroui/react";
-import { Edit2, MapPin, Bed, Bath, Maximize2 } from "lucide-react";
+import { Edit2, MapPin, Bed, Bath, Maximize2, Plus, X } from "lucide-react";
 import CloudinaryImageUploader from "@/hooks/CloudinaryImageUploader";
 import { toast } from "sonner";
 import { updateProperty } from "@/services/action/property";
 
-const EditPropertyModal = ({ property }) => {
+const EditPropertyModal = ({ property, onUpdated }) => {
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
@@ -21,8 +21,19 @@ const EditPropertyModal = ({ property }) => {
     bathrooms: "",
     flatSize: "",
     orientation: "South Facing",
+    landArea: "",
+    buildingHeight: "",
+    apartments: "",
+    unitsPerFloor: "",
+    apartmentSizes: "",
+    carParking: "",
+    motorbikeParking: "",
+    pricePerSqft: "",
+    projectBrochure: "",
   });
 
+  const [amenities, setAmenities] = useState([]);
+  const [newAmenityInput, setNewAmenityInput] = useState("");
   const [uploadedImages, setUploadedImages] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -42,12 +53,25 @@ const EditPropertyModal = ({ property }) => {
         bathrooms: property.bathrooms ?? "",
         flatSize: property.flatSize || "",
         orientation: property.orientation || "South Facing",
+        landArea: property.landArea || "",
+        buildingHeight: property.buildingHeight || "",
+        apartments: property.apartments ?? "",
+        unitsPerFloor: property.unitsPerFloor ?? "",
+        apartmentSizes: property.apartmentSizes || "",
+        carParking: property.carParking || "",
+        motorbikeParking: property.motorbikeParking || "",
+        pricePerSqft: property.pricePerSqft || "",
+        projectBrochure: property.projectBrochure || "",
       });
+
+      setAmenities(Array.isArray(property.amenities) ? property.amenities : []);
 
       if (property.images && Array.isArray(property.images)) {
         setUploadedImages(property.images.map((url) => ({ url })));
       } else if (property.coverImage) {
         setUploadedImages([{ url: property.coverImage }]);
+      } else {
+        setUploadedImages([]);
       }
     }
   }, [property]);
@@ -86,6 +110,25 @@ const EditPropertyModal = ({ property }) => {
     }));
   };
 
+  // Amenities Handlers
+  const handleAddAmenity = () => {
+    if (!newAmenityInput.trim()) return;
+    setAmenities((prev) => [...prev, newAmenityInput.trim()]);
+    setNewAmenityInput("");
+  };
+
+  const handleRemoveAmenity = (indexToRemove) => {
+    setAmenities((prev) => prev.filter((_, idx) => idx !== indexToRemove));
+  };
+
+  const handleAmenityChange = (index, value) => {
+    setAmenities((prev) => {
+      const updated = [...prev];
+      updated[index] = value;
+      return updated;
+    });
+  };
+
   const handleSubmit = async (e, close) => {
     e.preventDefault();
 
@@ -96,21 +139,23 @@ const EditPropertyModal = ({ property }) => {
       const updatedProjectData = {
         ...property,
         ...formData,
-        bedrooms: Number(formData.bedrooms) || 0,
-        bathrooms: Number(formData.bathrooms) || 0,
+        bedrooms: formData.bedrooms === "" ? 0 : Number(formData.bedrooms),
+        bathrooms: formData.bathrooms === "" ? 0 : Number(formData.bathrooms),
+        apartments:
+          formData.apartments === "" ? 0 : Number(formData.apartments),
+        unitsPerFloor:
+          formData.unitsPerFloor === "" ? 0 : Number(formData.unitsPerFloor),
+        amenities: amenities.filter(Boolean),
         images: uploadedImages.map((img) => img.url),
-        coverImage: uploadedImages[0]?.url || "",
+        coverImage: uploadedImages[0]?.url || property.coverImage || "",
         updatedAt: new Date().toISOString(),
       };
 
-      console.log("Updated Property Payload:", updatedProjectData);
+      await updateProperty(property._id, updatedProjectData);
 
-      // TODO: API Call Here
-      const result = await updateProperty(property._id, updatedProjectData);
+      toast.success("Property updated successfully!");
 
-      toast.success("Property updated locally!", {
-        description: "Ready to save to database via API.",
-      });
+      onUpdated?.(updatedProjectData);
 
       if (close) close();
     } catch (error) {
@@ -224,7 +269,7 @@ const EditPropertyModal = ({ property }) => {
 
                         <div>
                           <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
-                            Project Location
+                            Project Location / Address
                           </label>
                           <textarea
                             name="address"
@@ -266,7 +311,7 @@ const EditPropertyModal = ({ property }) => {
                               name="bedrooms"
                               value={formData.bedrooms}
                               onChange={handleChange}
-                              className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs sm:text-sm"
+                              className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs sm:text-sm text-zinc-900 dark:text-white"
                             />
                           </div>
 
@@ -280,7 +325,7 @@ const EditPropertyModal = ({ property }) => {
                               name="bathrooms"
                               value={formData.bathrooms}
                               onChange={handleChange}
-                              className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs sm:text-sm"
+                              className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs sm:text-sm text-zinc-900 dark:text-white"
                             />
                           </div>
 
@@ -293,7 +338,7 @@ const EditPropertyModal = ({ property }) => {
                               name="flatSize"
                               value={formData.flatSize}
                               onChange={handleChange}
-                              className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs sm:text-sm"
+                              className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs sm:text-sm text-zinc-900 dark:text-white"
                             />
                           </div>
 
@@ -306,13 +351,192 @@ const EditPropertyModal = ({ property }) => {
                               name="orientation"
                               value={formData.orientation}
                               onChange={handleChange}
+                              className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs sm:text-sm text-zinc-900 dark:text-white"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Expanded Specification Fields */}
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                          <div>
+                            <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
+                              Land Area
+                            </label>
+                            <input
+                              type="text"
+                              name="landArea"
+                              value={formData.landArea}
+                              onChange={handleChange}
+                              className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs sm:text-sm "
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
+                              Building Height
+                            </label>
+                            <input
+                              type="text"
+                              name="buildingHeight"
+                              value={formData.buildingHeight}
+                              onChange={handleChange}
+                              className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs sm:text-sm"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
+                              Price Per Sqft
+                            </label>
+                            <input
+                              type="text"
+                              name="pricePerSqft"
+                              value={formData.pricePerSqft}
+                              onChange={handleChange}
                               className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs sm:text-sm"
                             />
                           </div>
                         </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
+                              Total Apartments
+                            </label>
+                            <input
+                              type="number"
+                              min="0"
+                              name="apartments"
+                              value={formData.apartments}
+                              onChange={handleChange}
+                              className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs sm:text-sm text-zinc-900 dark:text-white"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
+                              Units Per Floor
+                            </label>
+                            <input
+                              type="number"
+                              min="0"
+                              name="unitsPerFloor"
+                              value={formData.unitsPerFloor}
+                              onChange={handleChange}
+                              className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs sm:text-sm text-zinc-900 dark:text-white"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
+                              Apartment Sizes
+                            </label>
+                            <input
+                              type="text"
+                              name="apartmentSizes"
+                              value={formData.apartmentSizes}
+                              onChange={handleChange}
+                              className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs sm:text-sm "
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
+                              Car Parking
+                            </label>
+                            <input
+                              type="text"
+                              name="carParking"
+                              value={formData.carParking}
+                              onChange={handleChange}
+                              className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs sm:text-sm"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
+                              Motorbike Parking
+                            </label>
+                            <input
+                              type="text"
+                              name="motorbikeParking"
+                              value={formData.motorbikeParking}
+                              onChange={handleChange}
+                              className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs sm:text-sm"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1.5">
+                            Project Brochure URL
+                          </label>
+                          <input
+                            type="text"
+                            name="projectBrochure"
+                            value={formData.projectBrochure}
+                            onChange={handleChange}
+                            placeholder="Brochure PDF or file link"
+                            className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs sm:text-sm text-zinc-900 dark:text-white"
+                          />
+                        </div>
                       </div>
 
-                      {/* Section 3: Images */}
+                      {/* Section 3: Amenities */}
+                      <div className="space-y-4 pt-2">
+                        <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-400 pb-2 border-b border-zinc-100 dark:border-zinc-800 ">
+                          Amenities
+                        </h2>
+
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            value={newAmenityInput}
+                            onChange={(e) => setNewAmenityInput(e.target.value)}
+                            placeholder="Add amenity (e.g., Garden, 1 Lift)"
+                            className="flex-1 px-3 py-2 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-xs sm:text-sm text-zinc-900 dark:text-white"
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.preventDefault();
+                                handleAddAmenity();
+                              }
+                            }}
+                          />
+                          <Button
+                            type="button"
+                            onClick={handleAddAmenity}
+                            className="bg-[#3b1a83] text-white px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1 h-auto min-w-0"
+                          >
+                            <Plus className="w-4 h-4" /> Add
+                          </Button>
+                        </div>
+
+                        <div className="space-y-2">
+                          {amenities.map((item, idx) => (
+                            <div key={idx} className="flex items-center gap-2">
+                              <input
+                                type="text"
+                                value={item}
+                                onChange={(e) =>
+                                  handleAmenityChange(idx, e.target.value)
+                                }
+                                className="flex-1 px-3 py-1.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg text-xs"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveAmenity(idx)}
+                                className="p-1.5 text-rose-500 hover:text-rose-700 dark:hover:text-rose-400"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Section 4: Images */}
                       <div className="space-y-4 pt-2">
                         <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-400 pb-2 border-b border-zinc-100 dark:border-zinc-800">
                           Project Images
@@ -375,6 +599,7 @@ const EditPropertyModal = ({ property }) => {
                             <img
                               src={
                                 uploadedImages[0]?.url ||
+                                property?.coverImage ||
                                 "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=800&auto=format&fit=crop"
                               }
                               alt="Preview Cover"
