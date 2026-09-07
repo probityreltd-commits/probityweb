@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Building, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-import PropertySearch from "./PropertySearch"; // Path dynamically adjust করে নেবেন
+import PropertySearch from "@/components/shared/PropertySearch";
 
 const fallingStarsData = [
   { id: 1, left: "10%", duration: 4, delay: 0, size: 2 },
@@ -46,11 +46,6 @@ const Banner = () => {
       x: 0,
       transition: { duration: 0.8, ease: "easeOut" },
     },
-  };
-
-  const handleSearchSubmit = (searchParams) => {
-    // পরবর্তীতে Real Backend API বা Filter Functionality বসানোর জন্য
-    console.log("Search parameters received in Banner:", searchParams);
   };
 
   return (
@@ -174,9 +169,7 @@ const Banner = () => {
           </div>
         </motion.div>
       </div>
-
-      {/* 3. Reusable Property Search Component */}
-      <PropertySearch onSearch={handleSearchSubmit} />
+      <PropertySearch />
     </section>
   );
 };

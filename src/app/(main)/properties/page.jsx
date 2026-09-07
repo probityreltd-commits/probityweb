@@ -8,11 +8,11 @@ export const metadata = {
     "Browse our complete collection of premium residential and commercial properties.",
 };
 
-const PropertiesPage = async () => {
-  // If fetching from API in future:
+const PropertiesPage = async ({ searchParams }) => {
+  const params = await searchParams;
+
   const data = await getPropertys();
   const properties = data.data;
-  // const properties = demoProperties || [];
 
   return (
     <main className="min-h-screen bg-[#f5f1ff] dark:bg-[#070913] text-zinc-800 dark:text-zinc-100 py-16 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
@@ -31,8 +31,12 @@ const PropertiesPage = async () => {
           </p>
         </div>
 
-        {/* Client Side Filter & Grid Section */}
-        <PropertiesClient properties={properties} />
+        <PropertiesClient
+          properties={properties}
+          initialLocation={params?.location || ""}
+          initialProject={params?.project || ""}
+          initialType={params?.type || ""}
+        />
       </div>
     </main>
   );
