@@ -339,3 +339,27 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* =========================================================
+   INFINITE MARQUEE ANIMATION (Tailwind v4 / Pure CSS)
+   ========================================================= */
+
+@keyframes marqueeScroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-33.333%, 0, 0);
+  }
+}
+
+.animate-marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: marqueeScroll 40s linear infinite !important;
+}
+
+.animate-marquee-track:hover {
+  animation-play-state: paused !important;
+}
