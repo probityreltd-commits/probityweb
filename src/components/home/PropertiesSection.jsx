@@ -43,7 +43,7 @@ const PropertiesSection = () => {
   }, []);
 
   return (
-    <section className="bg-slate-50 dark:bg-[#070913] py-20 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+    <section className="bg-slate-50 dark:bg-[#070913] py-20 px-4 sm:px-6 lg:px-8 overflow-x-hidden transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">

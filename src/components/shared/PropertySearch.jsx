@@ -16,12 +16,12 @@ import { getPropertys } from "@/services/api/property";
 const THEME = {
   floating: {
     wrapper:
-      "relative lg:absolute lg:bottom-6 left-0 lg:left-1/2 lg:-translate-x-1/2 w-full max-w-7xl px-4 sm:px-6 z-30 mb-10 lg:mt-0",
+      "relative lg:absolute lg:bottom-6 left-0 lg:left-1/2 lg:-translate-x-1/2 w-full max-w-7xl px-4 sm:px-6 z-30 md:mb-10 lg:mt-0",
     card: "bg-zinc-950/85 rounded-2xl sm:rounded-[2rem] shadow-2xl border border-white/10 backdrop-blur-xl",
     header:
       "flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-5 pb-2 border-b border-white/10",
     title:
-      "text-amber-300 font-bold text-xs sm:text-lg uppercase tracking-wider",
+      "text-amber-300 font-serif font-bold text-xs sm:text-lg uppercase tracking-wider",
     reset:
       "text-xs text-zinc-400 hover:text-white flex items-center gap-1 transition-colors",
     label:
@@ -41,7 +41,7 @@ const THEME = {
     header:
       "flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-5 pb-2 border-b border-zinc-200/80 dark:border-zinc-800",
     title:
-      "text-[#3b1a83] dark:text-indigo-400 font-bold text-xs sm:text-lg uppercase tracking-wider",
+      "text-[#3b1a83] dark:text-indigo-400 font-serif font-bold text-xs sm:text-lg uppercase tracking-wider",
     reset:
       "text-xs text-zinc-500 hover:text-[#3b1a83] dark:hover:text-indigo-400 flex items-center gap-1 transition-colors",
     label:
@@ -120,6 +120,7 @@ const PropertySearch = ({
     const locs = properties
       .map((p) => p.locationName)
       .filter((loc) => Boolean(loc) && loc.trim() !== "");
+
     return Array.from(new Set(locs));
   }, [properties]);
 
@@ -127,9 +128,11 @@ const PropertySearch = ({
     if (!selectedLocation) {
       return Array.from(new Set(properties.map((p) => p.title)));
     }
+
     const filteredProps = properties.filter(
       (p) => p.locationName?.toLowerCase() === selectedLocation.toLowerCase(),
     );
+
     return Array.from(new Set(filteredProps.map((p) => p.title)));
   }, [properties, selectedLocation]);
 
@@ -141,6 +144,7 @@ const PropertySearch = ({
         (p) => p.locationName?.toLowerCase() === selectedLocation.toLowerCase(),
       );
     }
+
     if (selectedProject) {
       scope = scope.filter(
         (p) => p.title?.toLowerCase() === selectedProject.toLowerCase(),
@@ -179,10 +183,13 @@ const PropertySearch = ({
 
       if (variant === "floating") {
         const params = new URLSearchParams();
+
         if (payload.location) params.set("location", payload.location);
         if (payload.projectName) params.set("project", payload.projectName);
         if (payload.propertyType) params.set("type", payload.propertyType);
+
         const query = params.toString();
+
         router.push(query ? `/properties?${query}` : "/properties");
       }
     },
@@ -193,11 +200,17 @@ const PropertySearch = ({
     setSelectedLocation("");
     setSelectedProject("");
     setSelectedType("");
-    runSearch({ location: "", projectName: "", propertyType: "" });
+
+    runSearch({
+      location: "",
+      projectName: "",
+      propertyType: "",
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     runSearch({
       location: selectedLocation,
       projectName: selectedProject,
@@ -209,7 +222,10 @@ const PropertySearch = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: variant === "floating" ? 0.2 : 0, duration: 0.5 }}
+      transition={{
+        delay: variant === "floating" ? 0.2 : 0,
+        duration: 0.5,
+      }}
       className={t.wrapper}
     >
       <div className={t.card}>
@@ -236,6 +252,7 @@ const PropertySearch = ({
               <MapPin className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${t.iconAccent}`} />
               Location
             </label>
+
             <div className="relative">
               <select
                 value={selectedLocation}
@@ -244,19 +261,21 @@ const PropertySearch = ({
                 className={t.select}
               >
                 <option value="">All Locations</option>
+
                 {locations.map((loc) => (
                   <option key={loc} value={loc} className={t.option}>
                     {loc}
                   </option>
                 ))}
               </select>
+
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-zinc-400">
                 ▼
               </div>
             </div>
           </div>
 
-          {/* Project Name (dependent on location) */}
+          {/* Project Name */}
           <div className="space-y-1 sm:space-y-1.5">
             <label className={t.label}>
               <Building
@@ -264,6 +283,7 @@ const PropertySearch = ({
               />
               Project Name
             </label>
+
             <div className="relative">
               <select
                 value={selectedProject}
@@ -276,12 +296,14 @@ const PropertySearch = ({
                     ? "All Projects in " + selectedLocation
                     : "All Projects"}
                 </option>
+
                 {projectNames.map((name) => (
                   <option key={name} value={name} className={t.option}>
                     {name}
                   </option>
                 ))}
               </select>
+
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-zinc-400">
                 ▼
               </div>
@@ -296,6 +318,7 @@ const PropertySearch = ({
               />
               Property Type
             </label>
+
             <div className="relative">
               <select
                 value={selectedType}
@@ -304,6 +327,7 @@ const PropertySearch = ({
                 className={t.select}
               >
                 <option value="">All Types</option>
+
                 <option
                   value="Residential"
                   disabled={!propertyTypeAvailability.residential}
@@ -312,6 +336,7 @@ const PropertySearch = ({
                   Residential{" "}
                   {!propertyTypeAvailability.residential && "(Unavailable)"}
                 </option>
+
                 <option
                   value="Commercial"
                   disabled={!propertyTypeAvailability.commercial}
@@ -321,6 +346,7 @@ const PropertySearch = ({
                   {!propertyTypeAvailability.commercial && "(Unavailable)"}
                 </option>
               </select>
+
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-zinc-400">
                 ▼
               </div>

@@ -1,18 +1,26 @@
-import { Manrope, Playfair_Display } from "next/font/google";
+import { Fraunces, Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
 import UnderConstruction from "@/components/underConstruction/UnderConstruction";
 
 import { Toaster } from "sonner";
 
-const manrope = Manrope({
-  variable: "--font-manrope",
+const fraunces = Fraunces({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-fraunces",
 });
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
+const inter = Inter({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter",
+});
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-plex-mono",
 });
 
 export const metadata = {
@@ -27,7 +35,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${playfair.variable} h-full antialiased`}
+      className={`${fraunces.variable} ${inter.variable} ${plexMono.variable} antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans antialiased">
         {maintenanceMode ? (

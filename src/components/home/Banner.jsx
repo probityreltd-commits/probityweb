@@ -49,7 +49,7 @@ const Banner = () => {
   };
 
   return (
-    <section className="relative w-full min-h-screen lg:h-screen overflow-hidden bg-[#0a0518] transition-colors duration-300 flex flex-col justify-between py-12 lg:py-0">
+    <section className="relative w-full min-h-screen lg:h-screen overflow-hidden bg-[#0a0518] transition-colors duration-300 flex flex-col justify-between py-20 lg:py-0">
       {/* 1. Background Atmosphere */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#2a1260] via-[#0f041a] to-[#05010a] z-0">
         {/* Falling Stars Animation */}
@@ -111,13 +111,15 @@ const Banner = () => {
                 quality={80}
                 className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
               />
+
               <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-70 transition-opacity duration-500 group-hover:opacity-85" />
 
               <div className="absolute bottom-20 left-6 p-5 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 shadow-lg text-white">
                 <p className="text-[10px] font-semibold tracking-widest uppercase text-amber-400">
                   New Project
                 </p>
-                <h3 className="text-xl font-extrabold tracking-tight mt-0.5">
+
+                <h3 className="font-serif text-xl font-extrabold tracking-tight mt-0.5">
                   Nouveau Elite Villa
                 </h3>
               </div>
@@ -133,12 +135,13 @@ const Banner = () => {
               <span className="text-amber-300 font-bold text-[10px] sm:text-xs uppercase tracking-widest">
                 Find Your Dream Property
               </span>
+
               <Building className="w-3.5 h-3.5 text-amber-300" />
             </motion.div>
 
             <motion.h1
               variants={itemVariants}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.15] sm:leading-[1.1] tracking-tight"
+              className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.15] sm:leading-[1.1] tracking-tight"
             >
               Discover Luxury <br />
               <span className="bg-gradient-to-r from-[#d4af37] via-[#f59e0b] to-[#d4af37] bg-clip-text text-transparent">
@@ -169,6 +172,7 @@ const Banner = () => {
           </div>
         </motion.div>
       </div>
+
       <PropertySearch />
     </section>
   );

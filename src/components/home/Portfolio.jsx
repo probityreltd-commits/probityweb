@@ -78,7 +78,6 @@ const Portfolio = () => {
     ];
   }, [properties]);
 
-  // Filter properties according to status
   const filteredProperties = useMemo(() => {
     if (activeTab === "ALL") return properties;
     return properties.filter(
@@ -139,8 +138,8 @@ const Portfolio = () => {
 
   if (loading) {
     return (
-      <section className="bg-[#f5f1ff] dark:bg-[#070913] py-16 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
-        <div className="max-w-6xl mx-auto text-center text-zinc-600 dark:text-zinc-400">
+      <section className="bg-[#f5f1ff] dark:bg-[#070913] py-10 sm:py-16 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+        <div className="max-w-6xl mx-auto text-center text-sm text-zinc-600 dark:text-zinc-400">
           Loading portfolio...
         </div>
       </section>
@@ -149,8 +148,8 @@ const Portfolio = () => {
 
   if (error || !activeProperty) {
     return (
-      <section className="bg-[#f5f1ff] dark:bg-[#070913] py-16 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
-        <div className="max-w-6xl mx-auto text-center text-zinc-600 dark:text-zinc-400">
+      <section className="bg-[#f5f1ff] dark:bg-[#070913] py-10 sm:py-16 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+        <div className="max-w-6xl mx-auto text-center text-sm text-zinc-600 dark:text-zinc-400">
           {error || "No properties available."}
         </div>
       </section>
@@ -158,14 +157,14 @@ const Portfolio = () => {
   }
 
   return (
-    <section className="bg-[#f5f1ff] dark:bg-[#070913] py-16 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+    <section className="bg-[#f5f1ff] dark:bg-[#070913] py-8 sm:py-10 md:py-16 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center max-w-3xl mx-auto mb-8">
-          <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
+        <div className="text-center max-w-3xl mx-auto mb-6 sm:mb-8">
+          <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
             Our Premium Portfolio
           </h2>
 
-          <p className="mt-3 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal">
+          <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal px-2 sm:px-0">
             Discover our collection of premium residential projects in prime
             locations across Dhaka. Every project is designed with quality,
             comfort, and modern living in mind.
@@ -173,8 +172,8 @@ const Portfolio = () => {
         </div>
 
         {/* Primary Status Filter */}
-        <div className="flex justify-center mb-6">
-          <div className="inline-flex flex-wrap items-center justify-center p-1.5 bg-[#eee9f8] dark:bg-zinc-800/80 rounded-full gap-1 shadow-inner">
+        <div className="flex justify-center mb-4 sm:mb-6">
+          <div className="inline-flex flex-wrap items-center justify-center p-1 sm:p-1.5 bg-[#eee9f8] dark:bg-zinc-800/80 rounded-full gap-1 shadow-inner">
             {statusTabs.map((tab) => {
               const isActive = activeTab === tab.id;
 
@@ -185,7 +184,7 @@ const Portfolio = () => {
                     setActiveTab(tab.id);
                     setCurrentImageIndex(0);
                   }}
-                  className={`relative px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 ${
+                  className={`relative px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full text-[11px] sm:text-sm font-semibold transition-all duration-300 ${
                     isActive
                       ? "text-white shadow-md"
                       : "text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white"
@@ -210,10 +209,9 @@ const Portfolio = () => {
           </div>
         </div>
 
-        {/* Option 1: Property Selector (Shows when multiple properties match the selected status) */}
         {filteredProperties.length > 1 && (
-          <div className="flex justify-center items-center gap-2 mb-8 flex-wrap">
-            <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mr-1">
+          <div className="flex justify-center items-center gap-1.5 sm:gap-2 mb-5 sm:mb-8 flex-wrap">
+            <span className="text-[11px] sm:text-xs font-semibold text-zinc-500 dark:text-zinc-400 mr-1">
               Select Project:
             </span>
             {filteredProperties.map((prop) => {
@@ -228,7 +226,7 @@ const Portfolio = () => {
                     setActivePropertyId(propKey);
                     setCurrentImageIndex(0);
                   }}
-                  className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-200 ${
+                  className={`px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-all duration-200 ${
                     isSelected
                       ? "bg-[#3b1a83] text-white shadow-md scale-105"
                       : "bg-white dark:bg-zinc-800/90 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 border border-zinc-200 dark:border-zinc-700/60"
@@ -249,35 +247,35 @@ const Portfolio = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.35, ease: "easeOut" }}
-            className="relative bg-white dark:bg-zinc-900 rounded-3xl shadow-xl border border-zinc-100 dark:border-zinc-800 overflow-hidden"
+            className="relative bg-white dark:bg-zinc-900 rounded-2xl sm:rounded-3xl shadow-xl border border-zinc-100 dark:border-zinc-800 overflow-hidden"
           >
-            {propertyImages.length > 1 && (
-              <>
-                <button
-                  onClick={handlePrevImage}
-                  className="absolute left-3 top-1/4 lg:top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/90 dark:bg-zinc-800/90 text-zinc-800 dark:text-white flex items-center justify-center shadow-lg hover:bg-white transition-all active:scale-95 border border-zinc-200 dark:border-zinc-700"
-                  aria-label="Previous image"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-
-                <button
-                  onClick={handleNextImage}
-                  className="absolute right-3 top-1/4 lg:top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/90 dark:bg-zinc-800/90 text-zinc-800 dark:text-white flex items-center justify-center shadow-lg hover:bg-white transition-all active:scale-95 border border-zinc-200 dark:border-zinc-700"
-                  aria-label="Next image"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </>
-            )}
-
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 items-stretch">
-              <div className="lg:col-span-6 relative min-h-[320px] sm:min-h-[420px] overflow-hidden bg-zinc-100 dark:bg-zinc-800">
-                <div className="absolute top-4 left-4 z-10">
-                  <span className="bg-[#3b1a83] text-white text-[10px] sm:text-xs uppercase font-extrabold px-3 py-1.5 rounded-full shadow-sm tracking-wider">
+              <div className="lg:col-span-6 relative min-h-[220px] sm:min-h-[320px] md:min-h-[420px] overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+                <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10">
+                  <span className="bg-[#3b1a83] text-white text-[9px] sm:text-xs uppercase font-extrabold px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full shadow-sm tracking-wider">
                     {formatStatus(activeProperty.status) || "N/A"}
                   </span>
                 </div>
+
+                {propertyImages.length > 1 && (
+                  <>
+                    <button
+                      onClick={handlePrevImage}
+                      className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/90 dark:bg-zinc-800/90 text-zinc-800 dark:text-white flex items-center justify-center shadow-lg hover:bg-white transition-all active:scale-95 border border-zinc-200 dark:border-zinc-700"
+                      aria-label="Previous image"
+                    >
+                      <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </button>
+
+                    <button
+                      onClick={handleNextImage}
+                      className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/90 dark:bg-zinc-800/90 text-zinc-800 dark:text-white flex items-center justify-center shadow-lg hover:bg-white transition-all active:scale-95 border border-zinc-200 dark:border-zinc-700"
+                      aria-label="Next image"
+                    >
+                      <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </button>
+                  </>
+                )}
 
                 <AnimatePresence mode="wait">
                   <motion.img
@@ -296,7 +294,7 @@ const Portfolio = () => {
                 </AnimatePresence>
 
                 {propertyImages.length > 1 && (
-                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 bg-black/30 backdrop-blur-md px-3 py-1.5 rounded-full">
+                  <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 bg-black/30 backdrop-blur-md px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full">
                     {propertyImages.map((_, index) => (
                       <button
                         key={index}
@@ -304,8 +302,8 @@ const Portfolio = () => {
                         aria-label={`Show image ${index + 1}`}
                         className={`transition-all duration-300 rounded-full ${
                           index === currentImageIndex
-                            ? "w-5 h-2 bg-[#ffb703]"
-                            : "w-2 h-2 bg-white/60 hover:bg-white"
+                            ? "w-4 h-1.5 sm:w-5 sm:h-2 bg-[#ffb703]"
+                            : "w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white/60 hover:bg-white"
                         }`}
                       />
                     ))}
@@ -313,83 +311,84 @@ const Portfolio = () => {
                 )}
               </div>
 
-              <div className="lg:col-span-6 p-6 sm:p-10 flex flex-col justify-between">
+              {/* Content column */}
+              <div className="lg:col-span-6 p-4 sm:p-6 md:p-8 lg:p-10 flex flex-col justify-between">
                 <div>
-                  <h3 className="font-serif text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
+                  <h3 className="font-serif text-xl sm:text-2xl md:text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
                     {activeProperty.title || "Untitled Property"}
                   </h3>
 
-                  <div className="flex items-start gap-2 mt-2 text-zinc-500 dark:text-zinc-400 text-xs sm:text-sm">
-                    <MapPin className="w-4 h-4 text-zinc-700 dark:text-zinc-300 shrink-0 mt-0.5" />
+                  <div className="flex items-start gap-1.5 sm:gap-2 mt-1.5 sm:mt-2 text-zinc-500 dark:text-zinc-400 text-xs sm:text-sm">
+                    <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-700 dark:text-zinc-300 shrink-0 mt-0.5" />
 
                     <span>{activeProperty.locationName || "Location N/A"}</span>
                   </div>
 
-                  <div className="mt-4">
-                    <span className="inline-block bg-[#ffb703] text-zinc-950 font-bold text-xs px-3 py-1 rounded-md shadow-sm">
+                  <div className="mt-3 sm:mt-4">
+                    <span className="inline-block bg-[#ffb703] text-zinc-950 font-bold text-[11px] sm:text-xs px-2.5 py-1 sm:px-3 sm:py-1 rounded-md shadow-sm">
                       {activeProperty.propertyType || "Property"}
                     </span>
                   </div>
 
-                  <p className="mt-4 text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed font-normal">
+                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed font-normal">
                     {activeProperty.description &&
                     activeProperty.description !== "N/A"
                       ? activeProperty.description
                       : "No description available for this property."}
                   </p>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6 bg-zinc-50 dark:bg-zinc-800/50 p-4 rounded-2xl border border-zinc-100 dark:border-zinc-800">
-                    <div className="flex items-center gap-2.5">
-                      <Bed className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-3 sm:gap-3 my-4 sm:my-6 p-3 sm:p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-xl sm:rounded-2xl border border-zinc-100 dark:border-zinc-800">
+                    <div className="flex items-center gap-2 sm:gap-2.5">
+                      <Bed className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-500 dark:text-zinc-400 shrink-0" />
 
                       <div>
-                        <span className="block text-base font-extrabold text-zinc-900 dark:text-white leading-tight">
+                        <span className="block text-sm sm:text-base font-extrabold text-zinc-900 dark:text-white leading-tight">
                           {activeProperty.bedrooms ?? "N/A"}
                         </span>
 
-                        <span className="block text-[10px] text-zinc-500 dark:text-zinc-400">
+                        <span className="block text-[9px] sm:text-[10px] text-zinc-500 dark:text-zinc-400">
                           Bedroom
                         </span>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2.5 border-l border-zinc-200 dark:border-zinc-700 pl-3">
-                      <Bath className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
+                    <div className="flex items-center gap-2 sm:gap-2.5 sm:border-l sm:border-zinc-200 sm:dark:border-zinc-700 sm:pl-3">
+                      <Bath className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-500 dark:text-zinc-400 shrink-0" />
 
                       <div>
-                        <span className="block text-base font-extrabold text-zinc-900 dark:text-white leading-tight">
+                        <span className="block text-sm sm:text-base font-extrabold text-zinc-900 dark:text-white leading-tight">
                           {activeProperty.bathrooms ?? "N/A"}
                         </span>
 
-                        <span className="block text-[10px] text-zinc-500 dark:text-zinc-400">
+                        <span className="block text-[9px] sm:text-[10px] text-zinc-500 dark:text-zinc-400">
                           Bathroom
                         </span>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2.5 border-l border-zinc-200 dark:border-zinc-700 pl-3">
-                      <Maximize className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
+                    <div className="flex items-center gap-2 sm:gap-2.5 sm:border-l sm:border-zinc-200 sm:dark:border-zinc-700 sm:pl-3">
+                      <Maximize className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-500 dark:text-zinc-400 shrink-0" />
 
                       <div>
-                        <span className="block text-xs font-extrabold text-zinc-900 dark:text-white leading-tight">
+                        <span className="block text-[11px] sm:text-xs font-extrabold text-zinc-900 dark:text-white leading-tight">
                           {activeProperty.flatSize || "N/A"}
                         </span>
 
-                        <span className="block text-[10px] text-zinc-500 dark:text-zinc-400">
+                        <span className="block text-[9px] sm:text-[10px] text-zinc-500 dark:text-zinc-400">
                           Flat Size
                         </span>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2.5 border-l border-zinc-200 dark:border-zinc-700 pl-3">
-                      <Compass className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
+                    <div className="flex items-center gap-2 sm:gap-2.5 sm:border-l sm:border-zinc-200 sm:dark:border-zinc-700 sm:pl-3">
+                      <Compass className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-500 dark:text-zinc-400 shrink-0" />
 
                       <div>
-                        <span className="block text-xs font-bold text-zinc-900 dark:text-white truncate max-w-[80px]">
+                        <span className="block text-[11px] sm:text-xs font-bold text-zinc-900 dark:text-white truncate max-w-[80px]">
                           {activeProperty.orientation || "N/A"}
                         </span>
 
-                        <span className="block text-[10px] text-zinc-500 dark:text-zinc-400">
+                        <span className="block text-[9px] sm:text-[10px] text-zinc-500 dark:text-zinc-400">
                           Orientation
                         </span>
                       </div>
@@ -397,15 +396,15 @@ const Portfolio = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-2 border-t border-zinc-100 dark:border-zinc-800">
-                  <div className="flex items-center gap-2">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 pt-2 border-t border-zinc-100 dark:border-zinc-800">
+                  <div className="flex flex-wrap items-center gap-2">
                     <a
                       href={
                         activeProperty.slug
                           ? `/properties/${activeProperty.slug}`
                           : "#"
                       }
-                      className="bg-[#3b1a83] hover:bg-[#2c1363] text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow-md transition-all active:scale-95 flex items-center justify-center gap-1.5"
+                      className="bg-[#3b1a83] hover:bg-[#2c1363] text-white font-semibold text-[11px] sm:text-xs px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl shadow-md transition-all active:scale-95 flex items-center justify-center gap-1.5"
                     >
                       <span>View Details</span>
 
@@ -416,7 +415,7 @@ const Portfolio = () => {
                       href={activeProperty.projectBrochure || "#"}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-[#eee9f8] dark:bg-zinc-800 hover:bg-[#e3dafa] text-[#3b1a83] dark:text-[#ffb703] font-semibold text-xs px-4 py-2.5 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-1.5"
+                      className="bg-[#eee9f8] dark:bg-zinc-800 hover:bg-[#e3dafa] text-[#3b1a83] dark:text-[#ffb703] font-semibold text-[11px] sm:text-xs px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-1.5"
                     >
                       <FileText className="w-3.5 h-3.5" />
 
@@ -424,8 +423,8 @@ const Portfolio = () => {
                     </a>
                   </div>
 
-                  <div className="text-right sm:text-right">
-                    <span className="block text-[10px] font-medium text-zinc-400 dark:text-zinc-500 uppercase tracking-wide">
+                  <div className="text-left sm:text-right">
+                    <span className="block text-[9px] sm:text-[10px] font-medium text-zinc-400 dark:text-zinc-500 uppercase tracking-wide">
                       Project Handover
                     </span>
 
