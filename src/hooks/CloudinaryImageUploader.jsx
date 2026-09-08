@@ -12,10 +12,8 @@ import {
 const CloudinaryImageUploader = ({ images = [], setImages = () => {} }) => {
   const [uploading, setUploading] = useState(false);
 
-  const CLOUD_NAME =
-    process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "your_cloud_name";
-  const UPLOAD_PRESET =
-    process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "your_upload_preset";
+  const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+  const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
   const handleFileUpload = async (files) => {
     if (!files || files.length === 0) return;

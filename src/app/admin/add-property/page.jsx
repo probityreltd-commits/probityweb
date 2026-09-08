@@ -124,8 +124,8 @@ const AddProperty = () => {
     );
   };
 
-  // Handle PDF Brochure Upload Simulation / Handler
-  const handleBrochureUpload = (e) => {
+  //  Brochure Upload Handler with Cloudinary Integration
+  const handleBrochureUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -137,21 +137,51 @@ const AddProperty = () => {
     }
 
     setIsUploadingPdf(true);
-    // Simulate cloud upload delay or use standard reader/uploader
-    setTimeout(() => {
-      const dummyBrochureUrl = URL.createObjectURL(file);
-      setBrochureFile({
-        name: file.name,
-        size: (file.size / (1024 * 1024)).toFixed(2) + " MB",
-        url: dummyBrochureUrl,
+
+    try {
+      const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+      const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+      const formDataToUpload = new FormData();
+      formDataToUpload.append("file", file);
+      formDataToUpload.append("upload_preset", UPLOAD_PRESET);
+
+      formDataToUpload.append("resource_type", "raw");
+
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/raw/upload`,
+        {
+          method: "POST",
+          body: formDataToUpload,
+        },
+      );
+
+      const data = await res.json();
+
+      if (data.secure_url) {
+        setBrochureFile({
+          name: file.name,
+          size: (file.size / (1024 * 1024)).toFixed(2) + " MB",
+          url: data.secure_url,
+        });
+
+        setFormData((prev) => ({
+          ...prev,
+          projectBrochure: data.secure_url,
+        }));
+
+        toast.success("Brochure uploaded successfully!");
+      } else {
+        throw new Error("Upload failed");
+      }
+    } catch (error) {
+      console.error("PDF Upload Error:", error);
+      toast.error("Failed to upload PDF brochure", {
+        description: "Please check your network or Cloudinary configuration.",
       });
-      setFormData((prev) => ({
-        ...prev,
-        projectBrochure: dummyBrochureUrl,
-      }));
+    } finally {
       setIsUploadingPdf(false);
-      toast.success("Brochure uploaded successfully!");
-    }, 1000);
+    }
   };
 
   const removeBrochure = () => {

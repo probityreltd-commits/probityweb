@@ -19,9 +19,11 @@ import {
   X,
   Expand,
   Download,
+  Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { addInquiries } from "@/services/action/inquiries";
+import FeaturesAndAmenities from "./FeaturesAndAmenities";
 
 const FONT_IMPORTS = `
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
@@ -43,10 +45,15 @@ const formatDate = (value) => {
 };
 
 const PropertyDetailsClient = ({ property }) => {
+  console.log("PropertyDetailsClient Rendered with property:", property);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("TOUR"); // "TOUR" | "BROCHURE"
   const [tourType, setTourType] = useState("In Person");
   const [imgErrors, setImgErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Form State
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -59,46 +66,12 @@ const PropertyDetailsClient = ({ property }) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-
-    const payload = {
-      requestType: "SCHEDULE_TOUR",
-      tourType: tourType,
-
-      name: formData.name.trim(),
-      phone: formData.phone.trim(),
-      email: formData.email.trim(),
-      message: formData.message.trim(),
-
-      property: {
-        id: property?._id || null,
-        slug: property?.slug || null,
-        title: property?.title || null,
-      },
-
-      createdAt: new Date().toISOString(),
-    };
-
-    try {
-      const body = await addInquiries(payload);
-      toast.success("Sent your text, Thank You!");
-      if (!body.success) throw new Error(body.message);
-
-      setSubmitted(true);
-      setFormData({ name: "", phone: "", email: "", message: "" });
-      setTimeout(() => setSubmitted(false), 3000);
-    } catch (err) {
-      console.error(err);
-      toast.error("Could not submit. Please try again.");
-    }
-  };
-
-  const handleBrochureDownload = () => {
+  // Helper function to trigger browser download
+  const triggerBrochureDownload = () => {
     if (property?.projectBrochure) {
       const link = document.createElement("a");
       link.href = property.projectBrochure;
-      link.download = `${property?.title || "project"}-brochure`;
+      link.download = `${property?.slug || property?.title || "project"}-brochure`;
       link.target = "_blank";
       link.rel = "noopener noreferrer";
       document.body.appendChild(link);
@@ -106,6 +79,91 @@ const PropertyDetailsClient = ({ property }) => {
       document.body.removeChild(link);
     } else {
       toast.error("Project brochure is currently unavailable.");
+    }
+  };
+
+  // Form Submit Handler
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    // Brochure Flow Submission
+    if (activeTab === "BROCHURE") {
+      const email = formData.email.trim();
+      const phone = formData.phone.trim();
+
+      if (!email || !phone) {
+        toast.error("Please provide your email and phone number.");
+        return;
+      }
+
+      setIsSubmitting(true);
+
+      const payload = {
+        requestType: "BROCHURE_DOWNLOAD",
+        name: "Valued Visitor",
+        email: email,
+        phone: phone,
+        property: {
+          id: property?._id || null,
+          slug: property?.slug || null,
+          title: property?.title || null,
+        },
+        createdAt: new Date().toISOString(),
+      };
+
+      try {
+        const body = await addInquiries(payload);
+
+        if (body && body.success === false) {
+          throw new Error(body.message || "Failed to submit request.");
+        }
+
+        triggerBrochureDownload();
+
+        toast.success("Download successful");
+
+        setFormData((prev) => ({ ...prev, email: "", phone: "" }));
+      } catch (err) {
+        console.error("Brochure Download Error:", err);
+        toast.error(
+          err.message || "Failed to download brochure. Please try again.",
+        );
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const payload = {
+      requestType: "SCHEDULE_TOUR",
+      tourType: tourType,
+      name: formData.name.trim(),
+      phone: formData.phone.trim(),
+      email: formData.email.trim(),
+      message: formData.message.trim(),
+      property: {
+        id: property?._id || null,
+        slug: property?.slug || null,
+        title: property?.title || null,
+      },
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      const body = await addInquiries(payload);
+      if (body && body.success === false) throw new Error(body.message);
+
+      toast.success("Sent your text, Thank You!");
+      setSubmitted(true);
+      setFormData({ name: "", phone: "", email: "", message: "" });
+      setTimeout(() => setSubmitted(false), 3000);
+    } catch (err) {
+      console.error("Tour Request Error:", err);
+      toast.error(err.message || "Could not submit. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -164,7 +222,6 @@ const PropertyDetailsClient = ({ property }) => {
     },
   ].filter(Boolean);
 
-  // Consolidated Key Details Dataset
   const keyDetailsList = [
     { label: "Property Title", value: property?.title },
     { label: "Location", value: property?.locationName },
@@ -207,6 +264,29 @@ const PropertyDetailsClient = ({ property }) => {
           background: rgba(148,163,184,0.4);
           border-radius: 999px;
         }
+        
+        /* Continuous Shimmer Animation */
+        @keyframes subtle-shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(200%); }
+        }
+        .animate-shimmer {
+          animation: subtle-shimmer 2.5s infinite ease-in-out;
+        }
+
+        /* Continuous Attention Pulse Glow */
+        @keyframes brochure-glow {
+          0%, 100% {
+            box-shadow: 0 0 0 0 rgba(67, 23, 128, 0.4), 0 0 12px rgba(67, 23, 128, 0.3);
+          }
+          50% {
+            box-shadow: 0 0 0 6px rgba(67, 23, 128, 0), 0 0 20px rgba(67, 23, 128, 0.6);
+          }
+        }
+        .animate-brochure-glow {
+          animation: brochure-glow 2s infinite ease-in-out;
+        }
+
         @media (prefers-reduced-motion: reduce) {
           * { animation: none !important; transition: none !important; }
         }
@@ -230,7 +310,7 @@ const PropertyDetailsClient = ({ property }) => {
           </Link>
           <span>/</span>
           <span className="text-zinc-800 dark:text-zinc-100 normal-case tracking-normal truncate max-w-[160px] sm:max-w-xs">
-            {property.title}
+            {property?.title}
           </span>
         </div>
       </div>
@@ -241,7 +321,7 @@ const PropertyDetailsClient = ({ property }) => {
           {images.length > 0 ? (
             <Image
               src={images[safeIndex]}
-              alt={`${property.title} — view ${safeIndex + 1}`}
+              alt={`${property?.title} — view ${safeIndex + 1}`}
               fill
               priority
               unoptimized
@@ -259,7 +339,7 @@ const PropertyDetailsClient = ({ property }) => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
 
           {/* Status stamp */}
-          {property.status && (
+          {property?.status && (
             <div
               className="absolute top-5 right-5 sm:top-7 sm:right-7 w-[86px] h-[86px] sm:w-[100px] sm:h-[100px] rounded-full flex items-center justify-center text-center border-2 border-dashed border-white/70 backdrop-blur-sm"
               style={{
@@ -307,17 +387,17 @@ const PropertyDetailsClient = ({ property }) => {
 
           {/* Title block */}
           <div className="absolute bottom-6 left-6 sm:bottom-9 sm:left-9 right-24 sm:right-32">
-            {property.propertyType && (
+            {property?.propertyType && (
               <span className="ledger-font text-[11px] tracking-[0.2em] uppercase text-[#c4a6f7]">
                 {property.propertyType}
               </span>
             )}
             <h1 className="display-font text-2xl sm:text-5xl font-semibold text-white leading-[1.05] mt-1.5">
-              {property.title}
+              {property?.title}
             </h1>
             <div className="flex items-center gap-1.5 mt-3 text-xs sm:text-sm text-white/85">
               <MapPin className="w-4 h-4 text-[#c4a6f7] shrink-0" />
-              <span>{property.locationName}</span>
+              <span>{property?.locationName}</span>
             </div>
           </div>
         </div>
@@ -337,7 +417,7 @@ const PropertyDetailsClient = ({ property }) => {
               >
                 <Image
                   src={img}
-                  alt={`${property.title} thumbnail ${idx + 1}`}
+                  alt={`${property?.title} thumbnail ${idx + 1}`}
                   fill
                   unoptimized
                   sizes="128px"
@@ -354,7 +434,7 @@ const PropertyDetailsClient = ({ property }) => {
             <span className="ledger-font text-[10px] uppercase tracking-[0.25em] text-[#431780] dark:text-violet-300">
               Survey &amp; Specification
             </span>
-            {property._id && (
+            {property?._id && (
               <span className="ledger-font text-[10px] uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
                 Ref. {String(property._id).slice(-8)}
               </span>
@@ -381,15 +461,14 @@ const PropertyDetailsClient = ({ property }) => {
 
       {/* ============ MAIN CONTENT ============ */}
       <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left column — Key Details */}
-        <div className="lg:col-span-8">
+        {/* Left column — Key Details & Features */}
+        <div className="lg:col-span-8 space-y-8">
           <div className="rounded-3xl p-6 sm:p-8 border border-zinc-200/80 dark:border-zinc-800 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md shadow-sm">
             <h2 className="display-font text-xl sm:text-2xl font-semibold text-zinc-900 dark:text-white pb-4 mb-6 border-b border-zinc-200/80 dark:border-zinc-800">
               Key Details
             </h2>
 
-            {/* Existing description incorporated directly */}
-            {property.description && (
+            {property?.description && (
               <div className="mb-6 pb-6 border-b border-zinc-200/80 dark:border-zinc-800">
                 <span className="ledger-font text-[10px] uppercase tracking-widest text-zinc-400 dark:text-zinc-500 block mb-2">
                   Overview
@@ -400,7 +479,6 @@ const PropertyDetailsClient = ({ property }) => {
               </div>
             )}
 
-            {/* Clean Table-Style Specification List */}
             <div className="divide-y divide-zinc-200/60 dark:divide-zinc-800/60 rounded-2xl border border-zinc-200/60 dark:border-zinc-800/60 overflow-hidden bg-zinc-50/40 dark:bg-zinc-900/40">
               {keyDetailsList.map((item, index) => (
                 <div
@@ -417,7 +495,7 @@ const PropertyDetailsClient = ({ property }) => {
               ))}
             </div>
 
-            {property.address && (
+            {property?.address && (
               <div className="flex items-start gap-2.5 mt-6 pt-5 border-t border-zinc-200/80 dark:border-zinc-800">
                 <Building2 className="w-4 h-4 text-[#431780] dark:text-violet-300 mt-0.5 shrink-0" />
                 <div>
@@ -437,25 +515,48 @@ const PropertyDetailsClient = ({ property }) => {
               </p>
             )}
           </div>
+
+          <FeaturesAndAmenities amenities={property?.amenities} />
         </div>
 
         {/* Right column — Action Card */}
         <div className="lg:col-span-4 lg:sticky lg:top-6">
           <div className="rounded-3xl p-6 sm:p-7 border border-zinc-200/80 dark:border-zinc-800 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl shadow-xl space-y-6">
+            {/* Mode Switching Navigation */}
             <div className="grid grid-cols-2 gap-2 p-1 bg-[#431780]/5 dark:bg-zinc-800 rounded-2xl border border-zinc-200 dark:border-zinc-700">
-              <div className="py-2.5 text-xs font-semibold rounded-xl bg-[#431780] text-white shadow-md text-center flex items-center justify-center">
-                Schedule a tour
-              </div>
               <button
                 type="button"
-                onClick={handleBrochureDownload}
-                className="py-2.5 text-xs font-semibold rounded-xl text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-all flex items-center justify-center gap-1.5"
+                onClick={() => setActiveTab("TOUR")}
+                className={`py-2.5 text-xs font-semibold rounded-xl text-center flex items-center justify-center transition-all ${
+                  activeTab === "TOUR"
+                    ? "bg-[#431780] text-white shadow-md"
+                    : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+                }`}
               >
-                <Download className="w-3.5 h-3.5" />
-                Download Brochure
+                Schedule a tour
+              </button>
+
+              {/* Highlighted & Animated Download Brochure Button */}
+              <button
+                type="button"
+                onClick={() => setActiveTab("BROCHURE")}
+                className={`relative overflow-hidden py-2.5 px-2 text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer border ${
+                  activeTab === "BROCHURE"
+                    ? "bg-[#431780] text-white shadow-md border-transparent"
+                    : "bg-gradient-to-r from-[#431780]/15 via-violet-500/10 to-[#431780]/15 text-[#431780] dark:text-violet-300 border-[#431780]/40 animate-brochure-glow"
+                }`}
+              >
+                {/* Continuous Shimmer Light Animation */}
+                <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                  <div className="w-1/2 h-full bg-gradient-to-r from-transparent via-white/30 dark:via-white/20 to-transparent skew-x-12 animate-shimmer" />
+                </div>
+
+                <Download className="w-3.5 h-3.5 animate-bounce shrink-0" />
+                <span className="truncate">Download Brochure</span>
               </button>
             </div>
 
+            {/* Sales Representative Card */}
             <div className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-[#431780]/5 border border-zinc-200/60 dark:border-zinc-700/60">
               <div className="relative w-11 h-11 rounded-full overflow-hidden border-2 border-[#431780] shrink-0 bg-zinc-200">
                 <Image
@@ -480,86 +581,151 @@ const PropertyDetailsClient = ({ property }) => {
               </div>
             </div>
 
+            {/* Dynamic Form Flow */}
             <form onSubmit={handleFormSubmit} className="space-y-3.5">
-              <div>
-                <label className="block text-[10px] font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-2">
-                  Tour type
-                </label>
-                <div className="grid grid-cols-2 gap-2">
+              {activeTab === "BROCHURE" ? (
+                /* ================= BROCHURE FLOW (NO NAME FIELD REQUIRED) ================= */
+                <>
+                  <div>
+                    <label className="block text-[10px] font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-1.5">
+                      Email Address <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      placeholder="Email address"
+                      required
+                      value={formData.email}
+                      onChange={handleFieldChange("email")}
+                      className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-1.5">
+                      Phone Number <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      placeholder="Phone number"
+                      required
+                      value={formData.phone}
+                      onChange={handleFieldChange("phone")}
+                      className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all"
+                    />
+                  </div>
+
                   <button
-                    type="button"
-                    onClick={() => setTourType("In Person")}
-                    className={`py-2 px-3 rounded-xl text-xs font-semibold border flex items-center justify-center gap-1.5 transition-all ${
-                      tourType === "In Person"
-                        ? "border-[#431780] bg-[#431780]/10 text-[#431780] dark:text-violet-300"
-                        : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400"
-                    }`}
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-[#431780] hover:bg-[#341166] text-white text-xs font-semibold py-3.5 px-6 rounded-2xl transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed mt-2"
                   >
-                    <User className="w-3.5 h-3.5" />
-                    In person
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <Download className="w-4 h-4" />
+                        Download Brochure Now
+                      </>
+                    )}
                   </button>
+                </>
+              ) : (
+                /* ================= TOUR REQUEST FLOW ================= */
+                <>
+                  <div>
+                    <label className="block text-[10px] font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-2">
+                      Tour type
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setTourType("In Person")}
+                        className={`py-2 px-3 rounded-xl text-xs font-semibold border flex items-center justify-center gap-1.5 transition-all ${
+                          tourType === "In Person"
+                            ? "border-[#431780] bg-[#431780]/10 text-[#431780] dark:text-violet-300"
+                            : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400"
+                        }`}
+                      >
+                        <User className="w-3.5 h-3.5" />
+                        In person
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setTourType("Video Chat")}
+                        className={`py-2 px-3 rounded-xl text-xs font-semibold border flex items-center justify-center gap-1.5 transition-all ${
+                          tourType === "Video Chat"
+                            ? "border-[#431780] bg-[#431780]/10 text-[#431780] dark:text-violet-300"
+                            : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400"
+                        }`}
+                      >
+                        <Video className="w-3.5 h-3.5" />
+                        Video chat
+                      </button>
+                    </div>
+                  </div>
+
+                  <input
+                    type="text"
+                    placeholder="Your name"
+                    required
+                    value={formData.name}
+                    onChange={handleFieldChange("name")}
+                    className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all"
+                  />
+                  <input
+                    type="tel"
+                    placeholder="Phone number"
+                    required
+                    value={formData.phone}
+                    onChange={handleFieldChange("phone")}
+                    className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all"
+                  />
+                  <input
+                    type="email"
+                    placeholder="Email address"
+                    required
+                    value={formData.email}
+                    onChange={handleFieldChange("email")}
+                    className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all"
+                  />
+                  <textarea
+                    rows={3}
+                    placeholder="Preferred date or message..."
+                    value={formData.message}
+                    onChange={handleFieldChange("message")}
+                    className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all resize-none"
+                  />
+
                   <button
-                    type="button"
-                    onClick={() => setTourType("Video Chat")}
-                    className={`py-2 px-3 rounded-xl text-xs font-semibold border flex items-center justify-center gap-1.5 transition-all ${
-                      tourType === "Video Chat"
-                        ? "border-[#431780] bg-[#431780]/10 text-[#431780] dark:text-violet-300"
-                        : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400"
-                    }`}
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-[#431780] hover:bg-[#341166] text-white text-xs font-semibold py-3.5 px-6 rounded-2xl transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                   >
-                    <Video className="w-3.5 h-3.5" />
-                    Video chat
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                        Submit tour request
+                      </>
+                    )}
                   </button>
-                </div>
-              </div>
 
-              <input
-                type="text"
-                placeholder="Your name"
-                required
-                value={formData.name}
-                onChange={handleFieldChange("name")}
-                className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all"
-              />
-              <input
-                type="tel"
-                placeholder="Phone number"
-                required
-                value={formData.phone}
-                onChange={handleFieldChange("phone")}
-                className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all"
-              />
-              <input
-                type="email"
-                placeholder="Email address"
-                required
-                value={formData.email}
-                onChange={handleFieldChange("email")}
-                className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all"
-              />
-              <textarea
-                rows={3}
-                placeholder="Preferred date or message..."
-                value={formData.message}
-                onChange={handleFieldChange("message")}
-                className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all resize-none"
-              />
-
-              <button
-                type="submit"
-                className="w-full bg-[#431780] hover:bg-[#341160] text-white text-xs font-semibold py-3.5 px-6 rounded-2xl transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 group"
-              >
-                <Send className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                Submit tour request
-              </button>
-
-              {submitted && (
-                <p className="text-[11px] text-emerald-600 dark:text-emerald-400 text-center font-medium">
-                  Logged to console — check DevTools.
-                </p>
+                  {submitted && (
+                    <p className="text-[11px] text-emerald-600 dark:text-emerald-400 text-center font-medium">
+                      Logged inquiry successfully.
+                    </p>
+                  )}
+                </>
               )}
 
-              <p className="text-[10px] text-zinc-400 dark:text-zinc-500 text-center">
+              <p className="text-[10px] text-zinc-400 dark:text-zinc-500 text-center pt-1">
                 By submitting this form you agree to the Terms of Service.
               </p>
             </form>
@@ -593,7 +759,7 @@ const PropertyDetailsClient = ({ property }) => {
           <div className="relative w-full max-w-4xl h-[70vh]">
             <Image
               src={images[safeIndex]}
-              alt={`${property.title} — full view ${safeIndex + 1}`}
+              alt={`${property?.title} — full view ${safeIndex + 1}`}
               fill
               unoptimized
               sizes="90vw"
