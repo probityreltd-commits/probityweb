@@ -4,8 +4,8 @@ import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { Plus, Image as ImageIcon } from "lucide-react";
 
-import EditPropertyModal from "./EditPropertyModal";
 import AlertDialogProperty from "./AlertDialogProperty";
+import EditPropertyModal from "./EditProperty/EditPropertyModal";
 
 const PropertyManagerClient = ({ initialProperties = [] }) => {
   const [properties, setProperties] = useState(initialProperties);

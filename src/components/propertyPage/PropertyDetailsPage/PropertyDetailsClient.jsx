@@ -15,6 +15,8 @@ import Lightbox from "./Lightbox";
 import MapSection from "./MapSection";
 import GallerySection from "./GallerySection";
 import FeaturesAndAmenities from "./FeaturesAndAmenities";
+import ScheduleTourSection from "./ScheduleTourSection";
+import OurFeatureProject from "./OurFeatureProject";
 
 // Font imports and brand colour (kept in parent for global scope)
 const FONT_IMPORTS = `
@@ -37,6 +39,7 @@ const formatDate = (value) => {
 };
 
 const PropertyDetailsClient = ({ property }) => {
+  console.log("PropertyDetailsClient received property:", property);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("TOUR");
@@ -320,6 +323,11 @@ const PropertyDetailsClient = ({ property }) => {
       {property.galleryImages?.length > 0 && (
         <GallerySection images={property.galleryImages} />
       )}
+
+      {/* ============ SCHEDULE A TOUR ============ */}
+      <ScheduleTourSection property={property} />
+
+      <OurFeatureProject></OurFeatureProject>
 
       {/* Lightbox Overlay */}
       <Lightbox
