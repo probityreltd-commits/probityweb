@@ -39,7 +39,6 @@ const formatDate = (value) => {
 };
 
 const PropertyDetailsClient = ({ property }) => {
-  console.log("PropertyDetailsClient received property:", property);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("TOUR");
@@ -298,7 +297,7 @@ const PropertyDetailsClient = ({ property }) => {
           <FeaturesAndAmenities amenities={property?.amenities} />
         </div>
 
-        <div className="lg:col-span-4 lg:sticky lg:top-6">
+        <div className="lg:col-span-4 lg:sticky lg:top-22">
           <ActionCard
             activeTab={activeTab}
             setActiveTab={setActiveTab}
