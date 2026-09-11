@@ -123,7 +123,7 @@ const NotFound = () => {
           </div>
 
           <h1 className="font-serif text-3xl sm:text-5xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-tight">
-            Oops! Property Not Found
+            Oops! Page Not Found
           </h1>
 
           <p className="mt-4 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal">

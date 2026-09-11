@@ -2,7 +2,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Building2, LogOut, Menu, Phone, X } from "lucide-react";
+import {
+  Building2,
+  LogOut,
+  Menu,
+  Phone,
+  X,
+  LayoutDashboard,
+} from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { authClient } from "@/lib/auth-client";
 import { usePathname, useRouter } from "next/navigation";
@@ -136,7 +143,7 @@ const Navbar = () => {
                 )}
               </button>
 
-              {/* Dropdown */}
+              {/* Profile Dropdown */}
               <AnimatePresence>
                 {dropdownOpen && (
                   <motion.div
@@ -156,12 +163,24 @@ const Navbar = () => {
                       </p>
                     </div>
 
+                    {/* Dashboard Option for Admin */}
+                    {isAdmin && (
+                      <Link
+                        href="/admin/dashboard"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors text-sm font-medium border-b border-slate-100 dark:border-zinc-800"
+                      >
+                        <LayoutDashboard className="w-4 h-4 text-[#3b1a83] dark:text-amber-400" />
+                        Dashboard
+                      </Link>
+                    )}
+
                     <button
                       onClick={() => {
                         setDropdownOpen(false);
                         signOut();
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors text-left"
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors text-left text-sm font-medium"
                     >
                       <LogOut className="w-4 h-4" />
                       Sign Out
@@ -192,6 +211,7 @@ const Navbar = () => {
         </div>
       </motion.div>
 
+      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div

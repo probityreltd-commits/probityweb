@@ -24,7 +24,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata = {
-  title: "Probity | Coming Soon",
+  title: "Probity Holdings - Modern Real Estate Platform",
   description:
     "Probity is building a modern real estate platform to help you discover, buy, rent, and sell properties with ease. Stay tuned for our official launch.",
 };

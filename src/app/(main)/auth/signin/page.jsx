@@ -6,8 +6,11 @@ import { motion } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const SignIn = () => {
+  const router = useRouter();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -28,15 +31,23 @@ const SignIn = () => {
       const { data, error } = await authClient.signIn.email({
         email,
         password,
-        callbackURL: "/",
         rememberMe: true,
       });
 
-      if (data) {
-        toast.success("Signed in successfully!");
-      }
       if (error) {
         toast.error(error.message);
+        return;
+      }
+      if (data) {
+        toast.success("Signed in successfully!");
+        const { data: sessionData } = await authClient.getSession();
+        const userRole = sessionData?.user?.role;
+        if (userRole === "admin") {
+          router.push("/admin/dashboard");
+        } else {
+          router.push("/");
+        }
+        router.refresh();
       }
     } catch (error) {
       console.error("Sign In error:", error);

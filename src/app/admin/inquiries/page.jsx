@@ -48,10 +48,6 @@ export default function InquiriesPage() {
   const [selectedIds, setSelectedIds] = useState([]);
   const [activeInquiry, setActiveInquiry] = useState(null);
 
-  // TODO: replace with a real fetch of your agents/team list for the
-  // "Assigned to" dropdown in the detail drawer, e.g. fetchAgents().
-  const [agents] = useState([]);
-
   // debounce the free-text search box so it doesn't re-fetch on every keystroke
   useEffect(() => {
     const id = setTimeout(() => setDebouncedSearch(filters.search), 400);
