@@ -13,13 +13,13 @@ export const metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased selection:bg-purple-600 selection:text-white">
+    <main className="min-h-screen bg-background text-zinc-800 dark:text-zinc-100">
       {/* Hero Header Section */}
       <ContactHero />
 
       {/* Main Info Cards & Map Grid */}
-      <section className="max-w-7xl mx-auto px-6 lg:px-8 -mt-16 sm:-mt-24 relative z-10 pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 sm:-mt-16 lg:-mt-24 relative z-10 pb-12 sm:pb-16 lg:pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 items-start">
           <div className="lg:col-span-4">
             <ContactInfoGrid />
           </div>
@@ -30,9 +30,9 @@ export default function ContactPage() {
       </section>
 
       {/* Form and FAQ Section */}
-      <section className="py-20 bg-slate-100/70 border-t border-slate-200/80">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+      <section className="py-12 sm:py-16 lg:py-20 border-t border-zinc-200/80 dark:border-zinc-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
             <div className="lg:col-span-6">
               <InquiryForm />
             </div>

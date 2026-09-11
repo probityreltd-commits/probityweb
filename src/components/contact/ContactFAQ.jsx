@@ -26,40 +26,40 @@ export default function ContactFAQ() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+        <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
           Frequently Asked Questions
         </h2>
-        <p className="text-xs text-slate-500 mt-1">
+        <p className="text-[11px] sm:text-xs text-slate-500 mt-1">
           Quick answers to common questions about contacting us and viewing
           properties.
         </p>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2.5 sm:space-y-3">
         {faqs.map((faq, idx) => {
           const isOpen = openIdx === idx;
 
           return (
             <div
               key={idx}
-              className="bg-white border border-slate-200/80 rounded-xl overflow-hidden transition-colors"
+              className="bg-white border border-slate-200/80 rounded-lg sm:rounded-xl overflow-hidden transition-colors"
             >
               <button
                 onClick={() => setOpenIdx(isOpen ? null : idx)}
-                className="w-full p-4 text-left flex justify-between items-center text-xs font-semibold text-slate-800 hover:text-purple-700 transition-colors"
+                className="w-full p-3.5 sm:p-4 text-left flex justify-between items-center gap-3 text-[11px] sm:text-xs font-semibold text-slate-800 hover:text-brand transition-colors"
               >
                 <span>{faq.q}</span>
                 <ChevronDown
-                  className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
-                    isOpen ? "rotate-180 text-purple-600" : ""
+                  className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${
+                    isOpen ? "rotate-180 text-brand" : ""
                   }`}
                 />
               </button>
 
               {isOpen && (
-                <div className="px-4 pb-4 pt-0 text-xs text-slate-500 leading-relaxed border-t border-slate-100 mt-1 pt-2">
+                <div className="px-3.5 sm:px-4 pb-3.5 sm:pb-4 pt-2 text-[11px] sm:text-xs text-slate-500 leading-relaxed border-t border-slate-100">
                   {faq.a}
                 </div>
               )}

@@ -74,6 +74,10 @@ const PropertySearch = ({
   const [loading, setLoading] = useState(shouldFetch);
   const [error, setError] = useState("");
 
+  const [selectedLocation, setSelectedLocation] = useState(initialLocation);
+  const [selectedProject, setSelectedProject] = useState(initialProject);
+  const [selectedType, setSelectedType] = useState(initialType);
+
   useEffect(() => {
     if (!shouldFetch) return;
     let active = true;
@@ -107,10 +111,6 @@ const PropertySearch = ({
   }, [shouldFetch]);
 
   const properties = propertiesProp || fetchedProperties;
-
-  const [selectedLocation, setSelectedLocation] = useState(initialLocation);
-  const [selectedProject, setSelectedProject] = useState(initialProject);
-  const [selectedType, setSelectedType] = useState(initialType);
 
   useEffect(() => setSelectedLocation(initialLocation), [initialLocation]);
   useEffect(() => setSelectedProject(initialProject), [initialProject]);
@@ -261,14 +261,12 @@ const PropertySearch = ({
                 className={t.select}
               >
                 <option value="">All Locations</option>
-
                 {locations.map((loc) => (
                   <option key={loc} value={loc} className={t.option}>
                     {loc}
                   </option>
                 ))}
               </select>
-
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-zinc-400">
                 ▼
               </div>
@@ -293,17 +291,15 @@ const PropertySearch = ({
               >
                 <option value="">
                   {selectedLocation
-                    ? "All Projects in " + selectedLocation
+                    ? `All Projects in ${selectedLocation}`
                     : "All Projects"}
                 </option>
-
                 {projectNames.map((name) => (
                   <option key={name} value={name} className={t.option}>
                     {name}
                   </option>
                 ))}
               </select>
-
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-zinc-400">
                 ▼
               </div>
@@ -327,26 +323,23 @@ const PropertySearch = ({
                 className={t.select}
               >
                 <option value="">All Types</option>
-
                 <option
                   value="Residential"
                   disabled={!propertyTypeAvailability.residential}
                   className={t.option}
                 >
-                  Residential{" "}
-                  {!propertyTypeAvailability.residential && "(Unavailable)"}
+                  Residential
+                  {!propertyTypeAvailability.residential && " (Unavailable)"}
                 </option>
-
                 <option
                   value="Commercial"
                   disabled={!propertyTypeAvailability.commercial}
                   className={t.option}
                 >
-                  Commercial{" "}
-                  {!propertyTypeAvailability.commercial && "(Unavailable)"}
+                  Commercial
+                  {!propertyTypeAvailability.commercial && " (Unavailable)"}
                 </option>
               </select>
-
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-zinc-400">
                 ▼
               </div>

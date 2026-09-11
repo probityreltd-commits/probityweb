@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useRef, useMemo } from "react";
 import Image from "next/image";
 import { motion, useInView, animate } from "framer-motion";
@@ -76,7 +77,7 @@ const HeritageSection = () => {
   };
 
   return (
-    <section className="bg-slate-50 dark:bg-zinc-950 py-8 sm:py-10 md:py-16 px-4 sm:px-6 lg:px-8 transition-colors duration-300 overflow-hidden">
+    <section className="bg-[#f5f1ff] dark:bg-[#070913] py-8 sm:py-10 md:py-16 px-4 sm:px-6 lg:px-8 transition-colors duration-300 overflow-hidden">
       <motion.div
         className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 lg:gap-6 items-stretch"
         variants={containerVariants}
@@ -87,11 +88,11 @@ const HeritageSection = () => {
         {/* Left Column: Text Content & REHAB Badge */}
         <motion.div
           variants={itemVariants}
-          className="lg:col-span-5 bg-white dark:bg-zinc-900 p-5 sm:p-6 md:p-8 lg:p-10 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 flex flex-col justify-between"
+          className="lg:col-span-5 bg-white dark:bg-zinc-900/90 backdrop-blur-sm p-5 sm:p-6 md:p-8 lg:p-10 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 flex flex-col justify-between"
         >
           <div>
             {/* Tag */}
-            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-400">
+            <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-[#3b1a83] dark:text-[#a07cf0]">
               CORPORATE HERITAGE
             </span>
 
@@ -101,7 +102,7 @@ const HeritageSection = () => {
             </h2>
 
             {/* Description Paragraph */}
-            <p className="text-zinc-500 dark:text-zinc-400 text-xs sm:text-sm leading-relaxed mb-5 sm:mb-6 lg:mb-8 font-normal">
+            <p className="text-zinc-600 dark:text-zinc-400 text-xs sm:text-sm leading-relaxed mb-5 sm:mb-6 lg:mb-8 font-normal">
               For over two decades, Probity has sculpted Dhaka&apos;s premier
               skyline, creating high-end residential landmarks in Dhaka&apos;s
               premier locations. We do not just build apartments; we craft
@@ -111,7 +112,7 @@ const HeritageSection = () => {
           </div>
 
           {/* REHAB Badge */}
-          <div className="bg-emerald-50 dark:bg-emerald-950/40 p-3 sm:p-4 rounded-xl flex items-start gap-2.5 sm:gap-3 border border-emerald-100 dark:border-emerald-900/50">
+          <div className="bg-emerald-50/80 dark:bg-emerald-950/30 p-3.5 sm:p-4 rounded-xl flex items-start gap-2.5 sm:gap-3 border border-emerald-100 dark:border-emerald-900/40">
             <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
 
             <div>
@@ -119,7 +120,7 @@ const HeritageSection = () => {
                 100% REHAB CERTIFIED
               </h4>
 
-              <p className="text-[10px] sm:text-[11px] text-emerald-700 dark:text-emerald-400/90 mt-0.5">
+              <p className="text-[10px] sm:text-[11px] text-emerald-700 dark:text-emerald-400/90 mt-0.5 leading-snug">
                 Registered and strictly compliant with RAJUK development
                 mandates.
               </p>
@@ -132,9 +133,9 @@ const HeritageSection = () => {
           {/* Top Stat Card (25+ Years) */}
           <motion.div
             variants={itemVariants}
-            className="bg-white dark:bg-zinc-900 p-4 sm:p-5 lg:p-6 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 flex-1 flex flex-col items-center justify-center text-center"
+            className="bg-white dark:bg-zinc-900/90 p-4 sm:p-5 lg:p-6 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 flex-1 flex flex-col items-center justify-center text-center"
           >
-            <div className="w-9 h-9 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-2 sm:mb-3 lg:mb-4">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-2 sm:mb-3 lg:mb-4">
               <Trophy className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
             </div>
 
@@ -150,10 +151,10 @@ const HeritageSection = () => {
 
           {/* Bottom Grid Stats */}
           <div className="grid grid-cols-2 gap-2.5 sm:gap-3 lg:gap-4">
-            {/* Purple Stat Card */}
+            {/* Brand Purple Stat Card */}
             <motion.div
               variants={itemVariants}
-              className="bg-[#321e82] text-white p-3.5 sm:p-4 lg:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between min-h-[92px] sm:min-h-[110px] lg:min-h-[140px] shadow-sm"
+              className="bg-[#3b1a83] text-white p-3.5 sm:p-4 lg:p-5 rounded-xl sm:rounded-2xl flex flex-col justify-between min-h-[92px] sm:min-h-[110px] lg:min-h-[140px] shadow-md"
             >
               <Building2 className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-200" />
 
@@ -165,7 +166,9 @@ const HeritageSection = () => {
                 <span className="text-[9px] sm:text-[10px] text-indigo-100 mt-1.5 sm:mt-2 block leading-tight">
                   Premium Landmarks
                   <br />
-                  <strong className="text-white">100% On-Time Delivery</strong>
+                  <strong className="text-white font-semibold">
+                    100% On-Time Delivery
+                  </strong>
                 </span>
               </div>
             </motion.div>
@@ -173,9 +176,9 @@ const HeritageSection = () => {
             {/* White Stat Card */}
             <motion.div
               variants={itemVariants}
-              className="bg-white dark:bg-zinc-900 p-3.5 sm:p-4 lg:p-5 rounded-xl sm:rounded-2xl border border-zinc-100 dark:border-zinc-800 flex flex-col justify-between min-h-[92px] sm:min-h-[110px] lg:min-h-[140px] shadow-sm"
+              className="bg-white dark:bg-zinc-900/90 p-3.5 sm:p-4 lg:p-5 rounded-xl sm:rounded-2xl border border-zinc-100 dark:border-zinc-800 flex flex-col justify-between min-h-[92px] sm:min-h-[110px] lg:min-h-[140px] shadow-sm"
             >
-              <Users className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-800 dark:text-indigo-400" />
+              <Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#3b1a83] dark:text-[#a07cf0]" />
 
               <div>
                 <span className="font-serif text-lg sm:text-xl md:text-2xl lg:text-3xl font-black text-zinc-900 dark:text-white block leading-none">
@@ -192,21 +195,22 @@ const HeritageSection = () => {
           </div>
         </div>
 
-        {/* Right Column: Image with Dark Overlay Badge */}
+        {/* Right Column: Image with Glassmorphism Overlay */}
         <motion.div
           variants={itemVariants}
-          className="lg:col-span-4 relative rounded-2xl overflow-hidden min-h-[200px] sm:min-h-[260px] md:min-h-[320px] lg:min-h-full shadow-sm group"
+          className="lg:col-span-4 relative rounded-2xl overflow-hidden min-h-[220px] sm:min-h-[260px] md:min-h-[320px] lg:min-h-full shadow-sm group"
         >
           <Image
             src="https://i.ibb.co.com/TD3Djqzy/Screenshot-2026-08-14-000804.png"
             alt="Acoustic Damping Architectural Landmark"
             fill
+            unoptimized
             sizes="(max-width: 1024px) 100vw, 33vw"
             className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
           />
 
-          {/* Overlay Card */}
-          <div className="absolute bottom-2.5 left-2.5 right-2.5 sm:bottom-4 sm:left-4 sm:right-4 bg-black/80 backdrop-blur-md p-3 sm:p-4 rounded-xl border border-white/10 text-white">
+          {/* Glassmorphism Dark Overlay Card */}
+          <div className="absolute bottom-2.5 left-2.5 right-2.5 sm:bottom-4 sm:left-4 sm:right-4 bg-black/75 backdrop-blur-md p-3 sm:p-4 rounded-xl border border-white/10 text-white shadow-lg">
             <div className="flex items-start gap-2.5 sm:gap-3">
               <div className="p-1 bg-emerald-500/20 text-emerald-400 rounded-full shrink-0 mt-0.5">
                 <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />

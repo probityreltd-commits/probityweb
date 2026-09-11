@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -12,7 +13,7 @@ const features = [
       "Browse carefully verified properties with accurate information, high-quality photos, and transparent pricing.",
     icon: ShieldCheck,
     iconBg:
-      "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400",
+      "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/30",
   },
   {
     id: 2,
@@ -21,7 +22,7 @@ const features = [
       "Our experienced agents provide personalized guidance to help you make confident property decisions.",
     icon: UserCheck,
     iconBg:
-      "bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400",
+      "bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400 border border-amber-100 dark:border-amber-800/30",
   },
   {
     id: 3,
@@ -30,7 +31,7 @@ const features = [
       "No hidden fees or unexpected costs. We believe in honest pricing and complete transparency.",
     icon: Tag,
     iconBg:
-      "bg-orange-50 text-orange-600 dark:bg-orange-950/40 dark:text-orange-400",
+      "bg-orange-50 text-orange-600 dark:bg-orange-950/40 dark:text-orange-400 border border-orange-100 dark:border-orange-800/30",
   },
   {
     id: 4,
@@ -38,7 +39,8 @@ const features = [
     description:
       "Explore homes and commercial spaces in carefully selected neighborhoods with excellent connectivity and amenities.",
     icon: MapPin,
-    iconBg: "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400",
+    iconBg:
+      "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400 border border-blue-100 dark:border-blue-800/30",
   },
   {
     id: 5,
@@ -54,20 +56,22 @@ const features = [
       "From property search to final handover, our dedicated team is with you every step of the way.",
     icon: Handshake,
     iconBg:
-      "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400",
+      "bg-purple-50 text-brand dark:bg-purple-950/40 dark:text-purple-400 border border-purple-100 dark:border-purple-800/30",
   },
 ];
 
 const WhyChooseUs = () => {
   return (
-    <section className="bg-[#f5f1ff] dark:bg-[#070913] py-20 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+    <section className=" py-10 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8 transition-colors duration-300 overflow-hidden">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        {/* Header */}
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12 lg:mb-16">
           <motion.span
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-xs font-bold uppercase tracking-widest text-[#3b1a83] dark:text-indigo-400 block mb-2"
+            transition={{ duration: 0.5 }}
+            className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-brand dark:text-indigo-400 block mb-1.5 sm:mb-2"
           >
             WHY CHOOSE US
           </motion.span>
@@ -76,8 +80,8 @@ const WhyChooseUs = () => {
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="font-serif text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight"
+            transition={{ delay: 0.1, duration: 0.5 }}
+            className="font-serif text-2xl sm:text-3xl lg:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight"
           >
             Why Choose Our Properties
           </motion.h2>
@@ -86,8 +90,8 @@ const WhyChooseUs = () => {
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="mt-4 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal"
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="mt-3 sm:mt-4 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed"
           >
             We&apos;re committed to making your real estate journey simple,
             transparent, and stress-free. Whether you&apos;re buying, selling,
@@ -97,19 +101,22 @@ const WhyChooseUs = () => {
         </div>
 
         {/* 3x2 Grid Container */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 items-stretch">
           {features.map((item, index) => {
             if (item.isImage) {
               return (
                 <motion.div
                   key={item.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 25 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
-                  className="relative h-64 md:h-full min-h-[220px] rounded-2xl overflow-hidden shadow-sm group border border-zinc-200/80 dark:border-zinc-800"
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{
+                    delay: index * 0.08,
+                    duration: 0.6,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  className="relative min-h-[160px] sm:min-h-[220px] lg:min-h-[280px] h-full rounded-xl sm:rounded-2xl overflow-hidden shadow-sm group border border-zinc-200/80 dark:border-zinc-800"
                 >
-                  {/* Next.js Image Component */}
                   <Image
                     src={item.imageSrc}
                     alt={item.alt}
@@ -117,7 +124,7 @@ const WhyChooseUs = () => {
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#3b1a83]/30 via-transparent to-transparent z-10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand/40 via-transparent to-transparent z-10 pointer-events-none" />
                 </motion.div>
               );
             }
@@ -127,26 +134,30 @@ const WhyChooseUs = () => {
             return (
               <motion.div
                 key={item.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 25 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
-                className="bg-white dark:bg-zinc-900/90 rounded-2xl p-8 text-center flex flex-col items-center justify-center border border-zinc-200/60 dark:border-zinc-800/80 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{
+                  delay: index * 0.08,
+                  duration: 0.6,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="bg-white/90 dark:bg-zinc-900/80 backdrop-blur-sm rounded-xl sm:rounded-2xl p-5 sm:p-7 lg:p-8 text-center flex flex-col items-center justify-center border border-zinc-200/70 dark:border-zinc-800 shadow-sm hover:shadow-xl hover:border-brand/30 dark:hover:border-indigo-500/30 hover:-translate-y-1 transition-all duration-300 group"
               >
-                {/* Icon Container */}
+                {/* Icon Badge */}
                 <div
-                  className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110 ${item.iconBg}`}
+                  className={`w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-4 lg:mb-6 transition-transform duration-300 group-hover:scale-110 shadow-sm ${item.iconBg}`}
                 >
-                  <IconComponent className="w-6 h-6 stroke-[2]" />
+                  <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2]" />
                 </div>
 
                 {/* Feature Title */}
-                <h3 className="font-serif text-lg font-bold text-zinc-900 dark:text-white mb-3 group-hover:text-[#3b1a83] dark:group-hover:text-indigo-400 transition-colors">
+                <h3 className="font-serif text-sm sm:text-base lg:text-lg font-bold text-zinc-900 dark:text-white mb-2 sm:mb-3 group-hover:text-brand dark:group-hover:text-indigo-400 transition-colors">
                   {item.title}
                 </h3>
 
                 {/* Feature Description */}
-                <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed font-normal max-w-xs">
+                <p className="text-[11px] sm:text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-xs">
                   {item.description}
                 </p>
               </motion.div>
