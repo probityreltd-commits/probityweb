@@ -260,11 +260,11 @@ const AddProperty = () => {
               handleChange={handleChange}
             />
 
-            {/* <SpecificationsSection
+            <SpecificationsSection
               number={4}
               formData={formData}
               handleChange={handleChange}
-            /> */}
+            />
 
             <ProjectDetailsSection
               number={5}

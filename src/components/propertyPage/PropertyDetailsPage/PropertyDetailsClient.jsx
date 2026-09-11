@@ -126,6 +126,7 @@ const PropertyDetailsClient = ({ property }) => {
         id: property?._id || null,
         slug: property?.slug || null,
         title: property?.title || null,
+        coverImage: property?.coverImage || null,
       },
       createdAt: new Date().toISOString(),
     };
@@ -267,7 +268,7 @@ const PropertyDetailsClient = ({ property }) => {
   .animate-brochure-glow {
     animation: brochure-glow 2s infinite ease-in-out;
   }
-`}</style>
+      `}</style>
 
       {/* Top Bar */}
       <TopBar title={property?.title} />

@@ -45,12 +45,10 @@ const OurFeatureProject = () => {
     <section className=" overflow-x-hidden md:overflow-x-visible transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-6">
-          <div>
-            <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight mt-1">
-              Our Feature Project
-            </h2>
-          </div>
+        <div>
+          <h2 className="font-serif text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight mt-1">
+            Our Feature Project
+          </h2>
         </div>
 
         {/* Properties */}

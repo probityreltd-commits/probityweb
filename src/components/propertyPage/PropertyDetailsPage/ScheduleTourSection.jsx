@@ -41,12 +41,13 @@ const ScheduleTourSection = ({ property }) => {
       name,
       phone,
       email,
-      subject: formData.subject.trim() || null, // preferred date/time
+      subject: formData.subject.trim() || null,
       message: formData.message.trim(),
       property: {
         id: property?._id || null,
         slug: property?.slug || null,
         title: property?.title || null,
+        coverImage: property?.coverImage || null,
       },
       createdAt: new Date().toISOString(),
     };
@@ -82,12 +83,9 @@ const ScheduleTourSection = ({ property }) => {
     "w-full bg-transparent border-0 border-b border-zinc-300 dark:border-zinc-700 pb-2.5 pt-1 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-[#431780] dark:focus:border-violet-400 transition-colors";
 
   return (
-    <section
-      aria-labelledby="schedule-tour-heading"
-      className="relative left-1/2 right-1/2 -mx-[50vw] w-screen  py-10 sm:py-14 px-4 sm:px-6 lg:px-8"
-    >
-      <div className="max-w-3xl mx-auto">
-        <div className="rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.15)] border border-zinc-100 dark:border-zinc-800 p-6 sm:p-10 lg:p-12">
+    <section aria-labelledby="schedule-tour-heading" className="pb-10">
+      <div className="max-w-7xl mx-auto">
+        <div className="rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900  border border-zinc-100 dark:border-zinc-800 p-6 sm:p-10 lg:p-12">
           <h2
             id="schedule-tour-heading"
             className="display-font text-2xl sm:text-3xl lg:text-4xl font-bold text-zinc-900 dark:text-white mb-1.5"

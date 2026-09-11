@@ -47,95 +47,95 @@ export const PropertyCard = ({ property, viewMode = "grid" }) => {
 
   const propertySlog = slug || _id;
 
+  // LIST VIEW LAYOUT
   if (viewMode === "list") {
     return (
-      <Link href={`/properties/${propertySlog}`}>
-        <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md rounded-3xl border border-zinc-200/80 dark:border-zinc-800 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group flex flex-col md:flex-row">
+      <Link href={`/properties/${propertySlog}`} className="block h-full">
+        <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md rounded-3xl border border-zinc-200/80 dark:border-zinc-800 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group flex flex-col md:flex-row h-full md:h-64">
           {/* Cover Image Container */}
-          <div className="relative md:w-80 h-64 md:h-auto shrink-0 overflow-hidden">
+          <div className="relative md:w-80 h-56 md:h-full shrink-0 overflow-hidden">
             <img
               src={displayImage}
-              alt={title}
+              alt={title || "Property"}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:hidden" />
 
             {/* Status Tag */}
             {status && (
-              <span className="absolute top-4 left-4 bg-[#3b1a83] text-white text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg">
+              <span className="absolute top-4 left-4 bg-[#3b1a83] text-white text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg z-10">
                 {status}
               </span>
             )}
 
             {/* Property Type */}
             {propertyType && (
-              <span className="absolute top-4 right-4 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md text-zinc-800 dark:text-zinc-100 text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm">
+              <span className="absolute top-4 right-4 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md text-zinc-800 dark:text-zinc-100 text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm z-10">
                 {propertyType}
               </span>
             )}
           </div>
 
           {/* Content Body */}
-          <div className="p-6 flex-1 flex flex-col justify-between">
+          <div className="p-5 md:p-6 flex-1 flex flex-col justify-between overflow-hidden">
             <div>
-              {fullLocation && (
-                <div className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 mb-2">
-                  <MapPin className="w-3.5 h-3.5 text-[#3b1a83] dark:text-indigo-400 shrink-0" />
-                  <span className="truncate">{fullLocation}</span>
-                </div>
-              )}
+              {/* Location Tag */}
+              <div className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 mb-1.5 h-4">
+                {fullLocation ? (
+                  <>
+                    <MapPin className="w-3.5 h-3.5 text-[#3b1a83] dark:text-indigo-400 shrink-0" />
+                    <span className="truncate">{fullLocation}</span>
+                  </>
+                ) : null}
+              </div>
 
+              {/* Title */}
               <h3 className="font-serif text-xl font-bold text-zinc-900 dark:text-white mb-2 group-hover:text-[#3b1a83] dark:group-hover:text-indigo-400 transition-colors line-clamp-1">
                 {title}
               </h3>
 
-              {description && (
-                <p className="text-xs text-zinc-600 dark:text-zinc-400 line-clamp-2 mb-4 leading-relaxed">
-                  {description}
-                </p>
-              )}
+              {/* Fixed Height Description Block */}
+              <p className="text-xs text-zinc-600 dark:text-zinc-400 line-clamp-2 mb-3 leading-relaxed min-h-[2.5rem]">
+                {description || ""}
+              </p>
             </div>
 
             <div>
               {/* Key Features */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 py-3 border-y border-zinc-100 dark:border-zinc-800/80 my-3 text-xs">
-                {bedrooms !== undefined && (
-                  <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
-                    <Bed className="w-4 h-4 text-[#3b1a83] dark:text-indigo-400" />
-                    <span>{bedrooms} Beds</span>
-                  </div>
-                )}
-                {bathrooms !== undefined && (
-                  <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
-                    <Bath className="w-4 h-4 text-[#3b1a83] dark:text-indigo-400" />
-                    <span>{bathrooms} Baths</span>
-                  </div>
-                )}
-                {flatSize && (
-                  <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
-                    <Maximize2 className="w-4 h-4 text-[#3b1a83] dark:text-indigo-400" />
-                    <span>{flatSize}</span>
-                  </div>
-                )}
-                {orientation && (
-                  <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
-                    <Compass className="w-4 h-4 text-[#3b1a83] dark:text-indigo-400" />
-                    <span className="truncate">{orientation}</span>
-                  </div>
-                )}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 py-2.5 border-y border-zinc-100 dark:border-zinc-800/80 my-2 text-xs">
+                <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
+                  <Bed className="w-4 h-4 text-[#3b1a83] dark:text-indigo-400 shrink-0" />
+                  <span className="truncate">
+                    {bedrooms !== undefined ? `${bedrooms} Beds` : "N/A"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
+                  <Bath className="w-4 h-4 text-[#3b1a83] dark:text-indigo-400 shrink-0" />
+                  <span className="truncate">
+                    {bathrooms !== undefined ? `${bathrooms} Baths` : "N/A"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
+                  <Maximize2 className="w-4 h-4 text-[#3b1a83] dark:text-indigo-400 shrink-0" />
+                  <span className="truncate">{flatSize || "N/A"}</span>
+                </div>
+                <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
+                  <Compass className="w-4 h-4 text-[#3b1a83] dark:text-indigo-400 shrink-0" />
+                  <span className="truncate">{orientation || "N/A"}</span>
+                </div>
               </div>
 
               {/* Footer Row */}
               <div className="flex items-center justify-between pt-1">
-                {formattedHandover ? (
-                  <div className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
-                    <Calendar className="w-3.5 h-3.5 text-[#3b1a83] dark:text-indigo-400" />
-                    <span>Handover: {formattedHandover}</span>
-                  </div>
-                ) : (
-                  <div />
-                )}
-                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#3b1a83]">
+                <div className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
+                  {formattedHandover && (
+                    <>
+                      <Calendar className="w-3.5 h-3.5 text-[#3b1a83] dark:text-indigo-400" />
+                      <span>Handover: {formattedHandover}</span>
+                    </>
+                  )}
+                </div>
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#3b1a83] dark:text-indigo-400">
                   View Details
                   <ArrowUpRight className="w-4 h-4" />
                 </span>
@@ -147,97 +147,95 @@ export const PropertyCard = ({ property, viewMode = "grid" }) => {
     );
   }
 
-  // Grid View Layout
+  // GRID VIEW LAYOUT
   return (
-    <Link href={`/properties/${propertySlog}`}>
+    <Link href={`/properties/${propertySlog}`} className="block h-full">
       <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md rounded-3xl border border-zinc-200/80 dark:border-zinc-800 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group flex flex-col h-full">
         {/* Cover Image Banner */}
-        <div className="relative h-56 w-full overflow-hidden shrink-0">
+        <div className="relative h-52 w-full overflow-hidden shrink-0">
           <img
             src={displayImage}
-            alt={title}
+            alt={title || "Property"}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
           {/* Status Tag */}
           {status && (
-            <span className="absolute top-4 left-4 bg-[#3b1a83] text-white text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg">
+            <span className="absolute top-4 left-4 bg-[#3b1a83] text-white text-[10px] font-extrabold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg z-10">
               {status}
             </span>
           )}
 
           {/* Property Type Tag */}
           {propertyType && (
-            <span className="absolute top-4 right-4 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md text-zinc-800 dark:text-zinc-100 text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm">
+            <span className="absolute top-4 right-4 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md text-zinc-800 dark:text-zinc-100 text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm z-10">
               {propertyType}
             </span>
           )}
 
           {/* Location Banner Overlay */}
-          {fullLocation && (
-            <div className="absolute bottom-3 left-4 right-4 flex items-center gap-1.5 text-xs text-white/90 font-medium drop-shadow-sm">
-              <MapPin className="w-3.5 h-3.5 text-indigo-300 shrink-0" />
-              <span className="truncate">{fullLocation}</span>
-            </div>
-          )}
+          <div className="absolute bottom-3 left-4 right-4 flex items-center gap-1.5 text-xs text-white/90 font-medium drop-shadow-sm h-4">
+            {fullLocation && (
+              <>
+                <MapPin className="w-3.5 h-3.5 text-indigo-300 shrink-0" />
+                <span className="truncate">{fullLocation}</span>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Card Details */}
         <div className="p-5 flex-1 flex flex-col justify-between">
           <div>
+            {/* Title */}
             <h3 className="font-serif text-lg font-bold text-zinc-900 dark:text-white mb-2 group-hover:text-[#3b1a83] dark:group-hover:text-indigo-400 transition-colors line-clamp-1">
               {title}
             </h3>
 
-            {description && (
-              <p className="text-xs text-zinc-600 dark:text-zinc-400 line-clamp-2 mb-4 leading-relaxed">
-                {description}
-              </p>
-            )}
+            {/* Fixed Height Description Block */}
+            <p className="text-xs text-zinc-600 dark:text-zinc-400 line-clamp-2 mb-4 leading-relaxed min-h-[2.5rem]">
+              {description || ""}
+            </p>
           </div>
 
           <div>
             {/* Specifications Grid */}
             <div className="grid grid-cols-2 gap-2.5 py-3 border-y border-zinc-100 dark:border-zinc-800/80 mb-4 text-xs">
-              {bedrooms !== undefined && (
-                <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
-                  <Bed className="w-3.5 h-3.5 text-[#3b1a83] dark:text-indigo-400" />
-                  <span>{bedrooms} Bedrooms</span>
-                </div>
-              )}
-              {bathrooms !== undefined && (
-                <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
-                  <Bath className="w-3.5 h-3.5 text-[#3b1a83] dark:text-indigo-400" />
-                  <span>{bathrooms} Bathrooms</span>
-                </div>
-              )}
-              {flatSize && (
-                <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
-                  <Maximize2 className="w-3.5 h-3.5 text-[#3b1a83] dark:text-indigo-400" />
-                  <span>{flatSize}</span>
-                </div>
-              )}
-              {orientation && (
-                <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300 truncate">
-                  <Compass className="w-3.5 h-3.5 text-[#3b1a83] dark:text-indigo-400 shrink-0" />
-                  <span className="truncate">{orientation}</span>
-                </div>
-              )}
+              <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
+                <Bed className="w-3.5 h-3.5 text-[#3b1a83] dark:text-indigo-400 shrink-0" />
+                <span className="truncate">
+                  {bedrooms !== undefined ? `${bedrooms} Beds` : "N/A"}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
+                <Bath className="w-3.5 h-3.5 text-[#3b1a83] dark:text-indigo-400 shrink-0" />
+                <span className="truncate">
+                  {bathrooms !== undefined ? `${bathrooms} Baths` : "N/A"}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
+                <Maximize2 className="w-3.5 h-3.5 text-[#3b1a83] dark:text-indigo-400 shrink-0" />
+                <span className="truncate">{flatSize || "N/A"}</span>
+              </div>
+              <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-300">
+                <Compass className="w-3.5 h-3.5 text-[#3b1a83] dark:text-indigo-400 shrink-0" />
+                <span className="truncate">{orientation || "N/A"}</span>
+              </div>
             </div>
 
             {/* Footer Card Row */}
             <div className="flex items-center justify-between text-xs pt-1">
-              {formattedHandover ? (
-                <div className="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400">
-                  <Calendar className="w-3.5 h-3.5 text-[#3b1a83] dark:text-indigo-400" />
-                  <span>{formattedHandover}</span>
-                </div>
-              ) : (
-                <div />
-              )}
+              <div className="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400">
+                {formattedHandover && (
+                  <>
+                    <Calendar className="w-3.5 h-3.5 text-[#3b1a83] dark:text-indigo-400" />
+                    <span>{formattedHandover}</span>
+                  </>
+                )}
+              </div>
 
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#3b1a83]">
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#3b1a83] dark:text-indigo-400">
                 View Details
                 <ArrowUpRight className="w-4 h-4" />
               </span>
