@@ -42,7 +42,7 @@ const buildingVariants = {
 
 const Banner = () => {
   return (
-    <section className="relative w-full py-24 lg:h-screen overflow-hidden bg-night flex flex-col">
+    <section className="relative w-full pb-24 lg:h-screen overflow-hidden bg-night flex flex-col">
       {/* Background Atmosphere */}
       <div className="absolute inset-0 bg-hero-gradient z-0">
         {/* Falling Stars Animation */}
@@ -74,7 +74,7 @@ const Banner = () => {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-20 container mx-auto px-4 sm:px-6 pt-24 pb-6 sm:pt-28 sm:pb-8 lg:pt-24 lg:pb-0 lg:flex-1 lg:flex lg:items-center">
+      <div className="relative z-20 container mx-auto px-4 sm:px-6 pt-24 pb-6 sm:pt-28 sm:pb-8 lg:pt-0 lg:pb-0 lg:flex-1 lg:flex lg:items-center">
         <motion.div
           variants={containerVariants}
           initial="hidden"

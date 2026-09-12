@@ -31,7 +31,7 @@ export default function ContactFAQ() {
         <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
           Frequently Asked Questions
         </h2>
-        <p className="text-[11px] sm:text-xs text-slate-500 mt-1">
+        <p className="text-[11px] sm:text-sm text-slate-500 mt-1">
           Quick answers to common questions about contacting us and viewing
           properties.
         </p>
@@ -48,7 +48,7 @@ export default function ContactFAQ() {
             >
               <button
                 onClick={() => setOpenIdx(isOpen ? null : idx)}
-                className="w-full p-3.5 sm:p-4 text-left flex justify-between items-center gap-3 text-[11px] sm:text-xs font-semibold text-slate-800 hover:text-brand transition-colors"
+                className="w-full p-3.5 sm:p-4 text-left flex justify-between items-center gap-3 text-[11px] sm:text-sm font-semibold text-slate-800 hover:text-brand transition-colors"
               >
                 <span>{faq.q}</span>
                 <ChevronDown
@@ -59,7 +59,7 @@ export default function ContactFAQ() {
               </button>
 
               {isOpen && (
-                <div className="px-3.5 sm:px-4 pb-3.5 sm:pb-4 pt-2 text-[11px] sm:text-xs text-slate-500 leading-relaxed border-t border-slate-100">
+                <div className="px-3.5 sm:px-4 pb-3.5 sm:pb-4 pt-2 text-[11px] sm:text-sm text-slate-500 leading-relaxed border-t border-slate-100">
                   {faq.a}
                 </div>
               )}

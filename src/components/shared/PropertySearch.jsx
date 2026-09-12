@@ -28,32 +28,32 @@ const THEME = {
       "text-[10px] sm:text-[11px] uppercase tracking-widest font-bold text-zinc-400 flex items-center gap-1.5",
     iconAccent: "text-amber-400",
     select:
-      "w-full bg-zinc-900/90 px-3.5 py-2.5 rounded-xl border border-white/10 text-xs sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#3b1a83] disabled:opacity-50 transition-all cursor-pointer appearance-none",
+      "w-full bg-zinc-900/90 px-3.5 py-2.5 rounded-xl border border-white/10 text-xs sm:text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand disabled:opacity-50 transition-all cursor-pointer appearance-none",
     option: "bg-zinc-900 text-white",
     button:
-      "w-full bg-[#3b1a83] hover:bg-[#2e1467] text-white px-6 py-2.5 sm:py-3 rounded-xl font-extrabold text-xs sm:text-sm transition-all duration-300 shadow-xl hover:shadow-2xl active:scale-95 flex items-center justify-center gap-2 group border border-white/10 disabled:opacity-50",
+      "w-full bg-brand hover:bg-brand-dark text-white px-6 py-2.5 sm:py-3 rounded-xl font-extrabold text-xs sm:text-sm transition-all duration-300 shadow-xl hover:shadow-2xl active:scale-95 flex items-center justify-center gap-2 group border border-white/10 disabled:opacity-50",
     error:
       "mx-4 sm:mx-6 mt-3 text-xs text-rose-400 bg-rose-950/40 p-2 rounded-lg border border-rose-800",
   },
   inline: {
     wrapper: "w-full",
-    card: "bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md rounded-3xl border border-zinc-200/80 dark:border-zinc-800 shadow-sm",
+    card: "bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-zinc-200/80 dark:border-zinc-800 shadow-sm",
     header:
-      "flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-5 pb-2 border-b border-zinc-200/80 dark:border-zinc-800",
+      "flex items-center justify-between px-3.5 sm:px-6 pt-3 sm:pt-5 pb-1.5 sm:pb-2 border-b border-zinc-200/80 dark:border-zinc-800",
     title:
-      "text-[#3b1a83] dark:text-indigo-400 font-serif font-bold text-xs sm:text-lg uppercase tracking-wider",
+      "text-brand dark:text-indigo-400 font-serif font-bold text-[11px] sm:text-lg uppercase tracking-wider",
     reset:
-      "text-xs text-zinc-500 hover:text-[#3b1a83] dark:hover:text-indigo-400 flex items-center gap-1 transition-colors",
+      "text-[10px] sm:text-xs text-zinc-500 hover:text-brand dark:hover:text-indigo-400 flex items-center gap-1 transition-colors",
     label:
-      "text-[10px] sm:text-[11px] uppercase tracking-widest font-bold text-zinc-500 dark:text-zinc-400 flex items-center gap-1.5",
-    iconAccent: "text-[#3b1a83] dark:text-indigo-400",
+      "text-[9px] sm:text-[11px] uppercase tracking-widest font-bold text-zinc-500 dark:text-zinc-400 flex items-center gap-1",
+    iconAccent: "text-brand dark:text-indigo-400",
     select:
-      "w-full bg-[#f5f1ff] dark:bg-zinc-800 px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700/80 text-xs sm:text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#3b1a83] disabled:opacity-50 transition-all cursor-pointer appearance-none",
+      "w-full bg-background dark:bg-zinc-800 px-2.5 sm:px-3.5 py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl border border-zinc-200 dark:border-zinc-700/80 text-[11px] sm:text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand disabled:opacity-50 transition-all cursor-pointer appearance-none",
     option: "bg-white text-zinc-900 dark:bg-zinc-900 dark:text-white",
     button:
-      "w-full bg-[#3b1a83] hover:bg-[#2e1467] text-white px-6 py-2.5 sm:py-3 rounded-xl font-extrabold text-xs sm:text-sm transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 flex items-center justify-center gap-2 group disabled:opacity-50",
+      "w-full bg-brand hover:bg-brand-dark text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-extrabold text-[11px] sm:text-sm transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 flex items-center justify-center gap-1.5 sm:gap-2 group disabled:opacity-50",
     error:
-      "mx-4 sm:mx-6 mt-3 text-xs text-rose-600 bg-rose-50 dark:bg-rose-950/40 p-2 rounded-lg border border-rose-200 dark:border-rose-800",
+      "mx-3.5 sm:mx-6 mt-2 sm:mt-3 text-[11px] sm:text-xs text-rose-600 bg-rose-50 dark:bg-rose-950/40 p-2 rounded-lg border border-rose-200 dark:border-rose-800",
   },
 };
 
@@ -244,15 +244,16 @@ const PropertySearch = ({
 
         <form
           onSubmit={handleSubmit}
-          className="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 items-end"
+          className="p-3.5 sm:p-6 grid grid-cols-2 md:grid-cols-2 xl:grid-cols-4 gap-2.5 sm:gap-4 items-end"
         >
           {/* Location */}
-          <div className="space-y-1 sm:space-y-1.5">
+          <div className="space-y-0.5 sm:space-y-1.5">
             <label className={t.label}>
-              <MapPin className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${t.iconAccent}`} />
+              <MapPin
+                className={`w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 ${t.iconAccent}`}
+              />
               Location
             </label>
-
             <div className="relative">
               <select
                 value={selectedLocation}
@@ -267,21 +268,20 @@ const PropertySearch = ({
                   </option>
                 ))}
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-zinc-400">
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 sm:px-3 text-[10px] sm:text-sm text-zinc-400">
                 ▼
               </div>
             </div>
           </div>
 
           {/* Project Name */}
-          <div className="space-y-1 sm:space-y-1.5">
+          <div className="space-y-0.5 sm:space-y-1.5">
             <label className={t.label}>
               <Building
-                className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${t.iconAccent}`}
+                className={`w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 ${t.iconAccent}`}
               />
               Project Name
             </label>
-
             <div className="relative">
               <select
                 value={selectedProject}
@@ -300,21 +300,20 @@ const PropertySearch = ({
                   </option>
                 ))}
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-zinc-400">
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 sm:px-3 text-[10px] sm:text-sm text-zinc-400">
                 ▼
               </div>
             </div>
           </div>
 
           {/* Property Type */}
-          <div className="space-y-1 sm:space-y-1.5">
+          <div className="space-y-0.5 sm:space-y-1.5">
             <label className={t.label}>
               <Building2
-                className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${t.iconAccent}`}
+                className={`w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 ${t.iconAccent}`}
               />
               Property Type
             </label>
-
             <div className="relative">
               <select
                 value={selectedType}
@@ -340,7 +339,7 @@ const PropertySearch = ({
                   {!propertyTypeAvailability.commercial && " (Unavailable)"}
                 </option>
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-zinc-400">
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 sm:px-3 text-[10px] sm:text-sm text-zinc-400">
                 ▼
               </div>
             </div>
@@ -350,11 +349,11 @@ const PropertySearch = ({
           <div>
             <button type="submit" disabled={loading} className={t.button}>
               {loading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin" />
               ) : (
                 <>
-                  <Search className="w-4 h-4 transition-transform group-hover:scale-110" />
-                  <span>Search Properties</span>
+                  <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform group-hover:scale-110" />
+                  <span>Search</span>
                 </>
               )}
             </button>

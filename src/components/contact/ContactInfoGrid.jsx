@@ -35,11 +35,11 @@ export default function ContactInfoGrid() {
             {detail.icon}
           </div>
           <div className="space-y-0.5">
-            <h3 className="text-[16px] sm:text-lg font-bold text-slate-900 tracking-wide">
+            <h3 className="text-[14px] sm:text-lg font-bold text-slate-900 tracking-wide">
               {detail.title}
             </h3>
             {detail.lines.map((line, lIdx) => (
-              <p key={lIdx} className="text-[16px] sm:text-xs text-slate-500">
+              <p key={lIdx} className="text-[11px] sm:text-xs text-slate-500">
                 {line}
               </p>
             ))}

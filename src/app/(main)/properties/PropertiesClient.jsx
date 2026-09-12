@@ -60,7 +60,7 @@ const PropertiesClient = ({
   }, [properties, filters]);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-5 sm:space-y-7 lg:space-y-8">
       <PropertySearch
         variant="inline"
         properties={properties}
@@ -72,17 +72,17 @@ const PropertiesClient = ({
 
       {/* Result count + grid/list toggle */}
       <div className="flex items-center justify-between px-1">
-        <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="text-xs sm:text-sm lg:text-base text-zinc-500 dark:text-zinc-400">
           {filteredProperties.length} propert
           {filteredProperties.length === 1 ? "y" : "ies"} found
         </p>
 
-        <div className="hidden sm:flex items-center bg-[#f5f1ff] dark:bg-zinc-800 p-1 rounded-2xl border border-zinc-200 dark:border-zinc-700">
+        <div className="hidden sm:flex items-center bg-background dark:bg-zinc-800 p-1 rounded-2xl border border-zinc-200 dark:border-zinc-700">
           <button
             onClick={() => setViewMode("grid")}
             className={`p-2 rounded-xl transition-all ${
               viewMode === "grid"
-                ? "bg-white dark:bg-zinc-700 text-[#3b1a83] dark:text-white shadow-sm"
+                ? "bg-white dark:bg-zinc-700 text-brand dark:text-white shadow-sm"
                 : "text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
             }`}
             title="Grid View"
@@ -93,7 +93,7 @@ const PropertiesClient = ({
             onClick={() => setViewMode("list")}
             className={`p-2 rounded-xl transition-all ${
               viewMode === "list"
-                ? "bg-white dark:bg-zinc-700 text-[#3b1a83] dark:text-white shadow-sm"
+                ? "bg-white dark:bg-zinc-700 text-brand dark:text-white shadow-sm"
                 : "text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
             }`}
             title="List View"
@@ -108,8 +108,8 @@ const PropertiesClient = ({
         <div
           className={
             viewMode === "grid"
-              ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
-              : "flex flex-col gap-6"
+              ? "grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8"
+              : "flex flex-col gap-4 sm:gap-6"
           }
         >
           {filteredProperties.map((property) => (
@@ -121,14 +121,14 @@ const PropertiesClient = ({
           ))}
         </div>
       ) : (
-        <div className="bg-white/60 dark:bg-zinc-900/60 rounded-3xl p-12 text-center border border-zinc-200 dark:border-zinc-800 my-12">
-          <div className="w-12 h-12 rounded-2xl bg-[#3b1a83]/10 text-[#3b1a83] dark:text-indigo-400 flex items-center justify-center mx-auto mb-4">
-            <SlidersHorizontal className="w-6 h-6" />
+        <div className="bg-white/60 dark:bg-zinc-900/60 rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-center border border-zinc-200 dark:border-zinc-800 my-8 sm:my-12">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-brand/10 text-brand dark:text-indigo-400 flex items-center justify-center mx-auto mb-3 sm:mb-4">
+            <SlidersHorizontal className="w-5 h-5 sm:w-6 sm:h-6" />
           </div>
-          <h3 className="font-serif text-xl font-bold text-zinc-900 dark:text-white mb-1">
+          <h3 className="font-serif text-lg sm:text-xl font-bold text-zinc-900 dark:text-white mb-1">
             No Properties Found
           </h3>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-xs mx-auto">
+          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 max-w-xs mx-auto">
             We couldn&apos;t find any properties matching your search criteria.
             Try clearing filters.
           </p>
@@ -136,7 +136,7 @@ const PropertiesClient = ({
             onClick={() =>
               handleSearch({ location: "", projectName: "", propertyType: "" })
             }
-            className="mt-5 text-xs font-bold text-[#3b1a83] dark:text-indigo-400 hover:underline"
+            className="mt-4 sm:mt-5 text-xs sm:text-sm font-bold text-brand dark:text-indigo-400 hover:underline"
           >
             Reset Filters
           </button>

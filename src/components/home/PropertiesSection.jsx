@@ -139,8 +139,8 @@ const PropertiesSection = () => {
               spaceBetween={24}
               breakpoints={{
                 0: {
-                  slidesPerView: 1,
-                  spaceBetween: 16,
+                  slidesPerView: 2,
+                  spaceBetween: 12,
                 },
                 640: {
                   slidesPerView: 2,
@@ -151,7 +151,7 @@ const PropertiesSection = () => {
                   spaceBetween: 24,
                 },
               }}
-              className="w-full !p-3 -m-3"
+              className="w-full !p-0 -m-2 sm:!p-3 sm:-m-3"
             >
               {properties.map((property) => (
                 <SwiperSlide key={property._id || property.id}>

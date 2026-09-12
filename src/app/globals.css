@@ -35,6 +35,9 @@
   --color-surface-tint-dark: #070913;
   --color-ink: #020817;
 
+  /* contact page */
+  --color-brand-light: #a78bfa;
+
   /* Global page background (light / dark) */
   --color-background: #f5f1ff;
 }
@@ -125,6 +128,10 @@
     box-shadow:
       0 0 30px var(--color-moon),
       0 0 60px rgb(253 242 233 / 0.4);
+  }
+
+  .text-brand-light {
+    color: var(--color-brand-light);
   }
 }
 

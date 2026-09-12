@@ -85,7 +85,7 @@ export default function InquiryForm() {
         <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
           Send an Inquiry
         </h2>
-        <p className="text-[11px] sm:text-xs text-slate-500 mt-1">
+        <p className="text-[11px] sm:text-sm text-slate-500 mt-1">
           Fill out the form below and our real estate team will get back to you
           shortly.
         </p>
