@@ -108,7 +108,7 @@ const PropertyOverview = ({ properties = [], loading }) => {
             </p>
           </div>
           <Link
-            href="/admin/properties"
+            href="/admin/property"
             className="text-xs font-bold text-[#3b1a83] dark:text-purple-400 hover:underline flex items-center gap-1"
           >
             <span>View All</span>
