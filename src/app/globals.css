@@ -133,6 +133,30 @@
   .text-brand-light {
     color: var(--color-brand-light);
   }
+
+  /* Property details page — ledger dotted line, uses brand token */
+  .leader-line {
+    width: 100%;
+    border-top: 1px dotted
+      color-mix(in srgb, var(--color-brand) 60%, transparent);
+    margin: 10px 0;
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .film-thumb::-webkit-scrollbar {
+    height: 6px;
+  }
+  .film-thumb::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.4);
+    border-radius: 999px;
+  }
 }
 
 /* =========================================================
@@ -218,4 +242,34 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* property details page */
+@keyframes subtle-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+.animate-shimmer {
+  animation: subtle-shimmer 2.5s infinite ease-in-out;
+}
+
+@keyframes brochure-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 color-mix(in srgb, var(--color-brand) 40%, transparent),
+      0 0 12px color-mix(in srgb, var(--color-brand) 30%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 6px transparent,
+      0 0 20px color-mix(in srgb, var(--color-brand) 60%, transparent);
+  }
+}
+.animate-brochure-glow {
+  animation: brochure-glow 2s infinite ease-in-out;
 }

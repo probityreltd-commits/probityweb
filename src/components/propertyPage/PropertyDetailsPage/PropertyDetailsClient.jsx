@@ -3,9 +3,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { addInquiries } from "@/services/action/inquiries";
-import { Bed, Bath, Maximize2, Calendar } from "lucide-react";
+import { LandPlot, Building2, Home, Car } from "lucide-react";
 
-// Import all section components
 import TopBar from "./TopBar";
 import Hero from "./Hero";
 import SpecLedger from "./SpecLedger";
@@ -18,13 +17,6 @@ import FeaturesAndAmenities from "./FeaturesAndAmenities";
 import ScheduleTourSection from "./ScheduleTourSection";
 import OurFeatureProject from "./OurFeatureProject";
 
-// Font imports and brand colour (kept in parent for global scope)
-const FONT_IMPORTS = `
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
-`;
-const BRAND = "#431780";
-
-// Utility
 const formatDate = (value) => {
   if (!value) return null;
   try {
@@ -53,24 +45,23 @@ const PropertyDetailsClient = ({ property }) => {
   });
   const [submitted, setSubmitted] = useState(false);
 
-  // Handlers
   const handleFieldChange = (field) => (e) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
   const triggerBrochureDownload = () => {
-    if (property?.projectBrochure) {
-      const link = document.createElement("a");
-      link.href = property.projectBrochure;
-      link.download = `${property?.slug || property?.title || "project"}-brochure`;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } else {
+    if (!property?.projectBrochure) {
       toast.error("Project brochure is currently unavailable.");
+      return;
     }
+    const link = document.createElement("a");
+    link.href = property.projectBrochure;
+    link.download = `${property?.slug || property?.title || "project"}-brochure`;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const handleFormSubmit = async (e) => {
@@ -83,6 +74,7 @@ const PropertyDetailsClient = ({ property }) => {
         toast.error("Please provide your email and phone number.");
         return;
       }
+
       setIsSubmitting(true);
       const payload = {
         requestType: "BROCHURE_DOWNLOAD",
@@ -96,6 +88,7 @@ const PropertyDetailsClient = ({ property }) => {
         },
         createdAt: new Date().toISOString(),
       };
+
       try {
         const body = await addInquiries(payload);
         if (body?.success === false) throw new Error(body.message);
@@ -113,7 +106,6 @@ const PropertyDetailsClient = ({ property }) => {
       return;
     }
 
-    // Tour flow
     setIsSubmitting(true);
     const payload = {
       requestType: "SCHEDULE_TOUR",
@@ -130,6 +122,7 @@ const PropertyDetailsClient = ({ property }) => {
       },
       createdAt: new Date().toISOString(),
     };
+
     try {
       const body = await addInquiries(payload);
       if (body?.success === false) throw new Error(body.message);
@@ -145,7 +138,6 @@ const PropertyDetailsClient = ({ property }) => {
     }
   };
 
-  // Image handling (main hero images)
   const rawImages =
     property?.images?.length > 0
       ? property.images
@@ -159,6 +151,7 @@ const PropertyDetailsClient = ({ property }) => {
   const handlePrev = useCallback(() => {
     setActiveImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   }, [images.length]);
+
   const handleNext = useCallback(() => {
     setActiveImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   }, [images.length]);
@@ -174,28 +167,27 @@ const PropertyDetailsClient = ({ property }) => {
     return () => window.removeEventListener("keydown", onKey);
   }, [lightboxOpen, handlePrev, handleNext]);
 
-  // Derived data
   const handoverLabel = formatDate(property?.handoverDate);
   const listedLabel = formatDate(property?.createdAt);
 
   const stats = [
     property?.landArea != null && {
-      icon: Bed,
+      icon: LandPlot,
       label: "Land",
       value: `${property.landArea}`,
     },
     property?.buildingHeight != null && {
-      icon: Bath,
+      icon: Building2,
       label: "Building Height",
       value: `${property.buildingHeight}`,
     },
     property?.apartments && {
-      icon: Maximize2,
+      icon: Home,
       label: "Apartments",
       value: property.apartments,
     },
-    handoverLabel && {
-      icon: Calendar,
+    property?.carParking && {
+      icon: Car,
       label: "Car Parking",
       value: property.carParking,
     },
@@ -228,55 +220,12 @@ const PropertyDetailsClient = ({ property }) => {
   );
 
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif" }}>
-      {/* Global Styles */}
-      <style>{FONT_IMPORTS}</style>
-      <style>{`
-  .ledger-font { font-family: 'IBM Plex Mono', monospace; }
-  .display-font { font-family: 'Fraunces', serif; }
-  .leader-line {
-    width: 100%;
-    border-top: 1px dotted ${BRAND}99;
-    margin: 10px 0;
-  }
-  .film-thumb::-webkit-scrollbar { height: 6px; }
-  .film-thumb::-webkit-scrollbar-thumb {
-    background: rgba(148,163,184,0.4);
-    border-radius: 999px;
-  }
-  
-  /* Hide scrollbar for gallery */
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  @keyframes subtle-shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(200%); }
-  }
-  .animate-shimmer {
-    animation: subtle-shimmer 2.5s infinite ease-in-out;
-  }
-  @keyframes brochure-glow {
-    0%, 100% {
-      box-shadow: 0 0 0 0 rgba(67, 23, 128, 0.4), 0 0 12px rgba(67, 23, 128, 0.3);
-    }
-    50% {
-      box-shadow: 0 0 0 6px rgba(67, 23, 128, 0), 0 0 20px rgba(67, 23, 128, 0.6);
-    }
-  }
-  .animate-brochure-glow {
-    animation: brochure-glow 2s infinite ease-in-out;
-  }
-      `}</style>
-
-      {/* Top Bar */}
+    <div>
       <TopBar title={property?.title} />
 
-      {/* Hero Section */}
       <Hero
         images={images}
-        activeIndex={activeImageIndex}
+        activeIndex={safeIndex}
         setActiveIndex={setActiveImageIndex}
         onPrev={handlePrev}
         onNext={handleNext}
@@ -284,12 +233,11 @@ const PropertyDetailsClient = ({ property }) => {
         property={property}
       />
 
-      {/* Spec Ledger */}
       <SpecLedger stats={stats} propertyId={property?._id} />
 
       {/* Main Content Grid */}
-      <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        <div className="lg:col-span-8 space-y-8">
+      <div className="mt-6 sm:mt-8 lg:mt-10 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+        <div className="lg:col-span-8 space-y-6 sm:space-y-8">
           <KeyDetailsSection
             property={property}
             keyDetailsList={keyDetailsList}
@@ -298,7 +246,7 @@ const PropertyDetailsClient = ({ property }) => {
           <FeaturesAndAmenities amenities={property?.amenities} />
         </div>
 
-        <div className="lg:col-span-4 lg:sticky lg:top-22">
+        <div className="lg:col-span-4 lg:sticky lg:top-24">
           <ActionCard
             activeTab={activeTab}
             setActiveTab={setActiveTab}
@@ -313,28 +261,23 @@ const PropertyDetailsClient = ({ property }) => {
         </div>
       </div>
 
-      {/* ============ NEW FULL‑WIDTH SECTIONS ============ */}
-      {/* Google Map – exact location */}
-      {property.mapLocation && (
+      {property?.mapLocation && (
         <MapSection embedString={property.mapLocation} />
       )}
 
-      {/* Image Gallery – full width using galleryImages */}
-      {property.galleryImages?.length > 0 && (
+      {property?.galleryImages?.length > 0 && (
         <GallerySection images={property.galleryImages} />
       )}
 
-      {/* ============ SCHEDULE A TOUR ============ */}
       <ScheduleTourSection property={property} />
 
-      <OurFeatureProject></OurFeatureProject>
+      <OurFeatureProject />
 
-      {/* Lightbox Overlay */}
       <Lightbox
         isOpen={lightboxOpen}
         onClose={() => setLightboxOpen(false)}
         images={images}
-        activeIndex={activeImageIndex}
+        activeIndex={safeIndex}
         onPrev={handlePrev}
         onNext={handleNext}
         title={property?.title}

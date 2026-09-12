@@ -13,16 +13,19 @@ const ActionCard = ({
   isSubmitting,
   submitted,
 }) => {
+  const inputCls =
+    "w-full px-3.5 sm:px-4 py-2.5 sm:py-3 bg-brand/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl sm:rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand transition-all";
+
   return (
-    <div className="rounded-3xl p-6 sm:p-7 border border-zinc-200/80 dark:border-zinc-800 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl shadow-xl space-y-6">
+    <div className="rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-7 border border-zinc-200/80 dark:border-zinc-800 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl shadow-xl space-y-4 sm:space-y-6">
       {/* Mode Switching Navigation */}
-      <div className="grid grid-cols-2 gap-2 p-1 bg-[#431780]/5 dark:bg-zinc-800 rounded-2xl border border-zinc-200 dark:border-zinc-700">
+      <div className="grid grid-cols-2 gap-1.5 sm:gap-2 p-1 bg-brand/5 dark:bg-zinc-800 rounded-xl sm:rounded-2xl border border-zinc-200 dark:border-zinc-700">
         <button
           type="button"
           onClick={() => setActiveTab("TOUR")}
-          className={`py-2.5 text-xs font-semibold rounded-xl text-center flex items-center justify-center transition-all ${
+          className={`py-2 sm:py-2.5 text-[11px] sm:text-xs font-semibold rounded-lg sm:rounded-xl text-center flex items-center justify-center transition-all ${
             activeTab === "TOUR"
-              ? "bg-[#431780] text-white shadow-md"
+              ? "bg-brand text-white shadow-md"
               : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
           }`}
         >
@@ -32,10 +35,10 @@ const ActionCard = ({
         <button
           type="button"
           onClick={() => setActiveTab("BROCHURE")}
-          className={`relative overflow-hidden py-2.5 px-2 text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer border ${
+          className={`relative overflow-hidden py-2 sm:py-2.5 px-2 text-[11px] sm:text-xs font-semibold rounded-lg sm:rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer border ${
             activeTab === "BROCHURE"
-              ? "bg-[#431780] text-white shadow-md border-transparent"
-              : "bg-gradient-to-r from-[#431780]/15 via-violet-500/10 to-[#431780]/15 text-[#431780] dark:text-violet-300 border-[#431780]/40 animate-brochure-glow"
+              ? "bg-brand text-white shadow-md border-transparent"
+              : "bg-gradient-to-r from-brand/15 via-violet-500/10 to-brand/15 text-brand dark:text-indigo-400 border-brand/40 animate-brochure-glow"
           }`}
         >
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -47,10 +50,10 @@ const ActionCard = ({
       </div>
 
       {/* Sales Representative Card */}
-      <div className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-[#431780]/5 border border-zinc-200/60 dark:border-zinc-700/60">
-        <div className="relative w-11 h-11 rounded-full overflow-hidden border-2 border-[#431780] shrink-0 bg-zinc-200">
+      <div className="flex items-center gap-3 sm:gap-3.5 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-brand/5 border border-zinc-200/60 dark:border-zinc-700/60">
+        <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden border-2 border-brand shrink-0 bg-zinc-200">
           <Image
-            src="https://ui-avatars.com/api/?name=Probity+Estates&background=431780&color=ffffff&size=128"
+            src="https://ui-avatars.com/api/?name=Probity+Estates&background=3b1a83&color=ffffff&size=128"
             alt="Property advisor"
             fill
             unoptimized
@@ -60,23 +63,23 @@ const ActionCard = ({
         </div>
         <div>
           <div className="flex items-center gap-1">
-            <h4 className="display-font text-sm font-semibold text-zinc-900 dark:text-white">
+            <h4 className="font-serif text-xs sm:text-sm font-semibold text-zinc-900 dark:text-white">
               Probity Sales Team
             </h4>
             <UserCheck className="w-3.5 h-3.5 text-emerald-500" />
           </div>
-          <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+          <p className="text-[10px] sm:text-[11px] text-zinc-500 dark:text-zinc-400">
             Senior Real Estate Advisor
           </p>
         </div>
       </div>
 
       {/* Dynamic Form Flow */}
-      <form onSubmit={handleFormSubmit} className="space-y-3.5">
+      <form onSubmit={handleFormSubmit} className="space-y-3 sm:space-y-3.5">
         {activeTab === "BROCHURE" ? (
           <>
             <div>
-              <label className="block text-[10px] font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-1.5">
+              <label className="block text-[9px] sm:text-[10px] font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-1.5">
                 Email Address <span className="text-red-500">*</span>
               </label>
               <input
@@ -85,11 +88,12 @@ const ActionCard = ({
                 required
                 value={formData.email}
                 onChange={handleFieldChange("email")}
-                className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all"
+                autoComplete="email"
+                className={inputCls}
               />
             </div>
             <div>
-              <label className="block text-[10px] font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-1.5">
+              <label className="block text-[9px] sm:text-[10px] font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-1.5">
                 Phone Number <span className="text-red-500">*</span>
               </label>
               <input
@@ -98,13 +102,14 @@ const ActionCard = ({
                 required
                 value={formData.phone}
                 onChange={handleFieldChange("phone")}
-                className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all"
+                autoComplete="tel"
+                className={inputCls}
               />
             </div>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-[#431780] hover:bg-[#341166] text-white text-xs font-semibold py-3.5 px-6 rounded-2xl transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed mt-2"
+              className="w-full bg-brand hover:bg-brand-dark text-white text-xs font-semibold py-3 sm:py-3.5 px-6 rounded-xl sm:rounded-2xl transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed mt-1 sm:mt-2"
             >
               {isSubmitting ? (
                 <>
@@ -122,16 +127,16 @@ const ActionCard = ({
         ) : (
           <>
             <div>
-              <label className="block text-[10px] font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-2">
+              <label className="block text-[9px] sm:text-[10px] font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-1.5 sm:mb-2">
                 Tour type
               </label>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
                 <button
                   type="button"
                   onClick={() => setTourType("In Person")}
-                  className={`py-2 px-3 rounded-xl text-xs font-semibold border flex items-center justify-center gap-1.5 transition-all ${
+                  className={`py-1.5 sm:py-2 px-2.5 sm:px-3 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-semibold border flex items-center justify-center gap-1.5 transition-all ${
                     tourType === "In Person"
-                      ? "border-[#431780] bg-[#431780]/10 text-[#431780] dark:text-violet-300"
+                      ? "border-brand bg-brand/10 text-brand dark:text-indigo-400"
                       : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400"
                   }`}
                 >
@@ -141,9 +146,9 @@ const ActionCard = ({
                 <button
                   type="button"
                   onClick={() => setTourType("Video Chat")}
-                  className={`py-2 px-3 rounded-xl text-xs font-semibold border flex items-center justify-center gap-1.5 transition-all ${
+                  className={`py-1.5 sm:py-2 px-2.5 sm:px-3 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-semibold border flex items-center justify-center gap-1.5 transition-all ${
                     tourType === "Video Chat"
-                      ? "border-[#431780] bg-[#431780]/10 text-[#431780] dark:text-violet-300"
+                      ? "border-brand bg-brand/10 text-brand dark:text-indigo-400"
                       : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400"
                   }`}
                 >
@@ -159,7 +164,8 @@ const ActionCard = ({
               required
               value={formData.name}
               onChange={handleFieldChange("name")}
-              className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all"
+              autoComplete="name"
+              className={inputCls}
             />
             <input
               type="tel"
@@ -167,7 +173,8 @@ const ActionCard = ({
               required
               value={formData.phone}
               onChange={handleFieldChange("phone")}
-              className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all"
+              autoComplete="tel"
+              className={inputCls}
             />
             <input
               type="email"
@@ -175,20 +182,21 @@ const ActionCard = ({
               required
               value={formData.email}
               onChange={handleFieldChange("email")}
-              className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all"
+              autoComplete="email"
+              className={inputCls}
             />
             <textarea
               rows={3}
               placeholder="Preferred date or message..."
               value={formData.message}
               onChange={handleFieldChange("message")}
-              className="w-full px-4 py-3 bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all resize-none"
+              className={`${inputCls} resize-none`}
             />
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-[#431780] hover:bg-[#341166] text-white text-xs font-semibold py-3.5 px-6 rounded-2xl transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full bg-brand hover:bg-brand-dark text-white text-xs font-semibold py-3 sm:py-3.5 px-6 rounded-xl sm:rounded-2xl transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <>
@@ -204,14 +212,14 @@ const ActionCard = ({
             </button>
 
             {submitted && (
-              <p className="text-[11px] text-emerald-600 dark:text-emerald-400 text-center font-medium">
+              <p className="text-[10px] sm:text-[11px] text-emerald-600 dark:text-emerald-400 text-center font-medium">
                 Logged inquiry successfully.
               </p>
             )}
           </>
         )}
 
-        <p className="text-[10px] text-zinc-400 dark:text-zinc-500 text-center pt-1">
+        <p className="text-[9px] sm:text-[10px] text-zinc-400 dark:text-zinc-500 text-center pt-1">
           By submitting this form you agree to the Terms of Service.
         </p>
       </form>
