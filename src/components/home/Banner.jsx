@@ -66,7 +66,7 @@ const Banner = () => {
       className="
         relative
         w-full
-        min-h-[95svh]
+        min-h-[100svh]
         lg:h-screen
         overflow-hidden
         bg-night
