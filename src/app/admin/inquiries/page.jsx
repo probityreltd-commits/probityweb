@@ -39,6 +39,7 @@ export default function InquiriesPage() {
   const [page, setPage] = useState(1);
 
   const [inquiries, setInquiries] = useState([]);
+  console.log("inquiries", inquiries);
 
   const [pagination, setPagination] = useState(null);
   const [stats, setStats] = useState(null);
@@ -277,7 +278,6 @@ export default function InquiriesPage() {
       {activeInquiry && (
         <InquiryDetailDrawer
           inquiry={activeInquiry}
-          agents={agents}
           onClose={() => setActiveInquiry(null)}
           onStatusChange={handleStatusChange}
           onAssignChange={handleAssignChange}

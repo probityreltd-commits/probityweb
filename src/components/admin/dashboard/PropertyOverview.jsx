@@ -1,168 +1,116 @@
 "use client";
 
-import React, { useMemo } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, MapPin, Building, Calendar } from "lucide-react";
+import Image from "next/image";
+import { Bed, Bath, MapPin, ArrowRight, Building2 } from "lucide-react";
+import { getPropertyStatusMeta } from "@/components/ui/dashboard-helpers";
+
+const RowSkeleton = () => (
+  <div className="flex items-center gap-3 p-3 sm:p-4 animate-pulse">
+    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg sm:rounded-xl bg-zinc-200 dark:bg-zinc-800 shrink-0" />
+    <div className="flex-1 space-y-2">
+      <div className="h-3 w-1/2 bg-zinc-200 dark:bg-zinc-800 rounded" />
+      <div className="h-2.5 w-1/3 bg-zinc-200 dark:bg-zinc-800 rounded" />
+    </div>
+  </div>
+);
 
 const PropertyOverview = ({ properties = [], loading }) => {
-  // Sort properties by createdAt descending
-  const recentProperties = useMemo(() => {
-    return [...properties]
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-      .slice(0, 4);
-  }, [properties]);
-
-  // Dynamic Status Breakdown
-  const statusStats = useMemo(() => {
-    const total = properties.length || 1;
-    const counts = properties.reduce((acc, p) => {
-      const st = p.status?.toUpperCase() || "UNKNOWN";
-      acc[st] = (acc[st] || 0) + 1;
-      return acc;
-    }, {});
-
-    return [
-      {
-        name: "UPCOMING",
-        count: counts["UPCOMING"] || 0,
-        color: "bg-blue-500",
-        text: "text-blue-500",
-      },
-      {
-        name: "UNDER CONSTRUCTION",
-        count:
-          counts["UNDER_CONSTRUCTION"] || counts["UNDER CONSTRUCTION"] || 0,
-        color: "bg-amber-500",
-        text: "text-amber-500",
-      },
-      {
-        name: "COMPLETED",
-        count: counts["COMPLETED"] || 0,
-        color: "bg-emerald-500",
-        text: "text-emerald-500",
-      },
-    ].map((item) => ({
-      ...item,
-      percentage: Math.round((item.count / total) * 100),
-    }));
-  }, [properties]);
-
-  if (loading) {
-    return (
-      <div className="h-64 bg-zinc-200 dark:bg-zinc-800 rounded-2xl animate-pulse" />
-    );
-  }
+  const recent = [...properties]
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 5);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      {/* Property Status Distribution */}
-      <div className="lg:col-span-4 bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-zinc-100 dark:border-zinc-800 shadow-sm flex flex-col justify-between">
-        <div>
-          <h3 className="text-base font-bold text-zinc-900 dark:text-white">
-            Portfolio Distribution
-          </h3>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
-            Real-time status analysis of all listings
-          </p>
-
-          <div className="mt-6 space-y-4">
-            {statusStats.map((item) => (
-              <div key={item.name} className="space-y-1.5">
-                <div className="flex items-center justify-between text-xs font-semibold">
-                  <span className="text-zinc-700 dark:text-zinc-300">
-                    {item.name}
-                  </span>
-                  <span className="text-zinc-500">
-                    {item.count} ({item.percentage}%)
-                  </span>
-                </div>
-                <div className="w-full h-2 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full ${item.color} transition-all duration-500`}
-                    style={{ width: `${item.percentage}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-6 pt-4 border-t border-zinc-100 dark:border-zinc-800 flex justify-between items-center text-xs">
-          <span className="text-zinc-500">Total Listed</span>
-          <span className="font-bold text-zinc-900 dark:text-white">
-            {properties.length} Properties
-          </span>
-        </div>
+    <div className="rounded-2xl sm:rounded-3xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm overflow-hidden">
+      <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-zinc-100 dark:border-zinc-800">
+        <h3 className="font-serif text-sm sm:text-lg font-bold text-zinc-900 dark:text-white">
+          Recent Properties
+        </h3>
+        <Link
+          href="/admin/properties"
+          className="text-[11px] sm:text-xs font-semibold text-brand dark:text-indigo-400 hover:underline flex items-center gap-1"
+        >
+          View all
+          <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+        </Link>
       </div>
 
-      {/* Recent Properties List */}
-      <div className="lg:col-span-8 bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-zinc-100 dark:border-zinc-800 shadow-sm">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h3 className="text-base font-bold text-zinc-900 dark:text-white">
-              Recently Added Properties
-            </h3>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
-              Latest additions to your real estate portfolio
-            </p>
-          </div>
-          <Link
-            href="/admin/property"
-            className="text-xs font-bold text-[#3b1a83] dark:text-purple-400 hover:underline flex items-center gap-1"
-          >
-            <span>View All</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </Link>
+      {loading ? (
+        <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <RowSkeleton key={i} />
+          ))}
         </div>
-
-        {recentProperties.length === 0 ? (
-          <div className="py-12 text-center text-xs text-zinc-500">
-            No properties available.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {recentProperties.map((prop) => (
-              <div
-                key={prop._id || prop.slug}
-                className="flex items-center gap-3 p-2.5 rounded-xl border border-zinc-100 dark:border-zinc-800/80 hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-all"
-              >
-                <div className="relative w-14 h-14 rounded-lg overflow-hidden shrink-0 bg-zinc-100 dark:bg-zinc-800">
+      ) : recent.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-10 sm:py-14 px-4 text-center">
+          <Building2 className="w-8 h-8 text-zinc-300 dark:text-zinc-700 mb-2" />
+          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
+            No properties added yet.
+          </p>
+        </div>
+      ) : (
+        <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+          {recent.map((property) => (
+            <Link
+              key={property._id}
+              href={`/properties/${property.slug || property._id}`}
+              target="_blank"
+              className="flex items-center gap-3 p-3 sm:p-4 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors"
+            >
+              <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-lg sm:rounded-xl overflow-hidden shrink-0 bg-zinc-100 dark:bg-zinc-800">
+                {property.coverImage && (
                   <Image
-                    src={
-                      prop.coverImage ||
-                      prop.images?.[0] ||
-                      "/placeholder-property.jpg"
-                    }
-                    alt={prop.title}
+                    src={property.coverImage}
+                    alt={property.title}
                     fill
+                    sizes="64px"
                     className="object-cover"
                   />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h4 className="text-xs font-bold text-zinc-900 dark:text-white truncate">
-                    {prop.title}
+                )}
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <h4 className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-white truncate">
+                    {property.title}
                   </h4>
-                  <div className="flex items-center gap-1 text-[11px] text-zinc-500 mt-0.5 truncate">
-                    <MapPin className="w-3 h-3 shrink-0" />
-                    <span className="truncate">
-                      {prop.locationName || "Location N/A"}
+                  {property.status && (
+                    <span
+                      className={`hidden sm:inline-block text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full shrink-0 ${getPropertyStatusMeta(property.status)}`}
+                    >
+                      {property.status}
                     </span>
-                  </div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300">
-                      {prop.propertyType}
+                  )}
+                </div>
+                <div className="flex items-center gap-1 text-[10px] sm:text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                  <MapPin className="w-3 h-3 shrink-0" />
+                  <span className="truncate">{property.locationName}</span>
+                </div>
+                <div className="hidden sm:flex items-center gap-3 text-[11px] text-zinc-500 dark:text-zinc-400 mt-1">
+                  {property.bedrooms !== undefined && (
+                    <span className="flex items-center gap-1">
+                      <Bed className="w-3 h-3" /> {property.bedrooms}
                     </span>
-                    <span className="text-[10px] font-bold text-[#3b1a83] dark:text-purple-400">
-                      {prop.pricePerSqft}
+                  )}
+                  {property.bathrooms !== undefined && (
+                    <span className="flex items-center gap-1">
+                      <Bath className="w-3 h-3" /> {property.bathrooms}
                     </span>
-                  </div>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+
+              {property.status && (
+                <span
+                  className={`sm:hidden text-[8px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full shrink-0 ${getPropertyStatusMeta(property.status)}`}
+                >
+                  {property.status}
+                </span>
+              )}
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

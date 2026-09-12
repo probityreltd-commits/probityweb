@@ -1,160 +1,103 @@
 "use client";
 
-import React, { useMemo } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Mail, Phone, Calendar } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, MessageSquare } from "lucide-react";
+import {
+  formatRelativeTime,
+  getRequestTypeMeta,
+} from "@/components/ui/dashboard-helpers";
 
-const formatRequestType = (type) => {
-  if (!type) return "General";
-  switch (type.toUpperCase()) {
-    case "SCHEDULE_TOUR":
-      return "Schedule Tour";
-    case "REQUEST_INFO":
-      return "Request Info";
-    case "CONTACT":
-      return "Contact Us";
-    default:
-      return type.replace(/_/g, " ");
-  }
-};
+const RowSkeleton = () => (
+  <div className="flex items-center gap-3 p-3 sm:p-4 animate-pulse">
+    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-zinc-200 dark:bg-zinc-800 shrink-0" />
+    <div className="flex-1 space-y-2">
+      <div className="h-3 w-2/5 bg-zinc-200 dark:bg-zinc-800 rounded" />
+      <div className="h-2.5 w-1/3 bg-zinc-200 dark:bg-zinc-800 rounded" />
+    </div>
+  </div>
+);
 
 const InquiryOverview = ({ inquiries = [], loading }) => {
-  const recentInquiries = useMemo(() => {
-    return [...inquiries]
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-      .slice(0, 5);
-  }, [inquiries]);
-
-  // Dynamic Status Breakdown
-  const inquiryStatuses = useMemo(() => {
-    const counts = inquiries.reduce((acc, inq) => {
-      const st = inq.status?.toUpperCase() || "NEW";
-      acc[st] = (acc[st] || 0) + 1;
-      return acc;
-    }, {});
-
-    return Object.entries(counts).map(([status, count]) => ({
-      status,
-      count,
-    }));
-  }, [inquiries]);
-
-  if (loading) {
-    return (
-      <div className="h-64 bg-zinc-200 dark:bg-zinc-800 rounded-2xl animate-pulse" />
-    );
-  }
+  const recent = [...inquiries]
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 6);
 
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-zinc-100 dark:border-zinc-800 shadow-sm space-y-5">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-        <div>
-          <h3 className="text-base font-bold text-zinc-900 dark:text-white">
-            Recent Inquiries & Leads
-          </h3>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">
-            Real-time inquiries received from property listing pages
-          </p>
-        </div>
-
-        {/* Dynamic Status Badges Bar */}
-        <div className="flex items-center gap-1.5 flex-wrap">
-          {inquiryStatuses.map((item) => (
-            <span
-              key={item.status}
-              className="text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300"
-            >
-              {item.status}:{" "}
-              <span className="text-[#3b1a83] dark:text-purple-400">
-                {item.count}
-              </span>
-            </span>
-          ))}
-          <Link
-            href="/admin/inquiries"
-            className="text-xs font-bold text-[#3b1a83] dark:text-purple-400 hover:underline flex items-center gap-1 ml-2"
-          >
-            <span>View All</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
+    <div className="rounded-2xl sm:rounded-3xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm overflow-hidden">
+      <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-zinc-100 dark:border-zinc-800">
+        <h3 className="font-serif text-sm sm:text-lg font-bold text-zinc-900 dark:text-white">
+          Recent Inquiries
+        </h3>
+        <Link
+          href="/admin/inquiries"
+          className="text-[11px] sm:text-xs font-semibold text-brand dark:text-indigo-400 hover:underline flex items-center gap-1"
+        >
+          View all
+          <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+        </Link>
       </div>
 
-      {recentInquiries.length === 0 ? (
-        <div className="py-12 text-center text-xs text-zinc-500">
-          No inquiries found.
+      {loading ? (
+        <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <RowSkeleton key={i} />
+          ))}
+        </div>
+      ) : recent.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-10 sm:py-14 px-4 text-center">
+          <MessageSquare className="w-8 h-8 text-zinc-300 dark:text-zinc-700 mb-2" />
+          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
+            No inquiries received yet.
+          </p>
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-zinc-100 dark:border-zinc-800 text-[11px] font-bold text-zinc-400 uppercase tracking-wider">
-                <th className="py-3 px-3">Customer</th>
-                <th className="py-3 px-3">Request Type</th>
-                <th className="py-3 px-3">Target Property</th>
-                <th className="py-3 px-3">Status</th>
-                <th className="py-3 px-3">Date</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800 text-xs">
-              {recentInquiries.map((inq) => {
-                const isUnread = inq.isRead === false;
-                return (
-                  <tr
-                    key={inq._id}
-                    className={`hover:bg-zinc-50/80 dark:hover:bg-zinc-800/40 transition-all ${
-                      isUnread
-                        ? "bg-purple-50/40 dark:bg-purple-950/10 font-semibold"
-                        : ""
-                    }`}
+        <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+          {recent.map((inquiry) => {
+            const meta = getRequestTypeMeta(inquiry.requestType);
+            return (
+              <div
+                key={inquiry._id}
+                className="flex items-start gap-3 p-3 sm:p-4 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors"
+              >
+                <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden shrink-0 bg-brand/10 flex items-center justify-center text-brand dark:text-indigo-400 font-bold text-xs">
+                  {inquiry.property?.coverImage ? (
+                    <Image
+                      src={inquiry.property.coverImage}
+                      alt={inquiry.property.title || ""}
+                      fill
+                      sizes="40px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    inquiry.name?.charAt(0)?.toUpperCase() || "?"
+                  )}
+                  {!inquiry.isRead && (
+                    <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-rose-500 border-2 border-white dark:border-zinc-900" />
+                  )}
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <h4 className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-white truncate">
+                      {inquiry.name}
+                    </h4>
+                    <span className="text-[9px] sm:text-[10px] text-zinc-400 dark:text-zinc-500 shrink-0 font-mono">
+                      {formatRelativeTime(inquiry.createdAt)}
+                    </span>
+                  </div>
+                  <p className="text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400 truncate mt-0.5">
+                    {inquiry.property?.title || "General inquiry"}
+                  </p>
+                  <span
+                    className={`inline-block mt-1.5 text-[9px] sm:text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${meta.colorClass}`}
                   >
-                    <td className="py-3 px-3">
-                      <div className="font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-                        {isUnread && (
-                          <span className="w-2 h-2 rounded-full bg-[#3b1a83] shrink-0" />
-                        )}
-                        <span>{inq.name}</span>
-                      </div>
-                      <div className="text-[10px] text-zinc-400 font-normal flex items-center gap-2 mt-0.5">
-                        <span className="flex items-center gap-1">
-                          <Mail className="w-2.5 h-2.5" /> {inq.email}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Phone className="w-2.5 h-2.5" /> {inq.phone}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="py-3 px-3">
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300">
-                        {formatRequestType(inq.requestType)}
-                      </span>
-                    </td>
-                    <td className="py-3 px-3 font-medium text-zinc-800 dark:text-zinc-200 truncate max-w-[140px]">
-                      {inq.property?.title || "N/A"}
-                    </td>
-                    <td className="py-3 px-3">
-                      <span
-                        className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold ${
-                          inq.status?.toUpperCase() === "NEW"
-                            ? "bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300"
-                            : "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
-                        }`}
-                      >
-                        {inq.status || "NEW"}
-                      </span>
-                    </td>
-                    <td className="py-3 px-3 text-zinc-400 text-[11px] whitespace-nowrap">
-                      {new Date(inq.createdAt).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                    {meta.label}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
