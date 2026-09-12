@@ -42,7 +42,7 @@ const buildingVariants = {
 
 const Banner = () => {
   return (
-    <section className="relative w-full pb-24 lg:h-screen overflow-hidden bg-night flex flex-col">
+    <section className="relative w-full py-16 pb-24 lg:h-screen overflow-hidden bg-night flex flex-col">
       {/* Background Atmosphere */}
       <div className="absolute inset-0 bg-hero-gradient z-0">
         {/* Falling Stars Animation */}
