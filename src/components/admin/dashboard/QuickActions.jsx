@@ -3,13 +3,13 @@ import { PlusCircle, Building2, MessageSquare, Home } from "lucide-react";
 
 const actions = [
   {
-    href: "/admin/properties/new",
+    href: "/admin/add-property",
     icon: PlusCircle,
     label: "Add Property",
     colorClass: "bg-brand text-white",
   },
   {
-    href: "/admin/properties",
+    href: "/admin/property",
     icon: Building2,
     label: "Manage Properties",
     colorClass:

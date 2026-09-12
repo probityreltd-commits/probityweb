@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import DashboardHeader from "@/components/admin/dashboard/DashboardHeader";
 import InquiryOverview from "@/components/admin/dashboard/InquiryOverview";
 import PropertyOverview from "@/components/admin/dashboard/PropertyOverview";
@@ -20,6 +20,15 @@ const DashboardPage = () => {
   const [lastUpdated, setLastUpdated] = useState(null);
   const [, forceTick] = useState(0);
 
+  // Guards against setState calls after the component has unmounted
+  const isMountedRef = useRef(true);
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
   const loadDashboardData = useCallback(async (silent = false) => {
     try {
       if (!silent) setLoading(true);
@@ -30,34 +39,65 @@ const DashboardPage = () => {
         fetchInquiries(),
       ]);
 
-      if (propRes?.data) setProperties(propRes.data);
-      if (inqRes?.data) setInquiries(inqRes.data);
+      if (!isMountedRef.current) return;
+
+      // Accept either { data: [...] } or a plain array response, and
+      // never let a bad shape crash the child components' .map() calls.
+      const propList = Array.isArray(propRes?.data)
+        ? propRes.data
+        : Array.isArray(propRes)
+          ? propRes
+          : null;
+      const inqList = Array.isArray(inqRes?.data)
+        ? inqRes.data
+        : Array.isArray(inqRes)
+          ? inqRes
+          : null;
+
+      if (propList) setProperties(propList);
+      if (inqList) setInquiries(inqList);
       setLastUpdated(new Date());
     } catch (err) {
       console.error("Error loading dashboard metrics:", err);
-      setError(
-        "Failed to fetch dashboard records. Please check your connection.",
-      );
+      if (isMountedRef.current) {
+        setError(
+          "Failed to fetch dashboard records. Please check your connection.",
+        );
+      }
     } finally {
-      setLoading(false);
+      if (isMountedRef.current) setLoading(false);
     }
   }, []);
 
+  // Initial load
   useEffect(() => {
     loadDashboardData();
   }, [loadDashboardData]);
 
-  // Real-time-ish polling: silently refresh every 30s while the tab is visible
+  // Real-time-ish polling: silently refresh every 30s while the tab is
+  // visible, and immediately refresh the moment the tab becomes visible
+  // again instead of waiting for the next tick.
   useEffect(() => {
     const interval = setInterval(() => {
       if (document.visibilityState === "visible") {
         loadDashboardData(true);
       }
     }, AUTO_REFRESH_INTERVAL);
-    return () => clearInterval(interval);
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        loadDashboardData(true);
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [loadDashboardData]);
 
-  // Keep "Updated Xm ago" label fresh
+  // Keep "Updated Xm ago" label fresh without triggering a refetch
   useEffect(() => {
     const tick = setInterval(() => forceTick((n) => n + 1), 30000);
     return () => clearInterval(tick);
@@ -76,7 +116,7 @@ const DashboardPage = () => {
           <span>{error}</span>
           <button
             onClick={() => loadDashboardData(false)}
-            className="font-bold underline shrink-0 hover:text-rose-900 dark:hover:text-rose-300"
+            className="font-bold underline shrink-0 hover:text-rose-900 dark:hover:text-rose-300 cursor-pointer"
           >
             Retry
           </button>

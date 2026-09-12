@@ -2,12 +2,14 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Download } from "lucide-react";
 
 import FilterBar from "@/components/admin/inquiries/FilterBar";
 import SummaryCards from "@/components/admin/inquiries/SummaryCards";
 import BulkActionBar from "@/components/admin/inquiries/BulkActionBar";
 import InquiriesTable from "@/components/admin/inquiries/InquiriesTable";
 import InquiryDetailDrawer from "@/components/admin/inquiries/InquiryDetailDrawer";
+import BrochureLeadsPanel from "@/components/admin/inquiries/BrochureLeadsPanel";
 import {
   fetchInquiries,
   fetchInquiryById,
@@ -21,10 +23,6 @@ import {
   updateInquiry,
 } from "@/services/action/inquiries";
 
-const FONT_IMPORTS = `
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
-`;
-
 const DEFAULT_FILTERS = {
   status: "",
   requestType: "",
@@ -33,14 +31,19 @@ const DEFAULT_FILTERS = {
   search: "",
 };
 
+const TABS = [
+  { key: "ALL", label: "All Inquiries" },
+  { key: "BROCHURE_LEADS", label: "Brochure Leads" },
+];
+
 export default function InquiriesPage() {
+  const [activeTab, setActiveTab] = useState("ALL");
+
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [page, setPage] = useState(1);
 
   const [inquiries, setInquiries] = useState([]);
-  console.log("inquiries", inquiries);
-
   const [pagination, setPagination] = useState(null);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -49,11 +52,23 @@ export default function InquiriesPage() {
   const [selectedIds, setSelectedIds] = useState([]);
   const [activeInquiry, setActiveInquiry] = useState(null);
 
-  // debounce the free-text search box so it doesn't re-fetch on every keystroke
+  // Debounce the free-text search input
   useEffect(() => {
     const id = setTimeout(() => setDebouncedSearch(filters.search), 400);
     return () => clearTimeout(id);
   }, [filters.search]);
+
+  // A fresh search should always start back at page 1, otherwise a
+  // narrower result set can leave the user stranded on an empty page.
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch]);
+
+  // Selection is scoped per tab — don't let a leftover selection from
+  // "All Inquiries" leak into the Brochure Leads context or vice versa.
+  useEffect(() => {
+    setSelectedIds([]);
+  }, [activeTab]);
 
   const loadInquiries = useCallback(async () => {
     setLoading(true);
@@ -97,14 +112,13 @@ export default function InquiriesPage() {
   }, []);
 
   useEffect(() => {
-    loadInquiries();
-  }, [loadInquiries]);
+    if (activeTab === "ALL") loadInquiries();
+  }, [loadInquiries, activeTab]);
 
   useEffect(() => {
     loadStats();
   }, [loadStats]);
 
-  // reset to page 1 whenever a filter changes
   const handleFilterChange = (next) => {
     setFilters(next);
     setPage(1);
@@ -130,9 +144,11 @@ export default function InquiriesPage() {
       await updateInquiry(id, { status });
       toast.success("Status updated.");
       loadStats();
+      return true;
     } catch (err) {
       toast.error(err.message || "Could not update status.");
-      loadInquiries(); // roll back by refetching
+      if (activeTab === "ALL") loadInquiries();
+      return false;
     }
   };
 
@@ -166,7 +182,7 @@ export default function InquiriesPage() {
       );
     }
     try {
-      const res = await fetchInquiryById(inquiry._id); // marks isRead server-side too
+      const res = await fetchInquiryById(inquiry._id);
       setActiveInquiry(res.data);
       loadStats();
     } catch {
@@ -175,15 +191,17 @@ export default function InquiriesPage() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm("Delete this inquiry? This cannot be undone.")) return;
+    if (!confirm("Delete this inquiry? This cannot be undone.")) return false;
     try {
       await deleteInquiry(id);
       setInquiries((prev) => prev.filter((inq) => inq._id !== id));
       setActiveInquiry((prev) => (prev && prev._id === id ? null : prev));
       toast.success("Inquiry deleted.");
       loadStats();
+      return true;
     } catch (err) {
       toast.error(err.message || "Could not delete inquiry.");
+      return false;
     }
   };
 
@@ -199,81 +217,125 @@ export default function InquiriesPage() {
     );
   };
 
-  const handleBulkStatus = async (status) => {
+  const handleBulkStatus = async (ids, status) => {
+    if (!ids?.length) return false;
     try {
-      await bulkUpdateStatus(selectedIds, status);
-      toast.success(`Updated ${selectedIds.length} inquiries.`);
-      setSelectedIds([]);
-      loadInquiries();
+      await bulkUpdateStatus(ids, status);
+      toast.success(`Updated ${ids.length} inquiries.`);
+      if (activeTab === "ALL") {
+        setSelectedIds([]);
+        loadInquiries();
+      }
       loadStats();
+      return true;
     } catch (err) {
       toast.error(err.message || "Bulk update failed.");
+      return false;
     }
   };
 
-  const handleBulkDelete = async () => {
-    if (
-      !confirm(`Delete ${selectedIds.length} inquiries? This cannot be undone.`)
-    )
-      return;
+  const handleBulkDelete = async (ids) => {
+    if (!ids?.length) return false;
+    if (!confirm(`Delete ${ids.length} inquiries? This cannot be undone.`))
+      return false;
     try {
-      await bulkDeleteInquiries(selectedIds);
-      toast.success(`Deleted ${selectedIds.length} inquiries.`);
-      setSelectedIds([]);
-      loadInquiries();
+      await bulkDeleteInquiries(ids);
+      toast.success(`Deleted ${ids.length} inquiries.`);
+      if (activeTab === "ALL") {
+        setSelectedIds([]);
+        loadInquiries();
+      }
       loadStats();
+      return true;
     } catch (err) {
       toast.error(err.message || "Bulk delete failed.");
+      return false;
     }
   };
 
+  const brochureCount = stats?.byRequestType?.BROCHURE_DOWNLOAD ?? null;
+
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif" }}>
-      <style>{FONT_IMPORTS}</style>
-      <style>{`
-        .ledger-font { font-family: 'IBM Plex Mono', monospace; }
-        .display-font { font-family: 'Fraunces', serif; }
-      `}</style>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-5 sm:space-y-6">
+      {/* Header */}
+      <div>
+        <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.25em] text-brand dark:text-brand-light">
+          Admin · Leads
+        </span>
+        <h1 className="font-serif text-xl sm:text-3xl font-semibold text-zinc-900 dark:text-white mt-1">
+          Inquiries
+        </h1>
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-6">
-        {/* header */}
-        <div>
-          <span className="ledger-font text-[10px] uppercase tracking-[0.25em] text-[#431780] dark:text-violet-300">
-            Admin · Leads
-          </span>
-          <h1 className="display-font text-2xl sm:text-3xl font-semibold text-zinc-900 dark:text-white mt-1">
-            Inquiries
-          </h1>
-        </div>
+      <SummaryCards stats={stats} loading={statsLoading} />
 
-        <SummaryCards stats={stats} loading={statsLoading} />
+      {/* Tab Switcher */}
+      <div className="flex gap-1.5 sm:gap-2 border-b border-zinc-200 dark:border-zinc-800 overflow-x-auto hide-scrollbar">
+        {TABS.map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className={`relative shrink-0 flex items-center gap-1.5 px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold transition-colors cursor-pointer ${
+              activeTab === tab.key
+                ? "text-brand dark:text-brand-light"
+                : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
+            }`}
+          >
+            {tab.key === "BROCHURE_LEADS" && (
+              <Download className="w-3.5 h-3.5" />
+            )}
+            {tab.label}
+            {tab.key === "BROCHURE_LEADS" && brochureCount !== null && (
+              <span className="text-[9px] sm:text-[10px] font-bold bg-brand/10 text-brand dark:bg-brand-light/10 dark:text-brand-light px-1.5 py-0.5 rounded-full">
+                {brochureCount}
+              </span>
+            )}
+            {activeTab === tab.key && (
+              <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-brand rounded-full" />
+            )}
+          </button>
+        ))}
+      </div>
 
-        <FilterBar
-          filters={filters}
-          onChange={handleFilterChange}
-          onReset={handleResetFilters}
-        />
+      {/* Tab Content */}
+      {activeTab === "ALL" ? (
+        <>
+          <FilterBar
+            filters={filters}
+            onChange={handleFilterChange}
+            onReset={handleResetFilters}
+          />
 
-        <BulkActionBar
-          count={selectedIds.length}
-          onClear={() => setSelectedIds([])}
-          onBulkStatus={handleBulkStatus}
-          onBulkDelete={handleBulkDelete}
-        />
+          <BulkActionBar
+            count={selectedIds.length}
+            onClear={() => setSelectedIds([])}
+            onBulkStatus={(status) => handleBulkStatus(selectedIds, status)}
+            onBulkDelete={() => handleBulkDelete(selectedIds)}
+          />
 
-        <InquiriesTable
-          inquiries={inquiries}
-          loading={loading}
-          selectedIds={selectedIds}
-          onToggleSelect={handleToggleSelect}
-          onToggleSelectAll={handleToggleSelectAll}
+          <InquiriesTable
+            inquiries={inquiries}
+            loading={loading}
+            selectedIds={selectedIds}
+            onToggleSelect={handleToggleSelect}
+            onToggleSelectAll={handleToggleSelectAll}
+            onOpen={handleOpenInquiry}
+            onStatusChange={handleStatusChange}
+            onDelete={handleDelete}
+            pagination={pagination}
+            onPageChange={setPage}
+          />
+        </>
+      ) : (
+        <BrochureLeadsPanel
           onOpen={handleOpenInquiry}
           onStatusChange={handleStatusChange}
           onDelete={handleDelete}
-          pagination={pagination}
-          onPageChange={setPage}
+          onBulkStatus={handleBulkStatus}
+          onBulkDelete={handleBulkDelete}
+          onRefreshStats={loadStats}
         />
-      </div>
+      )}
 
       {activeInquiry && (
         <InquiryDetailDrawer

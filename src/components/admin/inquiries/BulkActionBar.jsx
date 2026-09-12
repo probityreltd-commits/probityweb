@@ -15,16 +15,16 @@ export default function BulkActionBar({
   if (count === 0) return null;
 
   return (
-    <div className="flex items-center justify-between gap-3 rounded-2xl border border-[#431780]/30 bg-[#431780]/5 dark:bg-violet-500/10 px-4 py-3">
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-brand/30 dark:border-brand-light/30 bg-brand/5 dark:bg-brand-light/10 px-4 py-3">
       <div className="flex items-center gap-3">
         <button
           onClick={onClear}
           aria-label="Clear selection"
-          className="w-7 h-7 rounded-full flex items-center justify-center text-[#431780] dark:text-violet-300 hover:bg-[#431780]/10 transition-colors"
+          className="w-7 h-7 rounded-full flex items-center justify-center text-brand dark:text-brand-light hover:bg-brand/10 dark:hover:bg-brand-light/10 transition-colors cursor-pointer"
         >
           <FiX className="w-4 h-4" />
         </button>
-        <span className="text-xs font-semibold text-[#431780] dark:text-violet-300 ledger-font uppercase tracking-wide">
+        <span className="text-xs font-semibold text-brand dark:text-brand-light font-mono uppercase tracking-wide">
           {count} selected
         </span>
       </div>
@@ -36,7 +36,7 @@ export default function BulkActionBar({
             if (e.target.value) onBulkStatus(e.target.value);
             e.target.value = "";
           }}
-          className="text-xs bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-3 py-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#431780]"
+          className="text-xs bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl px-3 py-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand"
         >
           <option value="" disabled>
             Set status...
@@ -50,7 +50,7 @@ export default function BulkActionBar({
 
         <button
           onClick={onBulkDelete}
-          className="flex items-center gap-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 px-3 py-2 rounded-xl transition-colors"
+          className="flex items-center gap-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 px-3 py-2 rounded-xl transition-colors cursor-pointer"
         >
           <FiTrash2 className="w-3.5 h-3.5" />
           Delete

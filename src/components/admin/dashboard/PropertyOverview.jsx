@@ -27,7 +27,7 @@ const PropertyOverview = ({ properties = [], loading }) => {
           Recent Properties
         </h3>
         <Link
-          href="/admin/properties"
+          href="/admin/property"
           className="text-[11px] sm:text-xs font-semibold text-brand dark:text-indigo-400 hover:underline flex items-center gap-1"
         >
           View all

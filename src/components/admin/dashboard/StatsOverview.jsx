@@ -56,7 +56,7 @@ const StatsOverview = ({ properties = [], inquiries = [], loading }) => {
 
   const stats = [
     {
-      href: "/admin/properties",
+      href: "/admin/property",
       icon: Building2,
       label: "Total Properties",
       value: properties.length,

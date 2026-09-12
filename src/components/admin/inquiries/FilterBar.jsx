@@ -6,8 +6,13 @@ import {
   STATUS_ORDER,
 } from "@/services/constants/inquiryConstants";
 
+const REQUEST_TYPE_OPTIONS = [
+  { value: "SCHEDULE_TOUR", label: "Schedule Tour" },
+  { value: "BROCHURE_DOWNLOAD", label: "Brochure Download" },
+];
+
 const inputClasses =
-  "text-xs bg-[#431780]/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-[#431780] transition-all";
+  "text-xs bg-brand/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-800 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-brand transition-all";
 
 export default function FilterBar({ filters, onChange, onReset }) {
   const set = (patch) => onChange({ ...filters, ...patch });
@@ -56,8 +61,11 @@ export default function FilterBar({ filters, onChange, onReset }) {
             className={`${inputClasses} px-3 py-2.5 cursor-pointer`}
           >
             <option value="">All types</option>
-            <option value="SCHEDULE_TOUR">Tour requests</option>
-            <option value="REQUEST_INFO">Info requests</option>
+            {REQUEST_TYPE_OPTIONS.map(({ value, label }) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
           </select>
 
           {/* date range */}
@@ -65,6 +73,7 @@ export default function FilterBar({ filters, onChange, onReset }) {
             type="date"
             value={filters.dateFrom || ""}
             onChange={(e) => set({ dateFrom: e.target.value })}
+            max={filters.dateTo || undefined}
             className={`${inputClasses} px-3 py-2.5`}
             aria-label="From date"
           />
@@ -72,6 +81,7 @@ export default function FilterBar({ filters, onChange, onReset }) {
             type="date"
             value={filters.dateTo || ""}
             onChange={(e) => set({ dateTo: e.target.value })}
+            min={filters.dateFrom || undefined}
             className={`${inputClasses} px-3 py-2.5`}
             aria-label="To date"
           />
@@ -79,7 +89,7 @@ export default function FilterBar({ filters, onChange, onReset }) {
           {hasActiveFilters && (
             <button
               onClick={onReset}
-              className="flex items-center gap-1 text-xs font-semibold text-zinc-500 hover:text-[#431780] dark:hover:text-violet-300 px-3 py-2.5 transition-colors"
+              className="flex items-center gap-1 text-xs font-semibold text-zinc-500 hover:text-brand dark:hover:text-brand-light px-3 py-2.5 transition-colors cursor-pointer"
             >
               <FiX className="w-3.5 h-3.5" />
               Clear
