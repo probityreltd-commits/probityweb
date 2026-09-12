@@ -34,7 +34,6 @@ const ScheduleTourSection = ({ property }) => {
 
     setIsSubmitting(true);
 
-    // Same request shape used by the existing tour request flow.
     const payload = {
       requestType: "SCHEDULE_TOUR",
       tourType: "In Person",
@@ -78,27 +77,29 @@ const ScheduleTourSection = ({ property }) => {
     }
   };
 
-  // Underline-only input styling (matches the reference image)
   const inputCls =
-    "w-full bg-transparent border-0 border-b border-zinc-300 dark:border-zinc-700 pb-2.5 pt-1 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-[#431780] dark:focus:border-violet-400 transition-colors";
+    "w-full bg-transparent border-0 border-b border-zinc-300 dark:border-zinc-700 pb-2 sm:pb-2.5 pt-1 text-xs sm:text-sm text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-brand dark:focus:border-indigo-400 transition-colors";
 
   return (
-    <section aria-labelledby="schedule-tour-heading" className="py-10">
+    <section
+      aria-labelledby="schedule-tour-heading"
+      className="py-6 sm:py-8 lg:py-10"
+    >
       <div className="max-w-7xl mx-auto">
-        <div className="rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900  border border-zinc-100 dark:border-zinc-800 p-6 sm:p-10 lg:p-12">
+        <div className="rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 p-4 sm:p-8 lg:p-12">
           <h2
             id="schedule-tour-heading"
-            className="display-font text-2xl sm:text-3xl lg:text-4xl font-bold text-zinc-900 dark:text-white mb-1.5"
+            className="font-serif text-xl sm:text-3xl lg:text-4xl font-bold text-zinc-900 dark:text-white mb-1 sm:mb-1.5"
           >
             Schedule A Tour
           </h2>
-          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mb-7 sm:mb-9">
+          <p className="text-[11px] sm:text-sm text-zinc-500 dark:text-zinc-400 mb-5 sm:mb-9">
             Fill in your details and our team will get in touch to arrange a
             visit.
           </p>
 
-          <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-x-10 sm:gap-y-7">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-x-10 sm:gap-y-7">
               <input
                 type="text"
                 placeholder="Full Name"
@@ -146,10 +147,10 @@ const ScheduleTourSection = ({ property }) => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`inline-flex items-center justify-center gap-2 text-white text-sm font-semibold px-8 py-3.5 rounded-lg shadow-lg active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed ${
+              className={`inline-flex items-center justify-center gap-2 w-full sm:w-auto text-white text-xs sm:text-sm font-semibold px-6 sm:px-8 py-3 sm:py-3.5 rounded-lg shadow-lg active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed ${
                 isSuccess
                   ? "bg-emerald-600 hover:bg-emerald-700"
-                  : "bg-[#431780] hover:bg-[#341166]"
+                  : "bg-brand hover:bg-brand-dark"
               }`}
             >
               {isSubmitting ? (
