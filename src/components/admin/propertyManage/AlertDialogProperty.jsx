@@ -5,6 +5,7 @@ import { Trash2 } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { deleteProperty } from "@/services/action/property";
+import { authClient } from "@/lib/auth-client";
 
 const AlertDialogProperty = ({ property, onDeleted }) => {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -17,27 +18,66 @@ const AlertDialogProperty = ({ property, onDeleted }) => {
 
     try {
       setIsDeleting(true);
+      const { data } = await authClient.token();
+      const token = data?.token || null;
 
-      const result = await deleteProperty(property._id);
+      if (!token) {
+        toast.warning("Authentication required", {
+          description: "Please login first to delete this property.",
+        });
+        setIsDeleting(false);
+        return;
+      }
+
+      const result = await deleteProperty(property._id, token);
 
       if (result?.success) {
         toast.success("Property deleted successfully!", {
-          description: `${property.title} has been removed from your properties.`,
+          description: `${property.title || "Property"} has been removed.`,
         });
 
         onDeleted?.(property._id);
       } else {
-        toast.error("Failed to delete property", {
-          description:
-            result?.message || "Something went wrong. Please try again.",
-        });
+        const errorMessage =
+          result?.message || "Something went wrong. Please try again.";
+        const errorCode = result?.code;
+
+        if (
+          errorCode === "ADMIN_ACCESS_REQUIRED" ||
+          errorCode === "AUTH_REQUIRED" ||
+          errorCode === "TOKEN_MISSING" ||
+          errorCode === "INVALID_OR_EXPIRED_TOKEN"
+        ) {
+          toast.warning("Access Denied", {
+            description: errorMessage,
+          });
+        } else {
+          toast.error("Failed to delete property", {
+            description: errorMessage,
+          });
+        }
       }
     } catch (error) {
       console.error("Delete error:", error);
 
-      toast.error("Failed to delete property", {
-        description: "Something went wrong while deleting the property.",
-      });
+      const serverMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Something went wrong while deleting the property.";
+      const errorCode = error?.response?.data?.code;
+
+      if (
+        errorCode === "ADMIN_ACCESS_REQUIRED" ||
+        errorCode === "AUTH_REQUIRED" ||
+        errorCode === "TOKEN_MISSING" ||
+        errorCode === "INVALID_OR_EXPIRED_TOKEN"
+      ) {
+        toast.warning("Access Denied", { description: serverMessage });
+      } else {
+        toast.error("Failed to delete property", {
+          description: serverMessage,
+        });
+      }
     } finally {
       setIsDeleting(false);
     }

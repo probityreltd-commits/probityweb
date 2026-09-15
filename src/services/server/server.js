@@ -25,7 +25,10 @@ const handelResponse = async (res) => {
       message: data?.message || "Something went wrong.",
     };
   }
-  return data;
+  return {
+    success: true,
+    ...data,
+  };
 };
 
 export const serverMutation = async (path, data, token, method = "POST") => {
@@ -43,10 +46,23 @@ export const serverMutation = async (path, data, token, method = "POST") => {
 };
 
 export const serverFetch = async (path, token = null) => {
-  const res = await fetch(`${baseUrl}${path}`, {
-    headers: {
-      ...(token && { authorization: `Bearer ${token}` }),
-    },
-  });
-  return handelResponse(res);
+  try {
+    const res = await fetch(`${baseUrl}${path}`, {
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+
+      cache: "no-store",
+    });
+
+    return await handelResponse(res);
+  } catch (error) {
+    console.error("Fetch Error:", error);
+    return {
+      success: false,
+      status: 500,
+      code: "NETWORK_ERROR",
+      message: "Network error or server is unreachable.",
+    };
+  }
 };

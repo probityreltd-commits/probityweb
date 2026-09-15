@@ -22,6 +22,7 @@ import {
   deleteInquiry,
   updateInquiry,
 } from "@/services/action/inquiries";
+import { authClient } from "@/lib/auth-client";
 
 const DEFAULT_FILTERS = {
   status: "",
@@ -191,16 +192,65 @@ export default function InquiriesPage() {
   };
 
   const handleDelete = async (id) => {
+    if (!id) {
+      toast.error("Inquiry ID not found.");
+      return false;
+    }
+
+    const { data } = await authClient.token();
+    const token = data?.token || null;
+
+    if (!token) {
+      toast.warning("Authentication required. Please login first.");
+      return false;
+    }
+
     if (!confirm("Delete this inquiry? This cannot be undone.")) return false;
+
     try {
-      await deleteInquiry(id);
+      const response = await deleteInquiry(id, token);
+
+      if (response?.success === false) {
+        const errorMessage = response.message || "Could not delete inquiry.";
+        const errorCode = response.code;
+
+        if (
+          errorCode === "ADMIN_ACCESS_REQUIRED" ||
+          errorCode === "AUTH_REQUIRED" ||
+          errorCode === "TOKEN_MISSING" ||
+          errorCode === "INVALID_OR_EXPIRED_TOKEN"
+        ) {
+          toast.warning(errorMessage);
+        } else {
+          toast.error(errorMessage);
+        }
+        return false;
+      }
+
       setInquiries((prev) => prev.filter((inq) => inq._id !== id));
       setActiveInquiry((prev) => (prev && prev._id === id ? null : prev));
       toast.success("Inquiry deleted.");
       loadStats();
       return true;
     } catch (err) {
-      toast.error(err.message || "Could not delete inquiry.");
+      console.error("Delete Inquiry Error:", err);
+
+      const errorMessage =
+        err?.response?.data?.message ||
+        err?.message ||
+        "Could not delete inquiry.";
+      const errorCode = err?.response?.data?.code;
+
+      if (
+        errorCode === "ADMIN_ACCESS_REQUIRED" ||
+        errorCode === "AUTH_REQUIRED" ||
+        errorCode === "TOKEN_MISSING" ||
+        errorCode === "INVALID_OR_EXPIRED_TOKEN"
+      ) {
+        toast.warning(errorMessage);
+      } else {
+        toast.error(errorMessage);
+      }
       return false;
     }
   };
@@ -236,10 +286,38 @@ export default function InquiriesPage() {
 
   const handleBulkDelete = async (ids) => {
     if (!ids?.length) return false;
+
+    const { data } = await authClient.token();
+    const token = data?.token || null;
+
+    if (!token) {
+      toast.warning("Authentication required. Please login first.");
+      return false;
+    }
+
     if (!confirm(`Delete ${ids.length} inquiries? This cannot be undone.`))
       return false;
+
     try {
-      await bulkDeleteInquiries(ids);
+      const response = await bulkDeleteInquiries(ids, token);
+
+      if (response?.success === false) {
+        const errorMessage = response.message || "Bulk delete failed.";
+        const errorCode = response.code;
+
+        if (
+          errorCode === "ADMIN_ACCESS_REQUIRED" ||
+          errorCode === "AUTH_REQUIRED" ||
+          errorCode === "TOKEN_MISSING" ||
+          errorCode === "INVALID_OR_EXPIRED_TOKEN"
+        ) {
+          toast.warning(errorMessage);
+        } else {
+          toast.error(errorMessage);
+        }
+        return false;
+      }
+
       toast.success(`Deleted ${ids.length} inquiries.`);
       if (activeTab === "ALL") {
         setSelectedIds([]);
@@ -248,7 +326,22 @@ export default function InquiriesPage() {
       loadStats();
       return true;
     } catch (err) {
-      toast.error(err.message || "Bulk delete failed.");
+      console.error("Bulk Delete Inquiry Error:", err);
+
+      const errorMessage =
+        err?.response?.data?.message || err?.message || "Bulk delete failed.";
+      const errorCode = err?.response?.data?.code;
+
+      if (
+        errorCode === "ADMIN_ACCESS_REQUIRED" ||
+        errorCode === "AUTH_REQUIRED" ||
+        errorCode === "TOKEN_MISSING" ||
+        errorCode === "INVALID_OR_EXPIRED_TOKEN"
+      ) {
+        toast.warning(errorMessage);
+      } else {
+        toast.error(errorMessage);
+      }
       return false;
     }
   };

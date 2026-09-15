@@ -1,11 +1,9 @@
 "use client";
 
-import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-// Brand tokens from globals.css, kept in sync manually since PDF/Excel
-// libraries can't read CSS variables at runtime.
+// can't read CSS variables at runtime.
 const BRAND_RGB = [59, 26, 131]; // #3b1a83
 const BACKGROUND_RGB = [245, 241, 255]; // #f5f1ff
 
@@ -40,39 +38,6 @@ function formatLeadRow(lead) {
 
 function timestamp() {
   return new Date().toISOString().slice(0, 10);
-}
-
-/**
- * Downloads the given leads as an .xlsx file — opens natively in both
- * Microsoft Excel and Google Sheets (via File > Import / drag-drop).
- */
-export function exportLeadsToExcel(leads, filename = "brochure-leads") {
-  if (!leads?.length) return;
-
-  const rows = leads.map(formatLeadRow);
-
-  const worksheet = XLSX.utils.json_to_sheet(rows, {
-    header: EXPORT_COLUMNS.map((c) => c.key),
-    skipHeader: true,
-  });
-
-  // Friendly, human-readable header row instead of raw object keys
-  XLSX.utils.sheet_add_aoa(worksheet, [EXPORT_COLUMNS.map((c) => c.label)], {
-    origin: "A1",
-  });
-
-  worksheet["!cols"] = [
-    { wch: 22 }, // name
-    { wch: 16 }, // phone
-    { wch: 28 }, // email
-    { wch: 24 }, // property
-    { wch: 14 }, // date
-  ];
-
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Brochure Leads");
-
-  XLSX.writeFile(workbook, `${filename}-${timestamp()}.xlsx`);
 }
 
 /**

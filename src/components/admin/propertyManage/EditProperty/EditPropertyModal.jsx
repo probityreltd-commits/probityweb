@@ -16,6 +16,7 @@ import CoverImagesSection from "./CoverImagesSection";
 import GalleryImagesSection from "./GalleryImagesSection";
 import BrochureSection from "./BrochureSection";
 import LivePreviewSidebar from "./LivePreviewSidebar";
+import { authClient } from "@/lib/auth-client";
 
 const INITIAL_FORM = {
   title: "",
@@ -130,6 +131,15 @@ const EditPropertyModal = ({ property, onUpdated }) => {
     setIsSubmitting(true);
 
     try {
+      const { data } = await authClient.token();
+      const token = data?.token || null;
+
+      if (!token) {
+        toast.error("Authentication token not found. Please log in again.");
+        setIsSubmitting(false);
+        return;
+      }
+
       const payload = {
         ...property,
         ...formData,
@@ -146,14 +156,39 @@ const EditPropertyModal = ({ property, onUpdated }) => {
         updatedAt: new Date().toISOString(),
       };
 
-      await updateProperty(property._id, payload);
+      const response = await updateProperty(property._id, payload, token);
 
+      if (response?.status === false) {
+        if (
+          response.code === "ADMIN_ACCESS_REQUIRED" ||
+          response.code === "AUTH_REQUIRED"
+        ) {
+          toast.warning(response.message || "Admin permission required.");
+        } else {
+          toast.error(response.message || "Failed to update property.");
+        }
+        return;
+      }
       toast.success("Property updated successfully!");
       onUpdated?.(payload);
       close?.();
     } catch (error) {
       console.error("Update Property Error:", error);
-      toast.error("Failed to update property");
+      const serverMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to update property.";
+
+      const errorCode = error?.response?.data?.code;
+
+      if (
+        errorCode === "ADMIN_ACCESS_REQUIRED" ||
+        errorCode === "AUTH_REQUIRED"
+      ) {
+        toast.warning(serverMessage);
+      } else {
+        toast.error(serverMessage);
+      }
     } finally {
       setIsSubmitting(false);
     }
