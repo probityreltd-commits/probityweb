@@ -402,7 +402,7 @@ const Portfolio = () => {
                       <ArrowUpRight className="w-3.5 h-3.5" />
                     </a>
 
-                    <a
+                    {/* <a
                       href={activeProperty.projectBrochure || "#"}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -410,7 +410,7 @@ const Portfolio = () => {
                     >
                       <FileText className="w-3.5 h-3.5" />
                       <span>Request Floor Plan</span>
-                    </a>
+                    </a> */}
                   </div>
 
                   <div className="text-left sm:text-right mt-1 sm:mt-0">

@@ -2,9 +2,9 @@ import { Fraunces, Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
 import UnderConstruction from "@/components/underConstruction/UnderConstruction";
+import SmoothScroll from "@/components/ui/SmoothScroll";
 
 import { Toaster } from "sonner";
-
 const fraunces = Fraunces({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
@@ -41,14 +41,16 @@ export default function RootLayout({ children }) {
       className={`${fraunces.variable} ${inter.variable} ${plexMono.variable} antialiased`}
     >
       <body className="min-h-screen bg-background text-foreground font-sans antialiased flex flex-col selection:bg-[#3b1a83] selection:text-white">
-        {maintenanceMode ? (
-          <UnderConstruction />
-        ) : (
-          <>
-            {children}
-            <Toaster position="top-right" richColors closeButton />
-          </>
-        )}
+        <SmoothScroll>
+          {maintenanceMode ? (
+            <UnderConstruction />
+          ) : (
+            <>
+              {children}
+              <Toaster position="top-right" richColors closeButton />
+            </>
+          )}
+        </SmoothScroll>
       </body>
     </html>
   );

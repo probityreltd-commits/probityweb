@@ -151,7 +151,7 @@ const Footer = () => {
         <div className="pt-8 text-center">
           <p className="text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400 font-medium">
             &copy; {currentYear} Probity Holdings Ltd. All rights reserved -
-            Design &amp; Developed by JoulseLabs
+            Design &amp; Developed by Delta-Digivast
           </p>
         </div>
       </div>
