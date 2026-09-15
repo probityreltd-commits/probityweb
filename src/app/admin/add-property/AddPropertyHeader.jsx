@@ -5,7 +5,7 @@ import { Loader2, Sparkles } from "lucide-react";
 
 const AddPropertyHeader = ({ onReset, onSubmit, isSubmitting }) => {
   return (
-    <div className="sticky top-14 sm:top-15 z-20 bg-background/95 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 px-3 sm:px-6 lg:px-8 py-3 sm:py-4 mb-5 sm:mb-8 shadow-xs">
+    <div className="sticky top-14 sm:top-15 z-20  backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 px-3 sm:px-6 lg:px-8 py-3 sm:py-4 mb-5 sm:mb-8 shadow-xs">
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
         <div>
           <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">

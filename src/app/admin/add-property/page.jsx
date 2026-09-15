@@ -216,7 +216,7 @@ const AddProperty = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-zinc-900 dark:text-zinc-100 pb-10 sm:pb-16">
+    <div className="min-h-screen  text-zinc-900 dark:text-zinc-100 pb-10 sm:pb-16">
       <AddPropertyHeader
         onReset={handleReset}
         onSubmit={handleSubmit}
