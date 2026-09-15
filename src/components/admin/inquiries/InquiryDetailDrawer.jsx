@@ -29,12 +29,6 @@ import StatusDropdown from "./StatusDropdown";
 import RequestTypeBadge from "./RequestTypeBadge";
 import { formatDateTime } from "@/services/utils/formatters (1)";
 
-/* ----------------------------------------------------------------------- *
- * Small presentational helpers
- * These are pure, stateless, and only concerned with turning raw inquiry
- * data into human-readable rows. Nothing here touches the network/API.
- * ----------------------------------------------------------------------- */
-
 function hasValue(v) {
   if (v === null || v === undefined) return false;
   if (typeof v === "string" && v.trim() === "") return false;
@@ -83,29 +77,27 @@ function formatLabel(value) {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-/** Section container: heading + icon + a vertical stack of rows/content. */
 function SectionCard({ icon: Icon, title, children }) {
   return (
-    <div className="rounded-2xl border border-zinc-200/80 dark:border-zinc-800 p-4">
-      <div className="flex items-center gap-1.5 mb-3">
+    <div className="rounded-xl sm:rounded-2xl border border-zinc-200/80 dark:border-zinc-800 p-3.5 sm:p-4">
+      <div className="flex items-center gap-1.5 mb-2.5 sm:mb-3">
         {Icon && (
           <Icon className="w-3.5 h-3.5 text-brand dark:text-brand-light shrink-0" />
         )}
-        <span className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+        <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
           {title}
         </span>
       </div>
-      <div className="space-y-2.5">{children}</div>
+      <div className="space-y-2 sm:space-y-2.5">{children}</div>
     </div>
   );
 }
 
-/** A single label/value row. Renders nothing if the value is empty. */
 function InfoRow({ icon: Icon, label, value, href }) {
   if (!hasValue(value)) return null;
 
   const row = (
-    <div className="flex items-start justify-between gap-3 text-sm">
+    <div className="flex items-start justify-between gap-3 text-xs sm:text-sm">
       <span className="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400 shrink-0">
         {Icon && <Icon className="w-3.5 h-3.5" />}
         {label}
@@ -131,13 +123,6 @@ function InfoRow({ icon: Icon, label, value, href }) {
 
   return row;
 }
-
-/* ----------------------------------------------------------------------- *
- * Data extraction helpers
- * These safely pull whatever fields happen to exist on a given inquiry —
- * different inquiry types carry different shapes, so nothing here assumes
- * a field is present.
- * ----------------------------------------------------------------------- */
 
 function getCustomerRows(inquiry) {
   return [
@@ -191,8 +176,6 @@ function getPropertyRows(property) {
   ].filter((row) => hasValue(row.value));
 }
 
-/** Fields unique to a specific requestType. Extend this switch as new
- *  inquiry types are introduced — never invent values that aren't present. */
 function getInquirySpecificRows(inquiry) {
   switch (inquiry.requestType) {
     case "SCHEDULE_TOUR":
@@ -264,8 +247,6 @@ export default function InquiryDetailDrawer({
   const [noteText, setNoteText] = useState("");
   const [savingNote, setSavingNote] = useState(false);
 
-  // Lock background scroll while the drawer is open, and allow Escape to
-  // close it — standard expectations for any modal/drawer.
   useEffect(() => {
     if (!inquiry) return;
 
@@ -301,17 +282,14 @@ export default function InquiryDetailDrawer({
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
-      {/* backdrop */}
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      {/* panel */}
-      <div className="relative w-full max-w-md h-full bg-white dark:bg-zinc-900 shadow-2xl overflow-y-auto">
-        {/* header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between px-5 py-4 border-b border-zinc-100 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md">
-          <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-brand dark:text-brand-light">
+      <div className="relative w-full sm:max-w-md h-full bg-white dark:bg-zinc-900 shadow-2xl overflow-y-auto">
+        <div className="sticky top-0 z-10 flex items-center justify-between px-4 sm:px-5 py-3.5 sm:py-4 border-b border-zinc-100 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md">
+          <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.25em] text-brand dark:text-brand-light">
             Inquiry detail
           </span>
           <button
@@ -323,32 +301,32 @@ export default function InquiryDetailDrawer({
           </button>
         </div>
 
-        <div className="p-5 space-y-6">
+        <div className="p-4 sm:p-5 space-y-5 sm:space-y-6">
           {/* 1. Inquiry header */}
-          <div className="space-y-2.5">
-            <div className="flex flex-wrap items-center gap-2">
+          <div className="space-y-2 sm:space-y-2.5">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
               <RequestTypeBadge
                 requestType={inquiry.requestType}
                 tourType={inquiry.tourType}
               />
               {hasValue(inquiry.status) && (
-                <span className="text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full bg-brand/10 text-brand dark:bg-brand/20 dark:text-brand-light">
+                <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wide px-2 sm:px-2.5 py-1 rounded-full bg-brand/10 text-brand dark:bg-brand/20 dark:text-brand-light">
                   {formatLabel(inquiry.status)}
                 </span>
               )}
               {inquiry.isRead === false && (
-                <span className="text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400">
+                <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wide px-2 sm:px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400">
                   Unread
                 </span>
               )}
             </div>
 
-            <h2 className="font-serif text-xl font-semibold text-zinc-900 dark:text-white">
+            <h2 className="font-serif text-lg sm:text-xl font-semibold text-zinc-900 dark:text-white">
               {inquiry.name || "Unnamed inquiry"}
             </h2>
 
             {hasValue(inquiry.createdAt) && (
-              <p className="flex items-center gap-1.5 text-[11px] text-zinc-400 font-mono">
+              <p className="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-zinc-400 font-mono">
                 <FiClock className="w-3 h-3" />
                 Submitted {formatDateTime(inquiry.createdAt)}
               </p>
@@ -366,7 +344,7 @@ export default function InquiryDetailDrawer({
                   href={`https://wa.me/${waNumber}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-sm font-medium text-emerald-600 hover:underline pt-1"
+                  className="flex items-center gap-1.5 text-xs sm:text-sm font-medium text-emerald-600 hover:underline pt-1"
                 >
                   <FiMessageCircle className="w-3.5 h-3.5" />
                   Message on WhatsApp
@@ -382,19 +360,18 @@ export default function InquiryDetailDrawer({
                 href={`/properties/${inquiry.property.slug || ""}`}
                 className="flex items-center gap-3 -mx-1 p-2 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors"
               >
-                <div className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0 bg-zinc-200 dark:bg-zinc-800">
+                <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden shrink-0 bg-zinc-200 dark:bg-zinc-800">
                   {inquiry.property.coverImage && (
                     <Image
                       src={inquiry.property.coverImage}
                       alt={inquiry.property.title}
                       fill
-                      unoptimized
                       sizes="56px"
                       className="object-cover"
                     />
                   )}
                 </div>
-                <p className="text-sm font-semibold text-zinc-900 dark:text-white truncate">
+                <p className="text-xs sm:text-sm font-semibold text-zinc-900 dark:text-white truncate">
                   {inquiry.property.title}
                 </p>
               </Link>
@@ -407,7 +384,7 @@ export default function InquiryDetailDrawer({
           {/* 4. Message / request */}
           {hasValue(inquiry.message) && (
             <SectionCard icon={FiMessageCircle} title="Message">
-              <p className="text-sm text-zinc-700 dark:text-zinc-200 leading-relaxed whitespace-pre-line">
+              <p className="text-xs sm:text-sm text-zinc-700 dark:text-zinc-200 leading-relaxed whitespace-pre-line">
                 {inquiry.message}
               </p>
             </SectionCard>
@@ -426,9 +403,9 @@ export default function InquiryDetailDrawer({
           )}
 
           {/* status + assign */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
             <div>
-              <span className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 dark:text-zinc-400 block mb-2">
+              <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-widest text-zinc-500 dark:text-zinc-400 block mb-1.5 sm:mb-2">
                 Status
               </span>
               <StatusDropdown
@@ -437,7 +414,7 @@ export default function InquiryDetailDrawer({
               />
             </div>
             <div>
-              <span className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 dark:text-zinc-400 block mb-2">
+              <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-widest text-zinc-500 dark:text-zinc-400 block mb-1.5 sm:mb-2">
                 Assigned to
               </span>
               <select
@@ -457,13 +434,13 @@ export default function InquiryDetailDrawer({
 
           {/* internal notes */}
           <div>
-            <span className="font-mono text-[10px] uppercase tracking-widest text-zinc-500 dark:text-zinc-400 block mb-2">
+            <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-widest text-zinc-500 dark:text-zinc-400 block mb-1.5 sm:mb-2">
               Internal notes
             </span>
 
-            <div className="space-y-2.5 max-h-52 overflow-y-auto mb-3">
+            <div className="space-y-2 sm:space-y-2.5 max-h-52 overflow-y-auto mb-2.5 sm:mb-3">
               {(inquiry.internalNotes || []).length === 0 && (
-                <p className="text-xs text-zinc-400 dark:text-zinc-600 italic">
+                <p className="text-[11px] sm:text-xs text-zinc-400 dark:text-zinc-600 italic">
                   No notes yet — only your team sees these.
                 </p>
               )}
@@ -473,12 +450,12 @@ export default function InquiryDetailDrawer({
                 .map((note, idx) => (
                   <div
                     key={note._id || idx}
-                    className="rounded-xl bg-zinc-50 dark:bg-zinc-800/60 p-3"
+                    className="rounded-xl bg-zinc-50 dark:bg-zinc-800/60 p-2.5 sm:p-3"
                   >
-                    <p className="text-xs text-zinc-700 dark:text-zinc-200">
+                    <p className="text-[11px] sm:text-xs text-zinc-700 dark:text-zinc-200">
                       {note.text}
                     </p>
-                    <div className="flex items-center gap-1 mt-1.5 text-[10px] text-zinc-400 font-mono">
+                    <div className="flex items-center gap-1 mt-1.5 text-[9px] sm:text-[10px] text-zinc-400 font-mono">
                       <FiUser className="w-3 h-3" />
                       {note.addedBy} · {formatDateTime(note.addedAt)}
                     </div>

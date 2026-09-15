@@ -239,10 +239,10 @@ export const PropertyCard = ({
             </h3>
 
             <p
-              className={`text-zinc-600 dark:text-zinc-400 line-clamp-2 leading-relaxed min-h-[2.5rem] ${
+              className={`text-zinc-600 dark:text-zinc-400 line-clamp-2 leading-relaxed ${
                 alwaysExpanded
-                  ? "block text-xs mb-4"
-                  : "hidden sm:block text-xs mb-4"
+                  ? "block text-xs mb-4 h-[2.5rem]"
+                  : "hidden sm:block text-xs mb-4 h-[2.5rem]"
               }`}
             >
               {description || ""}

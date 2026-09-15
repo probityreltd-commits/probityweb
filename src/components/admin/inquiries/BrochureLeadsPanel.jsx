@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { fetchInquiries } from "@/services/api/inquiries";
 import { formatRelativeTime } from "@/components/ui/dashboard-helpers";
-import { exportLeadsToExcel, exportLeadsToPDF } from "@/lib/export/exportLeads";
+import { exportLeadsToPDF } from "@/lib/export/exportLeads";
 import ExportLeadsButton from "@/components/admin/inquiries/ExportLeadsButton";
 
 const PAGE_LIMIT = 20;
@@ -50,15 +50,13 @@ const BrochureLeadsPanel = ({
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [page, setPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState([]);
-  const [exportingAllType, setExportingAllType] = useState(null);
+  const [exportingAll, setExportingAll] = useState(false);
 
   useEffect(() => {
     const id = setTimeout(() => setDebouncedSearch(search), 400);
     return () => clearTimeout(id);
   }, [search]);
 
-  // A fresh search should reset back to page 1, otherwise a narrower
-  // result set can leave the user stranded on an empty page.
   useEffect(() => {
     setPage(1);
   }, [debouncedSearch]);
@@ -100,7 +98,6 @@ const BrochureLeadsPanel = ({
 
   const handleMarkContacted = async () => {
     if (selectedIds.length === 0) return;
-    // (ids, status) — matches the shared handler's signature on the parent page.
     const ok = await onBulkStatus?.(selectedIds, "CONTACTED");
     if (ok) {
       toast.success(`Marked ${selectedIds.length} lead(s) as contacted.`);
@@ -131,8 +128,8 @@ const BrochureLeadsPanel = ({
 
   // Exports every brochure lead matching the current search — not just the
   // current page — by fetching a fresh, high-limit page straight from the API.
-  const handleExportAllFiltered = async (type) => {
-    setExportingAllType(type);
+  const handleExportAllFiltered = async () => {
+    setExportingAll(true);
     try {
       const res = await fetchInquiries({
         requestType: "BROCHURE_DOWNLOAD",
@@ -145,16 +142,12 @@ const BrochureLeadsPanel = ({
         toast.error("No leads to export.");
         return;
       }
-      if (type === "xlsx") {
-        exportLeadsToExcel(all);
-      } else {
-        exportLeadsToPDF(all);
-      }
+      exportLeadsToPDF(all);
       toast.success(`Exported ${all.length} lead(s).`);
     } catch (err) {
       toast.error(err.message || "Could not export leads.");
     } finally {
-      setExportingAllType(null);
+      setExportingAll(false);
     }
   };
 
@@ -165,9 +158,9 @@ const BrochureLeadsPanel = ({
   const totalPages = pagination?.totalPages || 1;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3.5 sm:space-y-4">
       {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3">
         <div className="relative flex-1">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
           <input
@@ -180,16 +173,16 @@ const BrochureLeadsPanel = ({
         </div>
 
         <ExportLeadsButton
-          label="Export All"
+          label="Export All (PDF)"
           onExport={handleExportAllFiltered}
-          loading={exportingAllType !== null}
+          loading={exportingAll}
           disabled={leads.length === 0}
         />
       </div>
 
       {/* Bulk action bar — shown only when leads are selected */}
       {selectedIds.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3 p-3 rounded-xl bg-brand/5 dark:bg-brand-light/10 border border-brand/20 dark:border-brand-light/30">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 p-2.5 sm:p-3 rounded-xl bg-brand/5 dark:bg-brand-light/10 border border-brand/20 dark:border-brand-light/30">
           <span className="text-xs sm:text-sm font-semibold text-brand dark:text-brand-light">
             {selectedIds.length} selected
           </span>
@@ -218,16 +211,16 @@ const BrochureLeadsPanel = ({
 
       {/* Content */}
       {loading ? (
-        <div className="flex items-center justify-center py-16">
+        <div className="flex items-center justify-center py-14 sm:py-16">
           <Loader2 className="w-6 h-6 text-brand animate-spin" />
         </div>
       ) : leads.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-center rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-800">
-          <Download className="w-9 h-9 text-zinc-300 dark:text-zinc-700 mb-3" />
-          <p className="text-sm font-medium text-zinc-600 dark:text-zinc-300">
+        <div className="flex flex-col items-center justify-center py-14 sm:py-16 text-center rounded-xl sm:rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-800 px-4">
+          <Download className="w-8 h-8 sm:w-9 sm:h-9 text-zinc-300 dark:text-zinc-700 mb-2.5 sm:mb-3" />
+          <p className="text-xs sm:text-sm font-medium text-zinc-600 dark:text-zinc-300">
             No brochure leads yet
           </p>
-          <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1 max-w-xs">
+          <p className="text-[11px] sm:text-xs text-zinc-400 dark:text-zinc-500 mt-1 max-w-xs">
             When visitors download a project brochure, they will show up here
             for follow-up.
           </p>

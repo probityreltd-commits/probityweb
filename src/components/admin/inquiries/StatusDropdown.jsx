@@ -13,8 +13,8 @@ export default function StatusDropdown({ value, onChange, disabled = false }) {
       value={value}
       disabled={disabled}
       onChange={(e) => onChange(e.target.value)}
-      onClick={(e) => e.stopPropagation()} // don't trigger the row's onClick (open drawer)
-      className={`text-[11px] font-semibold uppercase tracking-wide ledger-font rounded-full border pl-2.5 pr-6 py-1.5 outline-none focus:ring-2 focus:ring-[#431780] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${config.badge}`}
+      onClick={(e) => e.stopPropagation()}
+      className={`w-full text-[10px] sm:text-[11px] font-semibold uppercase tracking-wide font-mono rounded-full border pl-2.5 pr-6 py-1.5 outline-none focus:ring-2 focus:ring-brand cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${config.badge}`}
     >
       {STATUS_ORDER.map((key) => (
         <option key={key} value={key} className="text-zinc-900 bg-white">

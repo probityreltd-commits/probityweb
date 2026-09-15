@@ -21,22 +21,19 @@ const AddProperty = () => {
   const [formData, setFormData] = useState(initialFormData);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   const [uploadedImages, setUploadedImages] = useState([]); // cover / main images
-  const [galleryImages, setGalleryImages] = useState([]); // NEW — separate details-page gallery
+  const [galleryImages, setGalleryImages] = useState([]); // separate details-page gallery
   const [brochureFile, setBrochureFile] = useState(null);
   const [isUploadingPdf, setIsUploadingPdf] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Format string to URL-safe slug
-  const formatSlug = (text) => {
-    return text
+  const formatSlug = (text) =>
+    text
       .toLowerCase()
       .trim()
       .replace(/[^a-z0-9 -]/g, "")
       .replace(/\s+/g, "-")
       .replace(/-+/g, "-");
-  };
 
-  // Auto-generate slug when title changes
   const handleTitleChange = (e) => {
     const val = e.target.value;
     setFormData((prev) => ({
@@ -46,7 +43,6 @@ const AddProperty = () => {
     }));
   };
 
-  // Manual slug input handler
   const handleSlugChange = (e) => {
     const val = e.target.value;
     setFormData((prev) => ({
@@ -63,7 +59,6 @@ const AddProperty = () => {
     }));
   };
 
-  // Toggle Amenity Selection
   const toggleAmenity = (amenityLabel) => {
     setSelectedAmenities((prev) =>
       prev.includes(amenityLabel)
@@ -72,7 +67,6 @@ const AddProperty = () => {
     );
   };
 
-  // Brochure Upload Handler with Cloudinary Integration
   const handleBrochureUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -145,7 +139,6 @@ const AddProperty = () => {
     toast.info("Form reset to default.");
   };
 
-  // Submit Handler
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -160,9 +153,6 @@ const AddProperty = () => {
         typeof img === "string" ? img : img.url || img.secure_url,
       );
 
-      // NEW — separate gallery collection, same extraction pattern as the
-      // main images so it works with whatever shape CloudinaryImageUploader
-      // returns (plain URL strings or {url}/{secure_url} objects)
       const galleryImageUrls = galleryImages.map((img) =>
         typeof img === "string" ? img : img.url || img.secure_url,
       );
@@ -171,7 +161,7 @@ const AddProperty = () => {
         title: formData.title,
         slug: formData.slug,
         locationName: formData.locationName,
-        mapLocation: formData.mapLocation, // NEW
+        mapLocation: formData.mapLocation,
         propertyType: formData.propertyType,
         pricePerSqft: formData.pricePerSqft,
         address: formData.address,
@@ -192,7 +182,7 @@ const AddProperty = () => {
         amenities: selectedAmenities,
         images: imageUrls,
         coverImage: imageUrls[0] || "",
-        galleryImages: galleryImageUrls, // NEW
+        galleryImages: galleryImageUrls,
         projectBrochure: formData.projectBrochure,
         createdAt: new Date().toISOString(),
       };
@@ -226,20 +216,20 @@ const AddProperty = () => {
   };
 
   return (
-    <div className="min-h-screen  text-zinc-900 dark:text-zinc-100 pb-16">
+    <div className="min-h-screen bg-background text-zinc-900 dark:text-zinc-100 pb-10 sm:pb-16">
       <AddPropertyHeader
         onReset={handleReset}
         onSubmit={handleSubmit}
         isSubmitting={isSubmitting}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <form
           onSubmit={handleSubmit}
-          className="grid grid-cols-1 lg:grid-cols-12 gap-8"
+          className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8"
         >
           {/* Main Form Content (8 Columns on Large Screens) */}
-          <div className="lg:col-span-8 space-y-8">
+          <div className="lg:col-span-8 space-y-5 sm:space-y-8">
             <BasicInfoSection
               number={1}
               formData={formData}
