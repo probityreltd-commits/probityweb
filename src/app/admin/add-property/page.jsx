@@ -6,7 +6,7 @@ import AddPropertyHeader from "./AddPropertyHeader";
 import BasicInfoSection from "@/components/admin/add-property/BasicInfoSection";
 import LocationMapSection from "@/components/admin/add-property/LocationMapSection";
 import StatusSection from "@/components/admin/add-property/StatusSection";
-import SpecificationsSection from "@/components/admin/add-property/SpecificationsSection";
+// import SpecificationsSection from "@/components/admin/add-property/SpecificationsSection";
 import ProjectDetailsSection from "@/components/admin/add-property/ProjectDetailsSection";
 import AmenitiesSection from "@/components/admin/add-property/AmenitiesSection";
 import ImageGallerySection from "@/components/admin/add-property/ImageGallerySection";
@@ -163,15 +163,11 @@ const AddProperty = () => {
         locationName: formData.locationName,
         mapLocation: formData.mapLocation,
         propertyType: formData.propertyType,
-        pricePerSqft: formData.pricePerSqft,
         address: formData.address,
         description: formData.description,
         status: formData.status,
         handoverDate: formData.handoverDate,
-        bedrooms: Number(formData.bedrooms) || 0,
-        bathrooms: Number(formData.bathrooms) || 0,
-        flatSize: formData.flatSize,
-        orientation: formData.orientation,
+
         landArea: formData.landArea,
         buildingHeight: formData.buildingHeight,
         apartments: Number(formData.apartments) || 0,
@@ -179,6 +175,7 @@ const AddProperty = () => {
         motorbikeParking: formData.motorbikeParking,
         unitsPerFloor: Number(formData.unitsPerFloor) || 0,
         apartmentSizes: formData.apartmentSizes,
+
         amenities: selectedAmenities,
         images: imageUrls,
         coverImage: imageUrls[0] || "",
@@ -250,38 +247,38 @@ const AddProperty = () => {
               handleChange={handleChange}
             />
 
-            <SpecificationsSection
+            {/* <SpecificationsSection
+              number={4}
+              formData={formData}
+              handleChange={handleChange}
+            /> */}
+
+            <ProjectDetailsSection
               number={4}
               formData={formData}
               handleChange={handleChange}
             />
 
-            <ProjectDetailsSection
-              number={5}
-              formData={formData}
-              handleChange={handleChange}
-            />
-
             <AmenitiesSection
-              number={6}
+              number={5}
               selectedAmenities={selectedAmenities}
               toggleAmenity={toggleAmenity}
             />
 
             <ImageGallerySection
-              number={7}
+              number={6}
               uploadedImages={uploadedImages}
               setUploadedImages={setUploadedImages}
             />
 
             <GalleryImagesSection
-              number={8}
+              number={7}
               galleryImages={galleryImages}
               setGalleryImages={setGalleryImages}
             />
 
             <BrochureSection
-              number={9}
+              number={8}
               brochureFile={brochureFile}
               isUploadingPdf={isUploadingPdf}
               handleBrochureUpload={handleBrochureUpload}

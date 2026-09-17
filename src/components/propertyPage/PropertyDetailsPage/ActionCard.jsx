@@ -1,4 +1,5 @@
-import { useState } from "react";
+"use client";
+
 import Image from "next/image";
 import { User, Send, Video, UserCheck, Download, Loader2 } from "lucide-react";
 
@@ -18,7 +19,7 @@ const ActionCard = ({
 
   return (
     <div className="rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-7 border border-zinc-200/80 dark:border-zinc-800 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl shadow-xl space-y-4 sm:space-y-6">
-      {/* Mode Switching Navigation */}
+      {/* Mode Switching */}
       <div className="grid grid-cols-2 gap-1.5 sm:gap-2 p-1 bg-brand/5 dark:bg-zinc-800 rounded-xl sm:rounded-2xl border border-zinc-200 dark:border-zinc-700">
         <button
           type="button"
@@ -44,12 +45,14 @@ const ActionCard = ({
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <div className="w-1/2 h-full bg-gradient-to-r from-transparent via-white/30 dark:via-white/20 to-transparent skew-x-12 animate-shimmer" />
           </div>
+
           <Download className="w-3.5 h-3.5 animate-bounce shrink-0" />
+
           <span className="truncate">Download Brochure</span>
         </button>
       </div>
 
-      {/* Sales Representative Card */}
+      {/* Sales Representative */}
       <div className="flex items-center gap-3 sm:gap-3.5 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-brand/5 border border-zinc-200/60 dark:border-zinc-700/60">
         <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden border-2 border-brand shrink-0 bg-zinc-200">
           <Image
@@ -61,51 +64,48 @@ const ActionCard = ({
             className="object-cover"
           />
         </div>
+
         <div>
           <div className="flex items-center gap-1">
             <h4 className="font-serif text-xs sm:text-sm font-semibold text-zinc-900 dark:text-white">
               Probity Sales Team
             </h4>
+
             <UserCheck className="w-3.5 h-3.5 text-emerald-500" />
           </div>
+
           <p className="text-[10px] sm:text-[11px] text-zinc-500 dark:text-zinc-400">
             Senior Real Estate Advisor
           </p>
         </div>
       </div>
 
-      {/* Dynamic Form Flow */}
+      {/* Form */}
       <form onSubmit={handleFormSubmit} className="space-y-3 sm:space-y-3.5">
         {activeTab === "BROCHURE" ? (
           <>
-            <div>
-              <label className="block text-[9px] sm:text-[10px] font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-1.5">
-                Email Address <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="email"
-                placeholder="Email address"
-                required
-                value={formData.email}
-                onChange={handleFieldChange("email")}
-                autoComplete="email"
-                className={inputCls}
-              />
-            </div>
-            <div>
-              <label className="block text-[9px] sm:text-[10px] font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-1.5">
-                Phone Number <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="tel"
-                placeholder="Phone number"
-                required
-                value={formData.phone}
-                onChange={handleFieldChange("phone")}
-                autoComplete="tel"
-                className={inputCls}
-              />
-            </div>
+            {/* Name */}
+            <input
+              type="text"
+              placeholder="Your name"
+              required
+              value={formData.name}
+              onChange={handleFieldChange("name")}
+              autoComplete="name"
+              className={inputCls}
+            />
+
+            {/* Phone */}
+            <input
+              type="tel"
+              placeholder="Phone number"
+              required
+              value={formData.phone}
+              onChange={handleFieldChange("phone")}
+              autoComplete="tel"
+              className={inputCls}
+            />
+
             <button
               type="submit"
               disabled={isSubmitting}
@@ -126,10 +126,12 @@ const ActionCard = ({
           </>
         ) : (
           <>
+            {/* Tour Type */}
             <div>
               <label className="block text-[9px] sm:text-[10px] font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-1.5 sm:mb-2">
                 Tour type
               </label>
+
               <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
                 <button
                   type="button"
@@ -143,6 +145,7 @@ const ActionCard = ({
                   <User className="w-3.5 h-3.5" />
                   In person
                 </button>
+
                 <button
                   type="button"
                   onClick={() => setTourType("Video Chat")}
@@ -158,6 +161,7 @@ const ActionCard = ({
               </div>
             </div>
 
+            {/* Name */}
             <input
               type="text"
               placeholder="Your name"
@@ -167,6 +171,8 @@ const ActionCard = ({
               autoComplete="name"
               className={inputCls}
             />
+
+            {/* Phone */}
             <input
               type="tel"
               placeholder="Phone number"
@@ -176,15 +182,8 @@ const ActionCard = ({
               autoComplete="tel"
               className={inputCls}
             />
-            <input
-              type="email"
-              placeholder="Email address"
-              required
-              value={formData.email}
-              onChange={handleFieldChange("email")}
-              autoComplete="email"
-              className={inputCls}
-            />
+
+            {/* Message */}
             <textarea
               rows={3}
               placeholder="Preferred date or message..."
@@ -193,6 +192,7 @@ const ActionCard = ({
               className={`${inputCls} resize-none`}
             />
 
+            {/* Submit */}
             <button
               type="submit"
               disabled={isSubmitting}

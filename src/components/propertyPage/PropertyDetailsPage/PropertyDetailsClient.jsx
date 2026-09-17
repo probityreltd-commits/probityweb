@@ -19,6 +19,7 @@ import OurFeatureProject from "./OurFeatureProject";
 
 const formatDate = (value) => {
   if (!value) return null;
+
   try {
     return new Date(value).toLocaleDateString("en-US", {
       month: "short",
@@ -37,16 +38,20 @@ const PropertyDetailsClient = ({ property }) => {
   const [tourType, setTourType] = useState("In Person");
   const [imgErrors, setImgErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
-    email: "",
     message: "",
   });
+
   const [submitted, setSubmitted] = useState(false);
 
   const handleFieldChange = (field) => (e) => {
-    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+    setFormData((prev) => ({
+      ...prev,
+      [field]: e.target.value,
+    }));
   };
 
   const triggerBrochureDownload = () => {
@@ -54,11 +59,17 @@ const PropertyDetailsClient = ({ property }) => {
       toast.error("Project brochure is currently unavailable.");
       return;
     }
+
     const link = document.createElement("a");
+
     link.href = property.projectBrochure;
-    link.download = `${property?.slug || property?.title || "project"}-brochure`;
+    link.download = `${
+      property?.slug || property?.title || "project"
+    }-brochure`;
+
     link.target = "_blank";
     link.rel = "noopener noreferrer";
+
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -67,19 +78,24 @@ const PropertyDetailsClient = ({ property }) => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
+    const name = formData.name.trim();
+    const phone = formData.phone.trim();
+
+    /*
+     * BROCHURE DOWNLOAD
+     * Required fields: Name + Phone
+     */
     if (activeTab === "BROCHURE") {
-      const email = formData.email.trim();
-      const phone = formData.phone.trim();
-      if (!email || !phone) {
-        toast.error("Please provide your email and phone number.");
+      if (!name || !phone) {
+        toast.error("Please provide your name and phone number.");
         return;
       }
 
       setIsSubmitting(true);
+
       const payload = {
         requestType: "BROCHURE_DOWNLOAD",
-        name: "Valued Visitor",
-        email,
+        name,
         phone,
         property: {
           id: property?._id || null,
@@ -89,32 +105,52 @@ const PropertyDetailsClient = ({ property }) => {
         },
         createdAt: new Date().toISOString(),
       };
-      console.log("FINAL BROCHURE PAYLOAD:", payload);
 
       try {
         const body = await addInquiries(payload);
-        if (body?.success === false) throw new Error(body.message);
+
+        if (body?.success === false) {
+          throw new Error(body.message || "Submission failed.");
+        }
+
         triggerBrochureDownload();
-        toast.success("Download successful");
-        setFormData((prev) => ({ ...prev, email: "", phone: "" }));
+
+        toast.success("Brochure download started.");
+
+        setFormData((prev) => ({
+          ...prev,
+          name: "",
+          phone: "",
+        }));
       } catch (err) {
         console.error("Brochure Download Error:", err);
+
         toast.error(
           err.message || "Failed to download brochure. Please try again.",
         );
       } finally {
         setIsSubmitting(false);
       }
+
+      return;
+    }
+
+    /*
+     * SCHEDULE TOUR
+     * Required fields: Name + Phone
+     */
+    if (!name || !phone) {
+      toast.error("Please provide your name and phone number.");
       return;
     }
 
     setIsSubmitting(true);
+
     const payload = {
       requestType: "SCHEDULE_TOUR",
       tourType,
-      name: formData.name.trim(),
-      phone: formData.phone.trim(),
-      email: formData.email.trim(),
+      name,
+      phone,
       message: formData.message.trim(),
       property: {
         id: property?._id || null,
@@ -127,13 +163,25 @@ const PropertyDetailsClient = ({ property }) => {
 
     try {
       const body = await addInquiries(payload);
-      if (body?.success === false) throw new Error(body.message);
-      toast.success("Sent your text, Thank You!");
+
+      if (body?.success === false) {
+        throw new Error(body.message || "Submission failed.");
+      }
+
+      toast.success("Tour request sent successfully!");
+
       setSubmitted(true);
-      setFormData({ name: "", phone: "", email: "", message: "" });
+
+      setFormData({
+        name: "",
+        phone: "",
+        message: "",
+      });
+
       setTimeout(() => setSubmitted(false), 3000);
     } catch (err) {
       console.error("Tour Request Error:", err);
+
       toast.error(err.message || "Could not submit. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -148,6 +196,7 @@ const PropertyDetailsClient = ({ property }) => {
         : [];
 
   const images = rawImages.filter((_, idx) => !imgErrors[idx]);
+
   const safeIndex = Math.min(activeImageIndex, Math.max(images.length - 1, 0));
 
   const handlePrev = useCallback(() => {
@@ -160,13 +209,18 @@ const PropertyDetailsClient = ({ property }) => {
 
   useEffect(() => {
     if (!lightboxOpen) return;
+
     const onKey = (e) => {
       if (e.key === "Escape") setLightboxOpen(false);
       if (e.key === "ArrowLeft") handlePrev();
       if (e.key === "ArrowRight") handleNext();
     };
+
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+
+    return () => {
+      window.removeEventListener("keydown", onKey);
+    };
   }, [lightboxOpen, handlePrev, handleNext]);
 
   const handoverLabel = formatDate(property?.handoverDate);
@@ -178,17 +232,20 @@ const PropertyDetailsClient = ({ property }) => {
       label: "Land",
       value: `${property.landArea}`,
     },
+
     property?.buildingHeight != null && {
       icon: Building2,
       label: "Building Height",
       value: `${property.buildingHeight}`,
     },
-    property?.apartments && {
+
+    property?.apartments != null && {
       icon: Home,
       label: "Apartments",
       value: property.apartments,
     },
-    property?.carParking && {
+
+    property?.carParking != null && {
       icon: Car,
       label: "Car Parking",
       value: property.carParking,
@@ -196,24 +253,58 @@ const PropertyDetailsClient = ({ property }) => {
   ].filter(Boolean);
 
   const keyDetailsList = [
-    { label: "Property Title", value: property?.title },
-    { label: "Location", value: property?.locationName },
-    { label: "Property Type", value: property?.propertyType },
-    { label: "Address", value: property?.address },
-    { label: "Status", value: property?.status },
-    { label: "Handover Date", value: handoverLabel },
-    { label: "Bedrooms", value: property?.bedrooms },
-    { label: "Bathrooms", value: property?.bathrooms },
-    { label: "Flat Size", value: property?.flatSize },
-    { label: "Orientation", value: property?.orientation },
-    { label: "Price Per Sqft", value: property?.pricePerSqft },
-    { label: "Building Height", value: property?.buildingHeight },
-    { label: "Land Area", value: property?.landArea },
-    { label: "Apartments", value: property?.apartments },
-    { label: "Apartment Sizes", value: property?.apartmentSizes },
-    { label: "Units Per Floor", value: property?.unitsPerFloor },
-    { label: "Car Parking", value: property?.carParking },
-    { label: "Motorbike Parking", value: property?.motorbikeParking },
+    {
+      label: "Property Title",
+      value: property?.title,
+    },
+    {
+      label: "Location",
+      value: property?.locationName,
+    },
+    {
+      label: "Property Type",
+      value: property?.propertyType,
+    },
+    {
+      label: "Address",
+      value: property?.address,
+    },
+    {
+      label: "Status",
+      value: property?.status,
+    },
+    {
+      label: "Handover Date",
+      value: handoverLabel,
+    },
+    {
+      label: "Building Height",
+      value: property?.buildingHeight,
+    },
+    {
+      label: "Land Area",
+      value: property?.landArea,
+    },
+    {
+      label: "Apartments",
+      value: property?.apartments,
+    },
+    {
+      label: "Apartment Sizes",
+      value: property?.apartmentSizes,
+    },
+    {
+      label: "Units Per Floor",
+      value: property?.unitsPerFloor,
+    },
+    {
+      label: "Car Parking",
+      value: property?.carParking,
+    },
+    {
+      label: "Motorbike Parking",
+      value: property?.motorbikeParking,
+    },
   ].filter(
     (item) =>
       item.value !== undefined &&
@@ -237,7 +328,6 @@ const PropertyDetailsClient = ({ property }) => {
 
       <SpecLedger stats={stats} propertyId={property?._id} />
 
-      {/* Main Content Grid */}
       <div className="mt-6 sm:mt-8 lg:mt-10 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
         <div className="lg:col-span-8 space-y-6 sm:space-y-8">
           <KeyDetailsSection
@@ -245,6 +335,7 @@ const PropertyDetailsClient = ({ property }) => {
             keyDetailsList={keyDetailsList}
             listedLabel={listedLabel}
           />
+
           <FeaturesAndAmenities amenities={property?.amenities} />
         </div>
 

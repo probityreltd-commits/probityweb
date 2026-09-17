@@ -9,26 +9,29 @@ const ScheduleTourSection = ({ property }) => {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
-    email: "",
     subject: "",
     message: "",
   });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   const handleChange = (field) => (e) =>
-    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+    setFormData((prev) => ({
+      ...prev,
+      [field]: e.target.value,
+    }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (isSubmitting) return;
 
     const name = formData.name.trim();
     const phone = formData.phone.trim();
-    const email = formData.email.trim();
 
-    if (!name || !phone || !email) {
-      toast.error("Please fill in your name, phone, and email.");
+    if (!name || !phone) {
+      toast.error("Please fill in your name and phone number.");
       return;
     }
 
@@ -39,36 +42,41 @@ const ScheduleTourSection = ({ property }) => {
       tourType: "In Person",
       name,
       phone,
-      email,
       subject: formData.subject.trim() || null,
       message: formData.message.trim(),
+
       property: {
         id: property?._id || null,
         slug: property?.slug || null,
         title: property?.title || null,
         coverImage: property?.coverImage || null,
       },
+
       createdAt: new Date().toISOString(),
     };
 
     try {
       const body = await addInquiries(payload);
+
       if (body?.success === false) {
         throw new Error(body.message || "Submission failed.");
       }
 
       toast.success("Tour request sent successfully!");
+
       setIsSuccess(true);
+
       setFormData({
         name: "",
         phone: "",
-        email: "",
         subject: "",
         message: "",
       });
+
       setTimeout(() => setIsSuccess(false), 4000);
     } catch (err) {
       console.error("Schedule Tour Error:", err);
+
       toast.error(
         err.message || "Could not submit your request. Please try again.",
       );
@@ -93,6 +101,7 @@ const ScheduleTourSection = ({ property }) => {
           >
             Schedule A Tour
           </h2>
+
           <p className="text-[11px] sm:text-sm text-zinc-500 dark:text-zinc-400 mb-5 sm:mb-9">
             Fill in your details and our team will get in touch to arrange a
             visit.
@@ -100,6 +109,7 @@ const ScheduleTourSection = ({ property }) => {
 
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-x-10 sm:gap-y-7">
+              {/* Name */}
               <input
                 type="text"
                 placeholder="Full Name"
@@ -109,6 +119,8 @@ const ScheduleTourSection = ({ property }) => {
                 autoComplete="name"
                 className={inputCls}
               />
+
+              {/* Phone */}
               <input
                 type="tel"
                 placeholder="Phone Number"
@@ -118,15 +130,8 @@ const ScheduleTourSection = ({ property }) => {
                 autoComplete="tel"
                 className={inputCls}
               />
-              <input
-                type="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleChange("email")}
-                required
-                autoComplete="email"
-                className={inputCls}
-              />
+
+              {/* Subject */}
               <input
                 type="text"
                 placeholder="Subject (preferred date / time)"
@@ -136,6 +141,7 @@ const ScheduleTourSection = ({ property }) => {
               />
             </div>
 
+            {/* Message */}
             <textarea
               placeholder="Message"
               rows={4}
@@ -144,6 +150,7 @@ const ScheduleTourSection = ({ property }) => {
               className={`${inputCls} resize-none`}
             />
 
+            {/* Submit */}
             <button
               type="submit"
               disabled={isSubmitting}

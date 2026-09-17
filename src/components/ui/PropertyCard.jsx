@@ -2,12 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowUpRight,
-  Bath,
-  Bed,
+  Building,
+  Building2,
   Calendar,
-  Compass,
+  LandPlot,
+  Layers3,
   MapPin,
-  Maximize2,
 } from "lucide-react";
 
 const FALLBACK_IMAGE =
@@ -27,19 +27,21 @@ export const PropertyCard = ({
     description,
     address,
     locationName,
-    bedrooms,
-    bathrooms,
-    flatSize,
+    buildingHeight,
+    apartments,
+    unitsPerFloor,
     handoverDate,
-    orientation,
+    landArea,
     propertyType,
     status,
     coverImage,
     images,
-  } = property;
+  } = property || {};
 
   const displayImage = coverImage || images?.[0] || FALLBACK_IMAGE;
+
   const propertySlug = slug || _id;
+
   const fullLocation = [address, locationName].filter(Boolean).join(", ");
 
   const formattedHandover = handoverDate
@@ -51,26 +53,49 @@ export const PropertyCard = ({
 
   const specs = [
     {
-      icon: Bed,
-      label: bedrooms !== undefined ? `${bedrooms} Bed` : "N/A",
-      listLabel: bedrooms !== undefined ? `${bedrooms} Beds` : "N/A",
+      icon: Building2,
+      label:
+        buildingHeight !== undefined &&
+        buildingHeight !== null &&
+        buildingHeight !== ""
+          ? `${buildingHeight} Building Height`
+          : "N/A",
     },
     {
-      icon: Bath,
-      label: bathrooms !== undefined ? `${bathrooms} Bath` : "N/A",
-      listLabel: bathrooms !== undefined ? `${bathrooms} Baths` : "N/A",
+      icon: Building,
+      label:
+        apartments !== undefined && apartments !== null && apartments !== ""
+          ? `${apartments} Apartments`
+          : "N/A",
     },
-    { icon: Maximize2, label: flatSize || "N/A", listLabel: flatSize || "N/A" },
     {
-      icon: Compass,
-      label: orientation || "N/A",
-      listLabel: orientation || "N/A",
+      icon: Layers3,
+      label:
+        unitsPerFloor !== undefined &&
+        unitsPerFloor !== null &&
+        unitsPerFloor !== ""
+          ? `${unitsPerFloor} Units / Floor`
+          : "N/A",
+    },
+    {
+      icon: LandPlot,
+      label:
+        landArea !== undefined && landArea !== null && landArea !== ""
+          ? `${landArea} Land Area`
+          : "N/A",
     },
   ];
 
+  /*
+   * LIST VIEW
+   */
   if (viewMode === "list") {
     return (
-      <Link href={`/properties/${propertySlug}`} className="block h-full">
+      <Link
+        href={`/properties/${propertySlug}`}
+        className="block h-full"
+        aria-label={`View ${title || "property"} details`}
+      >
         <article className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-zinc-200/80 dark:border-zinc-800 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group flex flex-col md:flex-row h-full md:h-64">
           {/* Cover Image */}
           <div className="relative md:w-80 h-44 sm:h-56 md:h-full shrink-0 overflow-hidden">
@@ -81,6 +106,7 @@ export const PropertyCard = ({
               sizes="(max-width: 768px) 100vw, 320px"
               className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
             />
+
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:hidden" />
 
             {status && (
@@ -107,7 +133,7 @@ export const PropertyCard = ({
               )}
 
               <h3 className="font-serif text-base sm:text-xl font-bold text-zinc-900 dark:text-white mb-1.5 sm:mb-2 group-hover:text-brand dark:group-hover:text-indigo-400 transition-colors line-clamp-1">
-                {title}
+                {title || "Untitled Property"}
               </h3>
 
               <p className="text-[11px] sm:text-xs text-zinc-600 dark:text-zinc-400 line-clamp-2 mb-2.5 sm:mb-3 leading-relaxed min-h-[2.2rem] sm:min-h-[2.5rem]">
@@ -116,32 +142,45 @@ export const PropertyCard = ({
             </div>
 
             <div>
+              {/* Property Specs */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 py-2 sm:py-2.5 border-y border-zinc-100 dark:border-zinc-800/80 my-1.5 sm:my-2 text-[11px] sm:text-xs">
-                {specs.map(({ icon: Icon, listLabel }, idx) => (
+                {specs.map(({ icon: Icon, label }, idx) => (
                   <div
-                    key={idx}
-                    className="flex items-center gap-1.5 sm:gap-2 text-zinc-600 dark:text-zinc-300"
+                    key={`${label}-${idx}`}
+                    className="flex items-center gap-1.5 sm:gap-2 text-zinc-600 dark:text-zinc-300 min-w-0"
                   >
                     <Icon
                       className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${SPECS_ICON_CLASS}`}
+                      aria-hidden="true"
                     />
-                    <span className="truncate">{listLabel}</span>
+
+                    <span className="truncate" title={label}>
+                      {label}
+                    </span>
                   </div>
                 ))}
               </div>
 
+              {/* Footer */}
               <div className="flex items-center justify-between pt-1">
-                <div className="flex items-center gap-1.5 text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400">
+                <div className="flex items-center gap-1.5 text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400 min-w-0">
                   {formattedHandover && (
                     <>
-                      <Calendar className={`w-3.5 h-3.5 ${SPECS_ICON_CLASS}`} />
-                      <span>Handover: {formattedHandover}</span>
+                      <Calendar
+                        className={`w-3.5 h-3.5 ${SPECS_ICON_CLASS}`}
+                        aria-hidden="true"
+                      />
+
+                      <span className="truncate">
+                        Handover: {formattedHandover}
+                      </span>
                     </>
                   )}
                 </div>
-                <span className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-bold text-brand dark:text-indigo-400">
+
+                <span className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-bold text-brand dark:text-indigo-400 shrink-0 ml-3">
                   View Details
-                  <ArrowUpRight className="w-4 h-4" />
+                  <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
                 </span>
               </div>
             </div>
@@ -151,10 +190,15 @@ export const PropertyCard = ({
     );
   }
 
-  // GRID VIEW — mobile compact, sm+ full detail
-
+  /*
+   * GRID VIEW
+   */
   return (
-    <Link href={`/properties/${propertySlug}`} className="block h-full">
+    <Link
+      href={`/properties/${propertySlug}`}
+      className="block h-full"
+      aria-label={`View ${title || "property"} details`}
+    >
       <article
         className={`bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border border-zinc-200/80 dark:border-zinc-800 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group flex flex-col h-full ${
           alwaysExpanded ? "rounded-3xl" : "rounded-xl sm:rounded-3xl"
@@ -173,6 +217,7 @@ export const PropertyCard = ({
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
           />
+
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
           {status && (
@@ -213,7 +258,9 @@ export const PropertyCard = ({
                     ? "w-3.5 h-3.5 text-indigo-300 shrink-0"
                     : "w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 text-indigo-300 shrink-0"
                 }
+                aria-hidden="true"
               />
+
               <span className="truncate">{fullLocation}</span>
             </div>
           )}
@@ -235,7 +282,7 @@ export const PropertyCard = ({
                   : "text-xs sm:text-lg mb-1 sm:mb-2"
               }`}
             >
-              {title}
+              {title || "Untitled Property"}
             </h3>
 
             <p
@@ -252,32 +299,30 @@ export const PropertyCard = ({
           <div>
             {/* Specs */}
             <div
-              className={`grid grid-cols-2 border-y border-zinc-100 dark:border-zinc-800/80 ${
+              className={`grid border-y border-zinc-100 dark:border-zinc-800/80 ${
                 alwaysExpanded
-                  ? "gap-2.5 py-3 mb-4 text-xs"
-                  : "gap-1.5 sm:gap-2.5 py-1.5 sm:py-3 mb-1.5 sm:mb-4 text-[10px] sm:text-xs"
+                  ? "grid-cols-2 gap-2.5 py-3 mb-4 text-xs"
+                  : "grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 py-2 sm:py-3 mb-2 sm:mb-4 text-[10px] sm:text-xs"
               }`}
             >
               {specs.map(({ icon: Icon, label }, idx) => (
                 <div
-                  key={idx}
-                  className={`flex items-center text-zinc-600 dark:text-zinc-300 ${
-                    alwaysExpanded
-                      ? "gap-2"
-                      : `gap-1 sm:gap-2 ${idx >= 2 ? "hidden sm:flex" : ""}`
+                  key={`${label}-${idx}`}
+                  className={`flex items-center text-zinc-600 dark:text-zinc-300 min-w-0 ${
+                    alwaysExpanded ? "gap-2" : "gap-1.5 sm:gap-2"
                   }`}
                 >
                   <Icon
                     className={
                       alwaysExpanded
                         ? "w-3.5 h-3.5 text-brand dark:text-indigo-400 shrink-0"
-                        : "w-3 h-3 sm:w-3.5 sm:h-3.5 text-brand dark:text-indigo-400 shrink-0"
+                        : "w-3.5 h-3.5 sm:w-3.5 sm:h-3.5 text-brand dark:text-indigo-400 shrink-0"
                     }
+                    aria-hidden="true"
                   />
-                  <span className="truncate">
-                    {alwaysExpanded
-                      ? label.replace("Bed", "Beds").replace("Bath", "Baths")
-                      : label}
+
+                  <span className="truncate" title={label}>
+                    {label}
                   </span>
                 </div>
               ))}
@@ -286,11 +331,17 @@ export const PropertyCard = ({
             {/* Footer */}
             <div className="flex items-center justify-between text-xs pt-0.5 sm:pt-1">
               <div
-                className={`items-center gap-1.5 text-zinc-500 dark:text-zinc-400 ${alwaysExpanded ? "flex" : "hidden sm:flex"}`}
+                className={`items-center gap-1.5 text-zinc-500 dark:text-zinc-400 ${
+                  alwaysExpanded ? "flex" : "hidden sm:flex"
+                }`}
               >
                 {formattedHandover && (
                   <>
-                    <Calendar className="w-3.5 h-3.5 text-brand dark:text-indigo-400" />
+                    <Calendar
+                      className="w-3.5 h-3.5 text-brand dark:text-indigo-400"
+                      aria-hidden="true"
+                    />
+
                     <span>{formattedHandover}</span>
                   </>
                 )}
@@ -308,10 +359,12 @@ export const PropertyCard = ({
                 >
                   View Details
                 </span>
+
                 <ArrowUpRight
                   className={
                     alwaysExpanded ? "w-4 h-4" : "w-3.5 h-3.5 sm:w-4 sm:h-4"
                   }
+                  aria-hidden="true"
                 />
               </span>
             </div>

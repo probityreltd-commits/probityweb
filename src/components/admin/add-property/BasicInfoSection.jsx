@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Tag } from "lucide-react";
 
 const BasicInfoSection = ({
   number,
@@ -84,8 +83,7 @@ const BasicInfoSection = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
             <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-2">
-              Property Type / Category{" "}
-              <span className="text-rose-500">*</span>
+              Property Type / Category <span className="text-rose-500">*</span>
             </label>
             <select
               name="propertyType"
@@ -95,18 +93,16 @@ const BasicInfoSection = ({
               className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl text-xs sm:text-sm text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#3b1a83]/30 focus:border-[#3b1a83] transition-all"
             >
               <option value="">Select Property Type</option>
-              <option value="Residential Apartment">
-                Residential Apartment
-              </option>
-              <option value="Luxury Villa">Luxury Villa</option>
-              <option value="Commercial Space">Commercial Space</option>
+              <option value="Residential">Residential</option>
+              <option value="Luxury">Luxury</option>
+              <option value="Commercial">Commercial</option>
               <option value="Penthouse">Penthouse</option>
-              <option value="Duplex Studio">Duplex Studio</option>
+              <option value="Duplex">Duplex</option>
             </select>
           </div>
 
           {/* Price Per Sqft Input Field */}
-          <div>
+          {/* <div>
             <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-2 flex items-center gap-1.5">
               <Tag className="w-3.5 h-3.5 text-[#3b1a83]" />
               Price Per Sqft
@@ -119,7 +115,7 @@ const BasicInfoSection = ({
               placeholder="e.g. 2,850 - 3,000 BDT"
               className="w-full px-4 py-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl text-xs sm:text-sm text-zinc-900 dark:text-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3b1a83]/30 focus:border-[#3b1a83] transition-all"
             />
-          </div>
+          </div> */}
         </div>
 
         {/* Address */}

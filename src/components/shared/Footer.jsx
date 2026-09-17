@@ -20,15 +20,15 @@ const Footer = () => {
   const quickLinks = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
-    { name: "Project", href: "/properties" },
-    { name: "Blog & News", href: "/blog" },
+    { name: "Properties", href: "/properties" },
+    // { name: "Blog & News", href: "/blog" },
   ];
 
   const supportLinks = [
     { name: "Contact Us", href: "/contact" },
-    { name: "FAQ", href: "/faq" },
+    // { name: "FAQ", href: "/faq" },
     { name: "Privacy Policy", href: "/privacy-policy" },
-    { name: "Terms of Service", href: "/terms" },
+    // { name: "Terms of Service", href: "/terms" },
   ];
 
   return (
@@ -151,7 +151,15 @@ const Footer = () => {
         <div className="pt-8 text-center">
           <p className="text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400 font-medium">
             &copy; {currentYear} Probity Holdings Ltd. All rights reserved -
-            Design &amp; Developed by Delta-Digivast
+            Design &amp; Developed by{" "}
+            <a
+              href="https://www.deltadigivast.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              Delta-Digivast
+            </a>
           </p>
         </div>
       </div>
