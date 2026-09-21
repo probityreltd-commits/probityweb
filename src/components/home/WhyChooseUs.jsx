@@ -8,36 +8,36 @@ import { ShieldCheck, UserCheck, Tag, MapPin, Handshake } from "lucide-react";
 const features = [
   {
     id: 1,
-    title: "Verified Property Listings",
+    title: "Verified Property Details",
     description:
-      "Browse carefully verified properties with accurate information, high-quality photos, and transparent pricing.",
+      "All information, photos and prices on our website are checked and correct.",
     icon: ShieldCheck,
     iconBg:
       "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/30",
   },
   {
     id: 2,
-    title: "Expert Real Estate Advisors",
+    title: "Friendly, Experienced Advisors",
     description:
-      "Our experienced agents provide personalized guidance to help you make confident property decisions.",
+      "Our team explains everything in simple words, so you can decide with confidence.",
     icon: UserCheck,
     iconBg:
       "bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400 border border-amber-100 dark:border-amber-800/30",
   },
   {
     id: 3,
-    title: "Transparent Pricing",
+    title: "Clear Pricing",
     description:
-      "No hidden fees or unexpected costs. We believe in honest pricing and complete transparency.",
+      "No hidden cost. You know the full price and payment plan before you sign.",
     icon: Tag,
     iconBg:
       "bg-orange-50 text-orange-600 dark:bg-orange-950/40 dark:text-orange-400 border border-orange-100 dark:border-orange-800/30",
   },
   {
     id: 4,
-    title: "Prime Locations",
+    title: "Good Locations in Bogura",
     description:
-      "Explore homes and commercial spaces in carefully selected neighborhoods with excellent connectivity and amenities.",
+      "Our projects are in well-connected areas, close to roads, schools, markets and hospitals.",
     icon: MapPin,
     iconBg:
       "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400 border border-blue-100 dark:border-blue-800/30",
@@ -51,9 +51,9 @@ const features = [
   },
   {
     id: 6,
-    title: "End-to-End Support",
+    title: "Support Till Handover",
     description:
-      "From property search to final handover, our dedicated team is with you every step of the way.",
+      "From your first visit to the day you get the key, our team stays with you.",
     icon: Handshake,
     iconBg:
       "bg-purple-50 text-brand dark:bg-purple-950/40 dark:text-purple-400 border border-purple-100 dark:border-purple-800/30",
@@ -83,7 +83,7 @@ const WhyChooseUs = () => {
             transition={{ delay: 0.1, duration: 0.5 }}
             className="font-serif text-2xl sm:text-3xl lg:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight"
           >
-            Why Choose Our Properties
+            Why Families Choose Probity
           </motion.h2>
 
           <motion.p
@@ -93,10 +93,9 @@ const WhyChooseUs = () => {
             transition={{ delay: 0.2, duration: 0.5 }}
             className="mt-3 sm:mt-4 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed"
           >
-            We&apos;re committed to making your real estate journey simple,
-            transparent, and stress-free. Whether you&apos;re buying, selling,
-            or renting, our experienced team provides trusted guidance, verified
-            listings, and personalized support every step of the way.
+            Buying a home is a big decision. We make it simple, clear and
+            stress-free. Whether you want to buy, sell or rent, our team is with
+            you at every step.
           </motion.p>
         </div>
 

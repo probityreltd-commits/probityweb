@@ -9,44 +9,44 @@ export default function FAQSection() {
   const faqs = [
     {
       q: "Property Size & Dimensions",
-      a: "Homes range from 1,720 sft to 2,400 sft, in 3 and 4-bedroom layouts, with family living and multiple verandas.",
+      a: "Apartment size is different in each project. For example, Mohona-03 has three units on each floor, of about 1,225 to 1,250 sq. ft. Please see each project page for exact sizes.",
       specs: [
         {
           icon: <Bed className="w-3.5 h-3.5 text-amber-500" />,
-          value: "3 to 4",
+          value: "3 Units per Floor (Mohona-03)",
           label: "Bedrooms",
         },
         {
           icon: <Maximize2 className="w-3.5 h-3.5 text-amber-500" />,
-          value: "1,720 sft",
+          value: "1,225 sft",
           label: "Smallest",
         },
         {
           icon: <Maximize2 className="w-3.5 h-3.5 text-amber-500" />,
-          value: "2,400 sft",
+          value: "1,250 sft",
           label: "Largest",
         },
       ],
     },
     {
       q: "Mortgage Options & Financial Guidance",
-      a: "We collaborate with leading financial institutions to offer hassle-free home loan options and flexible payment schedules.",
+      a: "Many buyers use a bank home loan. Our team can guide you about the payment plan and the documents you need. Please call us for the latest payment plan of each project.",
     },
     {
       q: "Number of Bedrooms Available",
-      a: "Our typical floor plans offer 3 to 4 spacious bedrooms tailored for modern families.",
+      a: "The number of bedrooms depends on the project and the unit. Please check the project page, or call us and our team will suggest the right flat for your family.",
     },
     {
       q: "Bathroom Facilities & Amenities",
-      a: "En-suite bathrooms with modern sanitary fixtures, hot/cold water provision, and high-quality ceramic tiles.",
+      a: "Bathroom and amenity details are given on each project page. Our team can also explain everything during a free site visit.",
     },
     {
       q: "Parking Space Availability",
-      a: "Dedicated basement parking is allocated per unit with EV charging options and visitor parking space.",
+      a: "Our buildings have car parking on the ground floor. For example, Mohona-03 has 27 parking slots for flat owners, with a booking charge of BDT 1 Lac per unit. Please ask our team for other projects.",
     },
     {
       q: "Community & Surrounding Area Insights",
-      a: "Located in prime locations with close proximity to top schools, markets, hospitals, and parks.",
+      a: "Our team will take you on a site visit and show you the nearby schools, markets, mosques, hospitals and main roads.",
     },
   ];
 

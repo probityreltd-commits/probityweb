@@ -21,7 +21,6 @@ const Hero = ({
             alt={`${property?.title} — view ${safeIndex + 1}`}
             fill
             priority
-            unoptimized
             sizes="(max-width: 768px) 100vw, 1152px"
             className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
           />
@@ -110,7 +109,6 @@ const Hero = ({
                 src={img}
                 alt={`${property?.title} thumbnail ${idx + 1}`}
                 fill
-                unoptimized
                 sizes="128px"
                 className="object-cover"
               />

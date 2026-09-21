@@ -37,7 +37,7 @@ export default function Services() {
           transition={{ delay: 0.1 }}
           className="font-serif text-2xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight"
         >
-          Services We Provide
+          Our Services
         </motion.h2>
 
         <motion.p
@@ -47,7 +47,7 @@ export default function Services() {
           transition={{ delay: 0.2 }}
           className="mt-2 sm:mt-4 text-[11px] sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed"
         >
-          Find the right solution with our comprehensive real estate options.
+          One team for all your property needs in Bogura.
         </motion.p>
       </div>
 

@@ -7,7 +7,8 @@ export default function ContactCTA() {
         Have a Property in Mind?
       </h2>
       <p className="text-[11px] sm:text-sm text-slate-500 max-w-md mx-auto">
-        Our team is ready to help you find the right space.
+        Our team is ready to help you find the right home or commercial space in
+        Bogura.
       </p>
       <div className="pt-1 sm:pt-2">
         <Link

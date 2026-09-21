@@ -52,7 +52,7 @@ export default function AboutHero() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="font-serif text-xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight"
         >
-          A Legacy of Delivering Excellence
+          Building Safe Homes in Bogura with Honesty
         </motion.h1>
 
         {/* Subtitle */}
@@ -62,8 +62,8 @@ export default function AboutHero() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-[11px] sm:text-sm text-slate-300 max-w-xl mx-auto font-light leading-relaxed"
         >
-          Twenty years in business, ten in real estate, and one commitment:
-          homes built for the life you actually live.
+          Probity Real Estate Ltd. is committed to building your safe address.
+          Strong buildings, clear prices and promises we keep.
         </motion.p>
       </div>
     </section>

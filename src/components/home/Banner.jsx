@@ -143,23 +143,23 @@ const Banner = () => {
       <div
         className="
           relative
-    z-20
-    flex
-    flex-none
-    lg:flex-1
-    lg:items-center
-    container
-    mx-auto
-    w-full
-    px-4
-    sm:px-6
-    lg:px-8
-    pt-[135px]
-    pb-6
-    sm:pt-36
-    sm:pb-8
-    lg:pt-0
-    lg:pb-20
+          z-20
+          flex
+          flex-none
+          lg:flex-1
+          lg:items-center
+          container
+          mx-auto
+          w-full
+          px-4
+          sm:px-6
+          lg:px-8
+          pt-[135px]
+          pb-6
+          sm:pt-36
+          sm:pb-8
+          lg:pt-0
+          lg:pb-20
         "
       >
         <motion.div
@@ -208,7 +208,7 @@ const Banner = () => {
             >
               <Image
                 src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=800&auto=format&fit=crop"
-                alt="Probiti Luxury Real Estate"
+                alt="Probity Real Estate Ltd."
                 width={800}
                 height={600}
                 priority
@@ -259,7 +259,7 @@ const Banner = () => {
                 </p>
 
                 <h3 className="font-serif text-xl font-extrabold tracking-tight mt-0.5">
-                  Nouveau Elite Villa
+                  Mohona-03, Taltola, Jamil Nagar, Bogura
                 </h3>
               </div>
             </div>
@@ -314,13 +314,13 @@ const Banner = () => {
                   tracking-[0.18em]
                 "
               >
-                Find Your Dream Property
+                Find Your Dream Home in Bogura
               </span>
 
               <Building className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-300" />
             </motion.div>
 
-            {/* Heading */}
+            {/* H-04: Hero Main Heading (H1) */}
             <motion.h1
               variants={itemVariants}
               className="
@@ -335,12 +335,11 @@ const Banner = () => {
                 tracking-tight
               "
             >
-              Discover Luxury
-              <br />
-              <span className="text-gradient-gold">Beyond Expectations</span>
+              Find Your Safe and{" "}
+              <span className="text-gradient-gold">Happy Home in Bogura</span>
             </motion.h1>
 
-            {/* Description */}
+            {/* H-05: Hero Paragraph */}
             <motion.p
               variants={itemVariants}
               className="
@@ -356,12 +355,12 @@ const Banner = () => {
                 lg:mx-0
               "
             >
-              Experience the perfect blend of modern architecture, elegant
-              design, and premium comfort. Probiti Real Estate offers exclusive
-              properties tailored to your lifestyle.
+              Quality apartments and commercial spaces, built with honesty.
+              Probity Real Estate Ltd. is committed to building your safe
+              address.
             </motion.p>
 
-            {/* CTA */}
+            {/* H-06: CTA Button */}
             <motion.div
               variants={itemVariants}
               className="

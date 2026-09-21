@@ -7,23 +7,23 @@ import { motion } from "framer-motion";
 export default function Milestones() {
   const milestones = [
     {
-      year: "2027",
-      title: "Next - Nestora Nibash",
-      desc: "Our next address is on the way.",
+      year: "Next",
+      title: "Next - More Homes for Bogura",
+      desc: "New projects are coming, like Probiti Ekantika. Your next safe address is on the way.",
       image:
         "https://images.unsplash.com/photo-1613977257363-707ba9348227?q=80&w=800",
     },
     {
       year: "2026",
-      title: "Today - Building in Bashundhara R/A",
-      desc: "Four residences underway across Blocks A, M, and N: Dokkhina Lake, Prottasha, and the twin Nestora Valley, each designed for space, light, and everything close.",
+      title: "Today - Building Across Bogura",
+      desc: "Our team is working on apartment and commercial projects, including Mohona-03, Rupkotha RS Tower and Rupkotha Bonanza Tower.",
       image:
         "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=800",
     },
     {
-      year: "2005",
+      year: "Beginning",
       title: "The Beginning",
-      desc: "Mamunur Rashid founded Nestora Holdings in Dhaka, bringing twenty years in business and a decade in real estate to a single idea: homes built around how families actually live.",
+      desc: "Probity Real Estate Ltd. started in Bogura with one simple idea: honest homes for real families.",
       image:
         "https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=800",
     },
@@ -50,7 +50,7 @@ export default function Milestones() {
           transition={{ delay: 0.1, duration: 0.5 }}
           className="font-serif text-2xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight"
         >
-          Milestones of Excellence
+          How Probity Grows
         </motion.h2>
 
         <motion.p
@@ -60,7 +60,7 @@ export default function Milestones() {
           transition={{ delay: 0.2, duration: 0.5 }}
           className="mt-1.5 sm:mt-2 text-[11px] sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-md mx-auto"
         >
-          Where Nestora began, and where it is headed.
+          Where Probity began, and where we are headed.
         </motion.p>
       </div>
 

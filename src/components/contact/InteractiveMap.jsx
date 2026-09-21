@@ -14,7 +14,7 @@ export default function InteractiveMap() {
           referrerPolicy="no-referrer-when-downgrade"
         />
 
-        {/* Floating Info Overlay Card — sm and up only */}
+        {/* Floating Info Overlay Card — Desktop */}
         <div className="absolute top-6 right-6 w-72 bg-white/95 backdrop-blur-md p-5 rounded-xl border border-slate-200 shadow-xl space-y-3 z-10 hidden sm:block">
           <div>
             <h4 className="text-sm font-extrabold text-brand">Probity</h4>
@@ -28,15 +28,15 @@ export default function InteractiveMap() {
           <div className="space-y-1.5 pt-1 text-[11px] text-slate-600">
             <div className="flex items-center gap-2">
               <MapPin className="w-3.5 h-3.5 text-brand shrink-0" />
-              <span>Station Road, Bogura</span>
+              <span>Rakhi Mansion, Level-5, Jaleswaritola, Bogura</span>
             </div>
             <div className="flex items-center gap-2">
               <Phone className="w-3.5 h-3.5 text-brand shrink-0" />
-              <span>+880 1700-000000</span>
+              <span>+880 1711-675001</span>
             </div>
             <div className="flex items-center gap-2">
               <Mail className="w-3.5 h-3.5 text-brand shrink-0" />
-              <span>inquiries@probity.com</span>
+              <span>probityreltd@gmail.com</span>
             </div>
           </div>
 
@@ -46,7 +46,7 @@ export default function InteractiveMap() {
         </div>
       </div>
 
-      {/* Mobile Info Card — below map, sm and up hidden */}
+      {/* Mobile Info Card */}
       <div className="sm:hidden bg-white p-4 rounded-b-xl border border-t-0 border-slate-200/80 shadow-sm space-y-3">
         <div className="flex items-center justify-between">
           <div>
@@ -61,15 +61,15 @@ export default function InteractiveMap() {
         <div className="grid grid-cols-1 gap-1.5 text-[11px] text-slate-600 pt-1 border-t border-slate-100">
           <div className="flex items-center gap-2 pt-1.5">
             <MapPin className="w-3.5 h-3.5 text-brand shrink-0" />
-            <span>Station Road, Bogura</span>
+            <span>Rakhi Mansion, Level-5, Jaleswaritola, Bogura</span>
           </div>
           <div className="flex items-center gap-2">
             <Phone className="w-3.5 h-3.5 text-brand shrink-0" />
-            <span>+880 1700-000000</span>
+            <span>+880 1711-675001</span>
           </div>
           <div className="flex items-center gap-2">
             <Mail className="w-3.5 h-3.5 text-brand shrink-0" />
-            <span>inquiries@probity.com</span>
+            <span>probityreltd@gmail.com</span>
           </div>
         </div>
       </div>

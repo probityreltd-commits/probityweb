@@ -52,12 +52,12 @@ const PropertiesSection = () => {
             </span>
 
             <h2 className="font-serif text-2xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight mt-1">
-              Explore Our Signature Properties
+              Explore Our Featured Projects
             </h2>
 
             <p className="mt-2 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 font-normal max-w-xl">
-              Find your ideal home engineered for ultimate soundproof luxury and
-              architectural perfection.
+              Find apartments and commercial spaces with good light, fresh air,
+              safe parking and easy access to schools, markets and hospitals.
             </p>
           </div>
 

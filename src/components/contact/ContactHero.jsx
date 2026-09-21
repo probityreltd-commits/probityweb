@@ -7,7 +7,7 @@ export default function ContactHero() {
       <div className="absolute inset-0 z-0 opacity-15">
         <Image
           src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1600"
-          alt="Modern Architecture Background"
+          alt="Probity Real Estate apartment project in Bogura"
           fill
           priority
           sizes="100vw"
@@ -27,8 +27,8 @@ export default function ContactHero() {
         </h1>
 
         <p className="text-[11px] sm:text-sm text-slate-300 max-w-lg leading-relaxed pt-1">
-          Connect with our team of specialists to discuss your architectural
-          needs, investment opportunities, or schedule a private viewing.
+          Talk to our team about buying a flat, investing in property or booking
+          a private site visit. We are happy to help.
         </p>
 
         {/* Breadcrumb Trail */}

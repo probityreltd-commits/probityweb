@@ -11,25 +11,25 @@ export default function FoundingVision() {
       icon: Compass,
       iconBg:
         "bg-purple-50 text-brand dark:bg-purple-950/40 dark:text-indigo-400 border border-purple-100 dark:border-purple-800/30",
-      title: "ARCHITECTURAL PRECISION",
+      title: "CAREFUL DESIGN",
       description:
-        "Our difference is in the details: most developers skip light in a room, strength of a well-built wall, or structural durability.",
+        "We give attention to small details: light in every room, fresh air, strong walls and a safe structure. Good design makes daily life easier.",
     },
     {
       icon: UserCheck,
       iconBg:
         "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/30",
-      title: "HUMAN-CENTRIC DESIGN",
+      title: "MADE FOR FAMILIES",
       description:
-        "Our homes are built around daily life. School, market, and hospital stay close, and open space is designed for sharing.",
+        "Our homes are planned around real family life. We choose locations near schools, markets, mosques and hospitals.",
     },
     {
       icon: ShieldCheck,
       iconBg:
         "bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400 border border-amber-100 dark:border-amber-800/30",
-      title: "FUTURE-PROOF LEGACY",
+      title: "BUILT TO LAST",
       description:
-        "We pair sound engineering and premium materials to last. Your home stays comfortable and holds value for years.",
+        "We use good materials and sound engineering. Your home stays strong, comfortable and keeps its value for many years.",
     },
   ];
 
@@ -46,7 +46,7 @@ export default function FoundingVision() {
               transition={{ duration: 0.5 }}
               className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-brand dark:text-indigo-400 block"
             >
-              FOUNDING VISION
+              OUR VISION
             </motion.span>
 
             <motion.h2
@@ -56,7 +56,7 @@ export default function FoundingVision() {
               transition={{ delay: 0.1, duration: 0.5 }}
               className="font-serif text-2xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 dark:text-white tracking-tight leading-[1.15]"
             >
-              Founded on Principles, <br className="hidden sm:inline" />
+              Built on Honesty, <br className="hidden sm:inline" />
               Driven by Vision
             </motion.h2>
           </div>
@@ -108,7 +108,7 @@ export default function FoundingVision() {
         >
           <Image
             src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1200"
-            alt="Architectural Blueprint Planning"
+            alt="Architectural blueprint planning for a Probity apartment project"
             fill
             sizes="(max-width: 1024px) 100vw, 50vw"
             className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
@@ -118,7 +118,7 @@ export default function FoundingVision() {
           {/* Floating Badge overlay */}
           <div className="absolute bottom-3 left-3 right-3 sm:bottom-6 sm:left-6 sm:right-6 p-3 sm:p-4 rounded-lg sm:rounded-xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border border-zinc-200/60 dark:border-zinc-800 shadow-lg">
             <p className="text-[11px] sm:text-xs font-serif font-semibold text-zinc-900 dark:text-white">
-              {`"Quality isn't an act, it is a habit in every blueprint we draft."`}
+              {`"Quality is not a one-time act. It is a habit in every plan we make."`}
             </p>
           </div>
         </motion.div>

@@ -10,25 +10,23 @@ import { LiaLinkedin } from "react-icons/lia";
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
+  // Client-provided social media links (If any platform doesn't exist, remove that object)
   const socialLinks = [
-    { icon: FaFacebook, href: "#", label: "Facebook" },
-    { icon: BsInstagram, href: "#", label: "Instagram" },
-    { icon: LiaLinkedin, href: "#", label: "LinkedIn" },
-    { icon: BsYoutube, href: "#", label: "YouTube" },
+    { icon: FaFacebook, href: "https://facebook.com", label: "Facebook" },
+    { icon: BsInstagram, href: "https://instagram.com", label: "Instagram" },
+    { icon: LiaLinkedin, href: "https://linkedin.com", label: "LinkedIn" },
+    { icon: BsYoutube, href: "https://youtube.com", label: "YouTube" },
   ];
 
   const quickLinks = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Properties", href: "/properties" },
-    // { name: "Blog & News", href: "/blog" },
   ];
 
   const supportLinks = [
     { name: "Contact Us", href: "/contact" },
-    // { name: "FAQ", href: "/faq" },
     { name: "Privacy Policy", href: "/privacy-policy" },
-    // { name: "Terms of Service", href: "/terms" },
   ];
 
   return (
@@ -42,31 +40,34 @@ const Footer = () => {
 
       <div className="relative max-w-7xl mx-auto z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-12 border-b border-zinc-200/80 dark:border-zinc-800/80">
-          {/* Brand & About Column */}
+          {/* G-02: Brand & About Column */}
           <div className="lg:col-span-4 flex flex-col justify-between">
             <div>
               <h2 className="font-serif text-2xl sm:text-3xl font-black tracking-tight text-[#3b1a83] dark:text-indigo-400">
-                PROBITY
+                Probity Real Estate Ltd.
               </h2>
+              {/* G-02: Updated Brand Text & Bangla Tagline */}
               <p className="mt-4 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-sm font-normal">
-                Crafting legacy residential developments for those who
-                appreciate uncompromising quality and architectural excellence.
+                Building safe, quality homes in Bogura. আপনার নিরাপদ ঠিকানা
+                গড়তে আমরা প্রতিশ্রুতিবদ্ধ।
               </p>
             </div>
 
-            {/* Social Media Buttons */}
+            {/* G-05: Social Media Buttons */}
             <div className="flex items-center gap-3 mt-6">
               {socialLinks.map((social, idx) => {
                 const IconComponent = social.icon;
                 return (
-                  <Link
+                  <a
                     key={idx}
                     href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     aria-label={social.label}
                     className="w-9 h-9 rounded-full bg-[#3b1a83] text-white flex items-center justify-center hover:bg-[#2c1363] hover:scale-110 active:scale-95 transition-all shadow-md"
                   >
                     <IconComponent className="w-4 h-4 fill-current" />
-                  </Link>
+                  </a>
                 );
               })}
             </div>
@@ -91,7 +92,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Support Column */}
+          {/* G-06: Support Column (Privacy Policy link pointing to /privacy-policy) */}
           <div className="lg:col-span-2">
             <h3 className="font-serif text-sm font-bold text-zinc-900 dark:text-white uppercase tracking-wider mb-4">
               Support
@@ -110,7 +111,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact Info Column */}
+          {/* G-03: Footer Contact Info Column */}
           <div className="lg:col-span-4">
             <h3 className="font-serif text-sm font-bold text-zinc-900 dark:text-white uppercase tracking-wider mb-4">
               Contact Info
@@ -118,47 +119,55 @@ const Footer = () => {
             <ul className="space-y-3.5 text-xs sm:text-sm">
               <li className="flex items-center gap-3 text-zinc-600 dark:text-zinc-400">
                 <Phone className="w-4 h-4 text-[#3b1a83] dark:text-indigo-400 shrink-0" />
-                <a
-                  href="tel:+8801795199599"
-                  className="hover:text-[#3b1a83] dark:hover:text-indigo-400 transition-colors"
-                >
-                  +880 1795-199599
-                </a>
+                <div className="flex items-center gap-2">
+                  <a
+                    href="tel:+8801711675001"
+                    className="hover:text-[#3b1a83] dark:hover:text-indigo-400 transition-colors"
+                  >
+                    +880 1711-675001
+                  </a>
+                  <span>|</span>
+                  <a
+                    href="tel:+8801711675002"
+                    className="hover:text-[#3b1a83] dark:hover:text-indigo-400 transition-colors"
+                  >
+                    +880 1711-675002
+                  </a>
+                </div>
               </li>
 
               <li className="flex items-center gap-3 text-zinc-600 dark:text-zinc-400">
                 <Mail className="w-4 h-4 text-[#3b1a83] dark:text-indigo-400 shrink-0" />
                 <a
-                  href="mailto:contact@probityholdings.com"
+                  href="mailto:probityreltd@gmail.com"
                   className="hover:text-[#3b1a83] dark:hover:text-indigo-400 transition-colors"
                 >
-                  contact@probityholdings.com
+                  probityreltd@gmail.com
                 </a>
               </li>
 
               <li className="flex items-start gap-3 text-zinc-600 dark:text-zinc-400">
                 <MapPin className="w-4 h-4 text-[#3b1a83] dark:text-indigo-400 shrink-0 mt-0.5" />
                 <span className="leading-relaxed">
-                  10th Floor, JCX Business Tower, 1136/A, Japan Street, Block I,
-                  Bashundhara R/A, Dhaka
+                  Rakhi Mansion, Level-5, Jaleswaritola, Bogura
                 </span>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom Copyright Area */}
+        {/* G-04: Footer Copyright & Developer Credit Area */}
         <div className="pt-8 text-center">
           <p className="text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400 font-medium">
-            &copy; {currentYear} Probity Holdings Ltd. All rights reserved -
+            &copy; {currentYear} Probity Real Estate Ltd. All rights reserved.
             Design &amp; Developed by{" "}
             <a
               href="https://www.deltadigivast.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:underline"
+              className="text-[#3b1a83] dark:text-indigo-400 hover:underline font-semibold"
             >
-              Delta-Digivast
+              Delta Digivast
             </a>
           </p>
         </div>

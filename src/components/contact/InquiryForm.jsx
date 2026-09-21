@@ -52,7 +52,9 @@ export default function InquiryForm() {
         throw new Error(body.message || "Submission failed.");
       }
 
-      toast.success("Inquiry sent successfully!");
+      toast.success(
+        "Thank you! We have received your message. Our team will call you soon.",
+      );
       setIsSuccess(true);
       setFormData({
         fullName: "",
@@ -83,11 +85,10 @@ export default function InquiryForm() {
     <div className="bg-white p-5 sm:p-8 rounded-xl sm:rounded-2xl border border-slate-200/80 shadow-sm space-y-4 sm:space-y-6">
       <div>
         <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-          Send an Inquiry
+          Send Us Your Inquiry
         </h2>
         <p className="text-[11px] sm:text-sm text-slate-500 mt-1">
-          Fill out the form below and our real estate team will get back to you
-          shortly.
+          Fill in the form below. Our team will call you as soon as possible.
         </p>
       </div>
 
@@ -98,7 +99,7 @@ export default function InquiryForm() {
             <input
               type="text"
               required
-              placeholder="John Doe"
+              placeholder="Your full name"
               value={formData.fullName}
               onChange={handleChange("fullName")}
               autoComplete="name"
@@ -111,7 +112,7 @@ export default function InquiryForm() {
             <input
               type="email"
               required
-              placeholder="john@example.com"
+              placeholder="yourname@example.com"
               value={formData.email}
               onChange={handleChange("email")}
               autoComplete="email"
@@ -125,7 +126,7 @@ export default function InquiryForm() {
             <label className={labelCls}>PHONE NUMBER</label>
             <input
               type="tel"
-              placeholder="+880 1XXX-XXXXXX"
+              placeholder="01XXX-XXXXXX"
               value={formData.phone}
               onChange={handleChange("phone")}
               autoComplete="tel"
@@ -163,7 +164,7 @@ export default function InquiryForm() {
           <label className={labelCls}>MESSAGE</label>
           <textarea
             rows={4}
-            placeholder="Please provide details about your inquiry..."
+            placeholder="Tell us what you are looking for (flat size, budget, area)"
             value={formData.message}
             onChange={handleChange("message")}
             className={`${inputCls} resize-none`}

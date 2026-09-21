@@ -81,10 +81,6 @@ const PropertyDetailsClient = ({ property }) => {
     const name = formData.name.trim();
     const phone = formData.phone.trim();
 
-    /*
-     * BROCHURE DOWNLOAD
-     * Required fields: Name + Phone
-     */
     if (activeTab === "BROCHURE") {
       if (!name || !phone) {
         toast.error("Please provide your name and phone number.");

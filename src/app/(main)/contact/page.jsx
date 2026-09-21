@@ -6,9 +6,9 @@ import ContactFAQ from "@/components/contact/ContactFAQ";
 import ContactCTA from "@/components/contact/ContactCTA";
 
 export const metadata = {
-  title: "Contact Us | Probity Real Estate",
+  title: "Contact Probity Real Estate | Flat Inquiry in Bogura",
   description:
-    "Connect with our team of specialists to discuss your architectural needs or schedule a viewing.",
+    "Call or visit Probity Real Estate Ltd. in Jaleswaritola, Bogura. Ask about flats, prices and site visits. We reply quickly. Sun-Thu, 9 AM-6 PM.",
 };
 
 export default function ContactPage() {

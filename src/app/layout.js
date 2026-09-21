@@ -27,9 +27,9 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata = {
-  title: "Probity Holdings - Modern Real Estate Platform",
+  title: "Apartments for Sale in Bogura | Probity Real Estate",
   description:
-    "Probity is building a modern real estate platform to help you discover, buy, rent, and sell properties with ease.",
+    "Looking for a flat in Bogura? Probity Real Estate builds safe, quality apartments in Jamil Nagar, Sherpur Road and more. Visit us today.",
 };
 
 export default function RootLayout({ children }) {

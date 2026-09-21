@@ -6,7 +6,6 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Building2,
   LogOut,
   Menu,
   Phone,
@@ -49,6 +48,11 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
   const signOut = async () => {
     await authClient.signOut({
       fetchOptions: {
@@ -60,28 +64,29 @@ const Navbar = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 px-3 sm:px-6 md:px-8 py-3 sm:py-4">
+    <header className="fixed top-0 left-0 w-full z-50 px-2 sm:px-4 md:px-6 lg:px-8 py-2.5 sm:py-3 md:py-4">
       <motion.div
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="max-w-7xl mx-auto bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md rounded-full px-4 sm:px-6 py-2.5 shadow-lg border border-zinc-200/60 dark:border-zinc-800 flex items-center justify-between transition-colors duration-300"
+        className="max-w-7xl mx-auto bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md rounded-full pl-3 pr-2.5 sm:pl-4 sm:pr-3 md:px-6 py-2 sm:py-2.5 shadow-lg border border-zinc-200/60 dark:border-zinc-800 flex items-center justify-between gap-2 transition-colors duration-300"
       >
         {/* 1. Brand Logo & Name */}
-        <Link
-          href="/"
-          className="flex items-center gap-2.5 sm:gap-3 group shrink-0"
-        >
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-tr from-[#3b1a83] to-purple-600 flex items-center justify-center text-white shadow-md transition-transform duration-300 group-hover:scale-105">
-            <Building2 className="w-4 h-4 sm:w-5 sm:h-5" />
+        <Link href="/" className="flex items-center shrink-0 group">
+          <div className="relative w-[150px] sm:w-[170px] md:w-[190px] h-10 sm:h-11 md:h-12">
+            <Image
+              src="/images/updateLogo.png"
+              alt="Probity Real Estate Ltd."
+              fill
+              sizes="190px"
+              priority
+              className="object-contain object-left transition-transform duration-300 group-hover:scale-[1.02]"
+            />
           </div>
-          <span className="text-lg sm:text-xl font-bold tracking-tight text-brand dark:text-white font-serif">
-            Probity
-          </span>
         </Link>
 
         {/* 2. Desktop Navigation Links */}
-        <nav className="hidden xl:flex items-center gap-6 text-sm font-medium">
+        <nav className="hidden lg:flex items-center gap-5 xl:gap-6 text-sm font-medium">
           {navLinks.map((link) => {
             const isActive =
               pathname === link.href ||
@@ -91,7 +96,7 @@ const Navbar = () => {
               <Link
                 key={link.name}
                 href={link.href}
-                className={`relative py-1 transition-colors duration-200 ${
+                className={`relative py-1 whitespace-nowrap transition-colors duration-200 ${
                   isActive
                     ? "text-amber-600 dark:text-amber-400 font-semibold"
                     : "text-zinc-700 dark:text-zinc-300 hover:text-brand dark:hover:text-white"
@@ -116,11 +121,11 @@ const Navbar = () => {
         </nav>
 
         {/* 3. Right Action Items */}
-        <div className="flex items-center gap-3 sm:gap-4">
-          <div className="hidden lg:flex items-center gap-2 text-zinc-700 dark:text-zinc-300 text-sm font-medium border-r border-zinc-200 dark:border-zinc-800 pr-4">
-            <Phone className="w-4 h-4 text-brand dark:text-amber-400" />
-            <span className="font-mono text-xs font-semibold">
-              +880 1700-000000
+        <div className="flex items-center gap-2 sm:gap-3 md:gap-4 shrink-0">
+          <div className="hidden xl:flex items-center gap-2 text-zinc-700 dark:text-zinc-300 text-sm font-medium border-r border-zinc-200 dark:border-zinc-800 pr-4">
+            <Phone className="w-4 h-4 text-brand dark:text-amber-400 shrink-0" />
+            <span className="font-mono text-xs font-semibold whitespace-nowrap">
+              +880 1711-675001
             </span>
           </div>
 
@@ -128,10 +133,10 @@ const Navbar = () => {
             <button
               disabled
               aria-label="Loading profile"
-              className="flex items-center justify-center gap-2 bg-zinc-200 dark:bg-zinc-800 text-zinc-500 px-5 py-2 rounded-full font-semibold text-xs sm:text-sm cursor-not-allowed"
+              className="flex items-center justify-center gap-2 bg-zinc-200 dark:bg-zinc-800 text-zinc-500 px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full font-semibold text-xs sm:text-sm cursor-not-allowed"
             >
               <span className="w-4 h-4 border-2 border-brand/40 border-t-brand rounded-full animate-spin" />
-              <span>Loading...</span>
+              <span className="hidden sm:inline">Loading...</span>
             </button>
           ) : user ? (
             <div className="relative" ref={dropdownRef}>
@@ -139,7 +144,7 @@ const Navbar = () => {
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 aria-label="User menu"
                 aria-expanded={dropdownOpen}
-                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-brand/20 dark:border-zinc-700 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center bg-brand text-white font-bold text-sm"
+                className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full overflow-hidden border-2 border-brand/20 dark:border-zinc-700 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center bg-brand text-white font-bold text-sm shrink-0"
               >
                 {user.image ? (
                   <Image
@@ -166,7 +171,7 @@ const Navbar = () => {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute right-0 mt-3 w-56 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-zinc-100 dark:border-zinc-800 py-2 z-50 overflow-hidden"
+                    className="absolute right-0 mt-3 w-52 sm:w-56 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-zinc-100 dark:border-zinc-800 py-2 z-50 overflow-hidden"
                   >
                     <div className="px-4 py-2.5 border-b border-zinc-100 dark:border-zinc-800">
                       <p className="font-semibold text-zinc-900 dark:text-white truncate text-sm">
@@ -205,7 +210,7 @@ const Navbar = () => {
             </div>
           ) : (
             <Link href="/auth/signin">
-              <button className="bg-brand hover:bg-brand-dark text-white px-5 sm:px-6 py-2 rounded-full font-semibold text-xs sm:text-sm transition-all duration-300 shadow-md hover:shadow-lg active:scale-95">
+              <button className="bg-brand hover:bg-brand-dark text-white px-3.5 sm:px-5 md:px-6 py-1.5 sm:py-2 rounded-full font-semibold text-xs sm:text-sm transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 whitespace-nowrap">
                 Sign In
               </button>
             </Link>
@@ -216,7 +221,7 @@ const Navbar = () => {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle navigation menu"
             aria-expanded={mobileMenuOpen}
-            className="xl:hidden p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors text-zinc-800 dark:text-white"
+            className="lg:hidden p-1.5 sm:p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors text-zinc-800 dark:text-white shrink-0"
           >
             {mobileMenuOpen ? (
               <X className="w-5 h-5" />
@@ -227,7 +232,7 @@ const Navbar = () => {
         </div>
       </motion.div>
 
-      {/* Mobile Menu Drawer */}
+      {/* Mobile / Tablet Menu Drawer */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -235,9 +240,9 @@ const Navbar = () => {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="xl:hidden max-w-7xl mx-auto mt-2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-lg rounded-2xl border border-zinc-200 dark:border-zinc-800 p-4 shadow-xl overflow-hidden"
+            className="lg:hidden max-w-7xl mx-auto mt-2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-lg rounded-2xl border border-zinc-200 dark:border-zinc-800 p-3 sm:p-4 shadow-xl overflow-hidden"
           >
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1.5 sm:gap-2">
               {navLinks.map((link) => {
                 const isActive =
                   pathname === link.href ||
@@ -258,8 +263,8 @@ const Navbar = () => {
                 );
               })}
               <div className="pt-2 mt-1 border-t border-zinc-100 dark:border-zinc-800 flex items-center gap-3 px-4 py-2 text-zinc-700 dark:text-zinc-300 text-sm">
-                <Phone className="w-4 h-4 text-brand dark:text-amber-400" />
-                <span className="font-mono text-xs">+880 1700-000000</span>
+                <Phone className="w-4 h-4 text-brand dark:text-amber-400 shrink-0" />
+                <span className="font-mono text-xs">+880 1711-675001</span>
               </div>
             </div>
           </motion.div>

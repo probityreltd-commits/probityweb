@@ -158,13 +158,13 @@ const Portfolio = () => {
         {/* Header Section */}
         <div className="text-center max-w-3xl mx-auto mb-6 sm:mb-8">
           <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
-            Our Premium Portfolio
+            Our Projects in Bogura
           </h2>
 
           <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal px-2 sm:px-0">
-            Discover our collection of premium residential projects in prime
-            locations across Dhaka. Every project is designed with quality,
-            comfort, and modern living in mind.
+            See our apartment and commercial projects in good locations across
+            Bogura, like Jamil Nagar, Jane Saba Housing and Sherpur Road. Every
+            project is planned for safety, comfort and easy daily life.
           </p>
         </div>
 
@@ -330,7 +330,7 @@ const Portfolio = () => {
                     </span>
                   </div>
 
-                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed font-normal">
+                  <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed font-normal line-clamp-3">
                     {activeProperty.description &&
                     activeProperty.description !== "N/A"
                       ? activeProperty.description

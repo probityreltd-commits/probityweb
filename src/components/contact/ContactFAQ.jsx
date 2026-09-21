@@ -4,24 +4,24 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 export default function ContactFAQ() {
-  const [openIdx, setOpenIdx] = useState(null);
+  const [openIdx, setOpenIdx] = (useState < number) | (null > null);
 
   const faqs = [
     {
       q: "How do I schedule a property visit?",
-      a: "You can schedule a visit by filling out our online form or calling our customer desk directly.",
+      a: "Call us at +880 1711-675001 or fill in the inquiry form. Tell us the project name and your preferred time. We will arrange a free site visit.",
     },
     {
       q: "What types of properties do you offer?",
-      a: "We offer luxury residential apartments, commercial corporate spaces, and land development opportunities.",
+      a: "We offer residential apartments and commercial spaces in different areas of Bogura. Some projects are ready to move, some are under construction and some are upcoming.",
     },
     {
       q: "How can I request detailed floor plans?",
-      a: "Floor plans are available upon request through our inquiry form or by contacting our sales agents.",
+      a: "Send us a message with the project name, or call our office. Our team will share the floor plan and other details with you.",
     },
     {
       q: "Who do I contact for sales inquiries?",
-      a: "Our sales team can be reached via phone at +880 1700-000000 or email at sales@probity.com.",
+      a: "Call +880 1711-675001 or +880 1711-675002, or email probityreltd@gmail.com. Our sales team will help you.",
     },
   ];
 

@@ -5,17 +5,17 @@ export default function ContactInfoGrid() {
     {
       icon: <MapPin className="w-4 h-4 text-brand" />,
       title: "Office Address",
-      lines: ["Kibria Mansion, Level-6", "Jalesswitola, Bogura, Bangladesh"],
+      lines: ["Rakhi Mansion, Level-5", "Jaleswaritola, Bogura, Bangladesh"],
     },
     {
       icon: <Phone className="w-4 h-4 text-brand" />,
       title: "Phone",
-      lines: ["+880 1700-000000"],
+      lines: ["+880 1711-675001", "+880 1711-675002"],
     },
     {
       icon: <Mail className="w-4 h-4 text-brand" />,
       title: "Email",
-      lines: ["info@probity.com"],
+      lines: ["probityreltd@gmail.com"],
     },
     {
       icon: <Clock className="w-4 h-4 text-brand" />,
