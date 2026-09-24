@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 export default function ContactFAQ() {
-  const [openIdx, setOpenIdx] = (useState < number) | (null > null);
+  const [openIdx, setOpenIdx] = useState(null);
 
   const faqs = [
     {
