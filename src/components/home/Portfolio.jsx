@@ -6,10 +6,10 @@ import {
   MapPin,
   ChevronLeft,
   ChevronRight,
-  Bed,
-  Bath,
-  Maximize,
-  Compass,
+  Building2,
+  Building,
+  Layers3,
+  LandPlot,
   ArrowUpRight,
   FileText,
 } from "lucide-react";
@@ -116,6 +116,48 @@ const Portfolio = () => {
       return [activeProperty.coverImage];
     }
     return ["/placeholder-property.jpg"];
+  }, [activeProperty]);
+
+  // Building facts row — Building Height / Apartments / Units per Floor / Land Area
+  const specs = useMemo(() => {
+    if (!activeProperty) return [];
+    const { buildingHeight, apartments, unitsPerFloor, landArea } =
+      activeProperty;
+
+    return [
+      {
+        icon: Building2,
+        label:
+          buildingHeight !== undefined &&
+          buildingHeight !== null &&
+          buildingHeight !== ""
+            ? `${buildingHeight} Building Height`
+            : "N/A",
+      },
+      {
+        icon: Building,
+        label:
+          apartments !== undefined && apartments !== null && apartments !== ""
+            ? `${apartments} Apartments`
+            : "N/A",
+      },
+      {
+        icon: Layers3,
+        label:
+          unitsPerFloor !== undefined &&
+          unitsPerFloor !== null &&
+          unitsPerFloor !== ""
+            ? `${unitsPerFloor} Units / Floor`
+            : "N/A",
+      },
+      {
+        icon: LandPlot,
+        label:
+          landArea !== undefined && landArea !== null && landArea !== ""
+            ? `${landArea} Land Area`
+            : "N/A",
+      },
+    ];
   }, [activeProperty]);
 
   const handlePrevImage = () => {
@@ -337,54 +379,18 @@ const Portfolio = () => {
                       : "No description available for this property."}
                   </p>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 my-4 sm:my-6 p-3.5 sm:p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-xl sm:rounded-2xl border border-zinc-100 dark:border-zinc-800">
-                    <div className="flex items-center gap-2 sm:gap-2.5">
-                      <Bed className="w-4 h-4 text-zinc-500 dark:text-zinc-400 shrink-0" />
-                      <div>
-                        <span className="block text-sm sm:text-base font-extrabold text-zinc-900 dark:text-white leading-tight">
-                          {activeProperty.bedrooms ?? "N/A"}
-                        </span>
-                        <span className="block text-[10px] text-zinc-500 dark:text-zinc-400">
-                          Bedroom
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 sm:gap-2.5 sm:border-l sm:border-zinc-200 sm:dark:border-zinc-700 sm:pl-3">
-                      <Bath className="w-4 h-4 text-zinc-500 dark:text-zinc-400 shrink-0" />
-                      <div>
-                        <span className="block text-sm sm:text-base font-extrabold text-zinc-900 dark:text-white leading-tight">
-                          {activeProperty.bathrooms ?? "N/A"}
-                        </span>
-                        <span className="block text-[10px] text-zinc-500 dark:text-zinc-400">
-                          Bathroom
+                  <div className="grid grid-cols-2 gap-x-3 gap-y-3 sm:gap-x-4 sm:gap-y-4 my-4 sm:my-6 p-3.5 sm:p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-xl sm:rounded-2xl border border-zinc-100 dark:border-zinc-800">
+                    {specs.map(({ icon: Icon, label }, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-2 sm:gap-2.5 min-w-0"
+                      >
+                        <Icon className="w-4 h-4 sm:w-[18px] sm:h-[18px] text-[#3b1a83] dark:text-violet-300 shrink-0" />
+                        <span className="text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-200 truncate">
+                          {label}
                         </span>
                       </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 sm:gap-2.5 sm:border-l sm:border-zinc-200 sm:dark:border-zinc-700 sm:pl-3">
-                      <Maximize className="w-4 h-4 text-zinc-500 dark:text-zinc-400 shrink-0" />
-                      <div>
-                        <span className="block text-xs font-extrabold text-zinc-900 dark:text-white leading-tight">
-                          {activeProperty.flatSize || "N/A"}
-                        </span>
-                        <span className="block text-[10px] text-zinc-500 dark:text-zinc-400">
-                          Flat Size
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 sm:gap-2.5 sm:border-l sm:border-zinc-200 sm:dark:border-zinc-700 sm:pl-3">
-                      <Compass className="w-4 h-4 text-zinc-500 dark:text-zinc-400 shrink-0" />
-                      <div>
-                        <span className="block text-xs font-bold text-zinc-900 dark:text-white truncate max-w-[80px]">
-                          {activeProperty.orientation || "N/A"}
-                        </span>
-                        <span className="block text-[10px] text-zinc-500 dark:text-zinc-400">
-                          Orientation
-                        </span>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
 
