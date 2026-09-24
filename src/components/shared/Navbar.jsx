@@ -75,7 +75,7 @@ const Navbar = () => {
         <Link href="/" className="flex items-center shrink-0 group">
           <div className="relative w-[150px] sm:w-[170px] md:w-[190px] h-10 sm:h-11 md:h-12">
             <Image
-              src="/images/updateLogo.png"
+              src="/images/mainLogo.png"
               alt="Probity Real Estate Ltd."
               fill
               sizes="190px"
