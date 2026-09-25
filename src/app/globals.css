@@ -12,7 +12,8 @@
    THEME FONTS & COLORS
    ========================================================= */
 @theme inline {
-  --font-serif: var(--font-fraunces), serif;
+  /* --font-serif: var(--font-fraunces), serif; */
+  --font-serif: var(--font-dm-serif), serif;
   --font-sans: var(--font-inter), sans-serif;
   --font-mono: var(--font-plex-mono), monospace;
 

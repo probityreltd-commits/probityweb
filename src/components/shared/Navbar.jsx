@@ -69,16 +69,19 @@ const Navbar = () => {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="max-w-7xl mx-auto bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md rounded-full pl-3 pr-2.5 sm:pl-4 sm:pr-3 md:px-6 py-2 sm:py-2.5 shadow-lg border border-zinc-200/60 dark:border-zinc-800 flex items-center justify-between gap-2 transition-colors duration-300"
+        className="max-w-7xl mx-auto bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md rounded-full pl-3 pr-2.5 sm:pl-4 sm:pr-3 md:px-6 py-1.5 sm:py-2 shadow-lg border border-zinc-200/60 dark:border-zinc-800 flex items-center justify-between gap-2 transition-colors duration-300"
       >
-        {/* 1. Brand Logo & Name */}
+        {/* 1. Brand Logo & Name — container reshaped to the logo's own
+            (portrait/square) proportions instead of a short, wide box that
+            was forcing object-contain to shrink it down and leave dead
+            space to the right */}
         <Link href="/" className="flex items-center shrink-0 group">
-          <div className="relative w-[150px] sm:w-[170px] md:w-[190px] h-10 sm:h-11 md:h-12">
+          <div className="relative w-[110px] sm:w-[130px] md:w-[150px] h-12 sm:h-14 md:h-16">
             <Image
               src="/images/mainLogo.png"
               alt="Probity Real Estate Ltd."
               fill
-              sizes="190px"
+              sizes="150px"
               priority
               className="object-contain object-left transition-transform duration-300 group-hover:scale-[1.02]"
             />
