@@ -78,6 +78,27 @@ const PropertySearch = ({
   const [selectedProject, setSelectedProject] = useState(initialProject);
   const [selectedType, setSelectedType] = useState(initialType);
 
+  // Track initial props to sync state changes during render
+  const [prevLocation, setPrevLocation] = useState(initialLocation);
+  const [prevProject, setPrevProject] = useState(initialProject);
+  const [prevType, setPrevType] = useState(initialType);
+
+  // Adjust state synchronously during render when initial props change
+  if (prevLocation !== initialLocation) {
+    setPrevLocation(initialLocation);
+    setSelectedLocation(initialLocation);
+  }
+
+  if (prevProject !== initialProject) {
+    setPrevProject(initialProject);
+    setSelectedProject(initialProject);
+  }
+
+  if (prevType !== initialType) {
+    setPrevType(initialType);
+    setSelectedType(initialType);
+  }
+
   useEffect(() => {
     if (!shouldFetch) return;
     let active = true;
@@ -111,10 +132,6 @@ const PropertySearch = ({
   }, [shouldFetch]);
 
   const properties = propertiesProp || fetchedProperties;
-
-  useEffect(() => setSelectedLocation(initialLocation), [initialLocation]);
-  useEffect(() => setSelectedProject(initialProject), [initialProject]);
-  useEffect(() => setSelectedType(initialType), [initialType]);
 
   const locations = useMemo(() => {
     const locs = properties

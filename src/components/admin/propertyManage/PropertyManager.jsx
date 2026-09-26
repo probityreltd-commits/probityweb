@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Plus, Image as ImageIcon } from "lucide-react";
 
 import AlertDialogProperty from "./AlertDialogProperty";
@@ -176,9 +177,11 @@ const PropertyManagerClient = ({ initialProperties = [] }) => {
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-12 rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200/80 dark:border-zinc-700/60 overflow-hidden shrink-0 flex items-center justify-center">
                           {item.coverImage ? (
-                            <img
+                            <Image
                               src={item.coverImage}
-                              alt={item.title}
+                              alt={item.title || "Project Cover"}
+                              width={48}
+                              height={48}
                               className="w-full h-full object-cover"
                             />
                           ) : (
@@ -248,9 +251,11 @@ const PropertyManagerClient = ({ initialProperties = [] }) => {
                   <div className="flex items-start gap-3">
                     <div className="w-12 h-12 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200/80 dark:border-zinc-700/60 overflow-hidden shrink-0 flex items-center justify-center">
                       {item.coverImage ? (
-                        <img
+                        <Image
                           src={item.coverImage}
-                          alt={item.title}
+                          alt={item.title || "Project Cover"}
+                          width={48}
+                          height={48}
                           className="w-full h-full object-cover"
                         />
                       ) : (

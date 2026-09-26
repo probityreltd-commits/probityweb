@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { MapPin, Bed, Bath, Maximize2, FileText } from "lucide-react";
 
 const LivePreviewSidebar = ({ formData, uploadedImages, property }) => {
@@ -29,12 +30,14 @@ const LivePreviewSidebar = ({ formData, uploadedImages, property }) => {
 
         <div className="rounded-xl overflow-hidden border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-950">
           <div className="relative aspect-video bg-zinc-200 dark:bg-zinc-800">
-            <img
+            <Image
               src={coverImg}
               alt="Preview Cover"
-              className="w-full h-full object-cover"
+              fill
+              sizes="(max-width: 1024px) 100vw, 320px"
+              className="object-cover"
             />
-            <span className="absolute top-2 left-2 text-[9px] font-extrabold bg-[#3b1a83] text-white px-2 py-0.5 rounded uppercase tracking-wider">
+            <span className="absolute top-2 left-2 text-[9px] font-extrabold bg-[#3b1a83] text-white px-2 py-0.5 rounded uppercase tracking-wider z-10">
               {formData.status || "STATUS"}
             </span>
           </div>

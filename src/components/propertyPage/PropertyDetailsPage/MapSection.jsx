@@ -1,48 +1,48 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { MapPin } from "lucide-react";
 
 const MapSection = ({ embedString, locationName, address }) => {
-  const [src, setSrc] = useState("");
-
-  useEffect(() => {
-    if (!embedString) return;
+  // Derive src directly during render instead of syncing state in useEffect
+  const src = useMemo(() => {
+    if (!embedString) return "";
 
     // 1) Direct URL
     if (
       embedString.startsWith("http://") ||
       embedString.startsWith("https://")
     ) {
-      setSrc(embedString);
-      return;
+      return embedString;
     }
 
     // 2) DOMParser extraction
-    try {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(embedString, "text/html");
-      const iframe = doc.querySelector("iframe");
-      if (iframe?.src) {
-        setSrc(iframe.src);
-        return;
+    if (typeof window !== "undefined") {
+      try {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(embedString, "text/html");
+        const iframe = doc.querySelector("iframe");
+        if (iframe?.src) {
+          return iframe.src;
+        }
+      } catch (e) {
+        console.warn("DOMParser failed:", e);
       }
-    } catch (e) {
-      console.warn("DOMParser failed:", e);
     }
 
     // 3) Regex fallback
     const match = embedString.match(/src=["']([^"']+)["']/);
     if (match?.[1]) {
-      setSrc(match[1]);
-      return;
+      return match[1];
     }
 
     // 4) Any URL fallback
     const urlMatch = embedString.match(/(https?:\/\/[^\s"']+)/);
     if (urlMatch?.[1]) {
-      setSrc(urlMatch[1]);
+      return urlMatch[1];
     }
+
+    return "";
   }, [embedString]);
 
   return (

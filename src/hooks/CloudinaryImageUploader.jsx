@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import {
   UploadCloud,
   CheckCircle2,
@@ -159,14 +160,16 @@ const CloudinaryImageUploader = ({ images = [], setImages = () => {} }) => {
                 </span>
               </div>
             ) : (
-              <img
+              <Image
                 src={file.url}
-                alt={`Upload ${idx}`}
-                className="w-full h-full object-cover"
+                alt={file.name || `Upload ${idx}`}
+                fill
+                sizes="(max-width: 640px) 33vw, 25vw"
+                className="object-cover"
               />
             )}
             {idx === 0 && (
-              <span className="absolute bottom-1.5 left-1.5 text-[9px] font-extrabold bg-[#3b1a83] text-white px-2 py-0.5 rounded-md uppercase tracking-wider">
+              <span className="absolute bottom-1.5 left-1.5 text-[9px] font-extrabold bg-[#3b1a83] text-white px-2 py-0.5 rounded-md uppercase tracking-wider z-10">
                 COVER IMAGE
               </span>
             )}

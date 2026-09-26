@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, Modal } from "@heroui/react";
 import { Edit2 } from "lucide-react";
 import { toast } from "sonner";
@@ -43,6 +43,55 @@ const INITIAL_FORM = {
   mapLocation: "",
 };
 
+const mapPropertyToFormData = (property) => {
+  if (!property) return INITIAL_FORM;
+  return {
+    title: property.title || "",
+    slug: property.slug || "",
+    locationName: property.locationName || "",
+    propertyType: property.propertyType || "",
+    address: property.address || "",
+    description: property.description || "",
+    status: property.status || "UNDER CONSTRUCTION",
+    handoverDate: property.handoverDate
+      ? new Date(property.handoverDate).toISOString().split("T")[0]
+      : "",
+    bedrooms: property.bedrooms ?? "",
+    bathrooms: property.bathrooms ?? "",
+    flatSize: property.flatSize || "",
+    orientation: property.orientation || "South Facing",
+    landArea: property.landArea || "",
+    buildingHeight: property.buildingHeight || "",
+    apartments: property.apartments ?? "",
+    unitsPerFloor: property.unitsPerFloor ?? "",
+    apartmentSizes: property.apartmentSizes || "",
+    carParking: property.carParking || "",
+    motorbikeParking: property.motorbikeParking || "",
+    pricePerSqft: property.pricePerSqft || "",
+    projectBrochure: property.projectBrochure || "",
+    mapLocation: property.mapLocation || "",
+  };
+};
+
+const mapPropertyToUploadedImages = (property) => {
+  if (!property) return [];
+  if (Array.isArray(property.images) && property.images.length) {
+    return property.images.map((url) => ({ url }));
+  }
+  if (property.coverImage) {
+    return [{ url: property.coverImage }];
+  }
+  return [];
+};
+
+const mapPropertyToGalleryImages = (property) => {
+  if (!property) return [];
+  if (Array.isArray(property.galleryImages)) {
+    return property.galleryImages.map((url) => ({ url }));
+  }
+  return [];
+};
+
 const formatSlug = (text) =>
   text
     .toLowerCase()
@@ -52,61 +101,32 @@ const formatSlug = (text) =>
     .replace(/-+/g, "-");
 
 const EditPropertyModal = ({ property, onUpdated }) => {
-  const [formData, setFormData] = useState(INITIAL_FORM);
-  const [amenities, setAmenities] = useState([]);
-  const [uploadedImages, setUploadedImages] = useState([]);
-  const [galleryImages, setGalleryImages] = useState([]);
+  // Track previous property ID to adjust state when prop changes
+  const [prevPropertyId, setPrevPropertyId] = useState(property?._id);
+
+  // Initialize state directly from props
+  const [formData, setFormData] = useState(() =>
+    mapPropertyToFormData(property),
+  );
+  const [amenities, setAmenities] = useState(() =>
+    Array.isArray(property?.amenities) ? property.amenities : [],
+  );
+  const [uploadedImages, setUploadedImages] = useState(() =>
+    mapPropertyToUploadedImages(property),
+  );
+  const [galleryImages, setGalleryImages] = useState(() =>
+    mapPropertyToGalleryImages(property),
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Prefill from property
-  useEffect(() => {
-    if (!property) return;
-
-    setFormData({
-      title: property.title || "",
-      slug: property.slug || "",
-      locationName: property.locationName || "",
-      propertyType: property.propertyType || "",
-      address: property.address || "",
-      description: property.description || "",
-      status: property.status || "UNDER CONSTRUCTION",
-      handoverDate: property.handoverDate
-        ? new Date(property.handoverDate).toISOString().split("T")[0]
-        : "",
-      bedrooms: property.bedrooms ?? "",
-      bathrooms: property.bathrooms ?? "",
-      flatSize: property.flatSize || "",
-      orientation: property.orientation || "South Facing",
-      landArea: property.landArea || "",
-      buildingHeight: property.buildingHeight || "",
-      apartments: property.apartments ?? "",
-      unitsPerFloor: property.unitsPerFloor ?? "",
-      apartmentSizes: property.apartmentSizes || "",
-      carParking: property.carParking || "",
-      motorbikeParking: property.motorbikeParking || "",
-      pricePerSqft: property.pricePerSqft || "",
-      projectBrochure: property.projectBrochure || "",
-      mapLocation: property.mapLocation || "",
-    });
-
-    setAmenities(Array.isArray(property.amenities) ? property.amenities : []);
-
-    // Main images
-    if (Array.isArray(property.images) && property.images.length) {
-      setUploadedImages(property.images.map((url) => ({ url })));
-    } else if (property.coverImage) {
-      setUploadedImages([{ url: property.coverImage }]);
-    } else {
-      setUploadedImages([]);
-    }
-
-    // Gallery images
-    if (Array.isArray(property.galleryImages)) {
-      setGalleryImages(property.galleryImages.map((url) => ({ url })));
-    } else {
-      setGalleryImages([]);
-    }
-  }, [property]);
+  // Synchronize state during render if property prop changes
+  if (property?._id !== prevPropertyId) {
+    setPrevPropertyId(property?._id);
+    setFormData(mapPropertyToFormData(property));
+    setAmenities(Array.isArray(property?.amenities) ? property.amenities : []);
+    setUploadedImages(mapPropertyToUploadedImages(property));
+    setGalleryImages(mapPropertyToGalleryImages(property));
+  }
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;

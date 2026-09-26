@@ -60,7 +60,7 @@ const OurStory = () => {
             and prices nobody explains. Probity Real Estate Ltd. was started to
             change this. We tell you the price, the plan and the handover date
             from the very first day. When you choose Probity, you are choosing a
-            safe address for your family's future.
+            safe address for your family&apos;s future.
           </p>
 
           {/* CEO card */}

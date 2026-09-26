@@ -21,8 +21,6 @@ import { exportLeadsToPDF } from "@/lib/export/exportLeads";
 import ExportLeadsButton from "@/components/admin/inquiries/ExportLeadsButton";
 
 const PAGE_LIMIT = 20;
-// Effectively "unlimited" for a single export fetch. Raise this if a single
-// project ever realistically gets more brochure leads than this in one go.
 const EXPORT_ALL_LIMIT = 5000;
 
 const STATUS_BADGE_CLASS = {
@@ -52,15 +50,16 @@ const BrochureLeadsPanel = ({
   const [selectedIds, setSelectedIds] = useState([]);
   const [exportingAll, setExportingAll] = useState(false);
 
+  // Debounce search query and reset page to 1 when search changes
   useEffect(() => {
-    const id = setTimeout(() => setDebouncedSearch(search), 400);
+    const id = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(1);
+    }, 400);
     return () => clearTimeout(id);
   }, [search]);
 
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedSearch]);
-
+  // Handler for manual refetches (e.g. after bulk delete or status updates)
   const loadLeads = useCallback(async () => {
     setLoading(true);
     try {
@@ -80,9 +79,41 @@ const BrochureLeadsPanel = ({
     }
   }, [debouncedSearch, page]);
 
+  // Fetch data on search or page change safely inside an effect
   useEffect(() => {
-    loadLeads();
-  }, [loadLeads]);
+    let isSubscribed = true;
+
+    const executeFetch = async () => {
+      setLoading(true);
+      try {
+        const res = await fetchInquiries({
+          requestType: "BROCHURE_DOWNLOAD",
+          search: debouncedSearch,
+          page,
+          limit: PAGE_LIMIT,
+        });
+        if (isSubscribed) {
+          setLeads(res.data || []);
+          setPagination(res.pagination || null);
+          setSelectedIds([]);
+        }
+      } catch (err) {
+        if (isSubscribed) {
+          toast.error(err.message || "Could not load brochure leads.");
+        }
+      } finally {
+        if (isSubscribed) {
+          setLoading(false);
+        }
+      }
+    };
+
+    executeFetch();
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, [debouncedSearch, page]);
 
   const toggleSelect = (id) => {
     setSelectedIds((prev) =>
@@ -126,8 +157,6 @@ const BrochureLeadsPanel = ({
     }
   };
 
-  // Exports every brochure lead matching the current search — not just the
-  // current page — by fetching a fresh, high-limit page straight from the API.
   const handleExportAllFiltered = async () => {
     setExportingAll(true);
     try {
@@ -180,7 +209,7 @@ const BrochureLeadsPanel = ({
         />
       </div>
 
-      {/* Bulk action bar — shown only when leads are selected */}
+      {/* Bulk action bar */}
       {selectedIds.length > 0 && (
         <div className="flex flex-wrap items-center gap-2 sm:gap-3 p-2.5 sm:p-3 rounded-xl bg-brand/5 dark:bg-brand-light/10 border border-brand/20 dark:border-brand-light/30">
           <span className="text-xs sm:text-sm font-semibold text-brand dark:text-brand-light">

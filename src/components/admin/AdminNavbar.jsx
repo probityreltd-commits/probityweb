@@ -2,7 +2,8 @@
 
 import React, { useRef, useState } from "react";
 import Link from "next/link";
-import { Search, Bell, HelpCircle, LogOut, Menu, X } from "lucide-react";
+import Image from "next/image";
+import { Search, LogOut, Menu } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -51,54 +52,7 @@ const AdminNavbar = ({ onMenuClick }) => {
             </Link>
           </div>
 
-          {/* <div className="hidden md:block flex-1 max-w-md lg:max-w-lg mx-4">
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#3b1a83]/70 dark:text-zinc-400">
-                <Search className="w-4 h-4" />
-              </div>
-
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search projects, clients..."
-                className="w-full pl-9 pr-4 py-2 bg-white dark:bg-zinc-900 border border-[#3b1a83]/20 dark:border-zinc-700/80 rounded-full text-xs sm:text-sm text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3b1a83]/30 dark:focus:ring-indigo-500/30 focus:border-[#3b1a83] transition-all shadow-sm"
-              />
-            </div>
-          </div> */}
-
           <div className="flex items-center gap-1 sm:gap-2 lg:gap-4 shrink-0">
-            {/* <button
-              type="button"
-              onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-              aria-label="Search"
-              className="md:hidden p-2 rounded-full text-[#3b1a83] dark:text-zinc-300 hover:bg-[#3b1a83]/10 dark:hover:bg-zinc-800 transition-colors active:scale-95"
-            >
-              {mobileSearchOpen ? (
-                <X className="w-5 h-5" />
-              ) : (
-                <Search className="w-5 h-5" />
-              )}
-            </button>
-
-            <button
-              type="button"
-              aria-label="Notifications"
-              className="relative p-2 rounded-full text-[#3b1a83] dark:text-zinc-300 hover:bg-[#3b1a83]/10 dark:hover:bg-zinc-800 transition-colors active:scale-95"
-            >
-              <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
-
-              <span className="absolute top-1 right-1 w-2 h-2 bg-amber-500 rounded-full ring-2 ring-[#f8f7fc] dark:ring-zinc-950" />
-            </button>
-
-            <button
-              type="button"
-              aria-label="Help & Support"
-              className="hidden lg:flex p-2 rounded-full text-[#3b1a83] dark:text-zinc-300 hover:bg-[#3b1a83]/10 dark:hover:bg-zinc-800 transition-colors active:scale-95"
-            >
-              <HelpCircle className="w-5 h-5" />
-            </button> */}
-
             {isLoading ? (
               <button
                 disabled
@@ -114,9 +68,11 @@ const AdminNavbar = ({ onMenuClick }) => {
                   className="w-10 h-10 rounded-full overflow-hidden border-2 border-white dark:border-zinc-700 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
                 >
                   {user.image ? (
-                    <img
+                    <Image
                       src={user.image}
                       alt={user.name || "Profile"}
+                      width={40}
+                      height={40}
                       className="w-full h-full object-cover"
                     />
                   ) : (

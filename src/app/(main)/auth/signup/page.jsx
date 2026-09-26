@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   User,
@@ -11,10 +13,10 @@ import {
   Eye,
   EyeOff,
   ArrowRight,
+  AlertCircle,
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -26,23 +28,25 @@ const SignUp = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [imageError, setImageError] = useState("");
+  const [imageError, setImageError] = useState(false);
   const router = useRouter();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (name === "image") {
-      setImageError("");
+      setImageError(false);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (imageError) {
-      toast.error("Please enter a valid profile image URL.");
+
+    if (formData.image && imageError) {
+      toast.error("Please provide a valid image URL or leave it empty.");
       return;
     }
+
     setIsLoading(true);
 
     try {
@@ -51,26 +55,25 @@ const SignUp = () => {
         name,
         email,
         password,
-        image,
+        image: image.trim() ? image.trim() : undefined,
       });
-      if (error) {
-        let message = "Unable to create your account. Please try again.";
 
-        if (error.message?.toLocaleLowerCase().includes("email")) {
-          message = "This email address may already be registered.";
+      if (error) {
+        let message = error.message || "Unable to create your account.";
+        if (error.message?.toLowerCase().includes("email")) {
+          message = "This email address is already registered.";
         }
-        toast.error(error.message);
+        toast.error(message);
         return;
       }
+
       if (data) {
         toast.success("Account created successfully!");
         router.push("/");
       }
-    } catch (error) {
-      console.error("Sign up error:", error);
-      toast.error(
-        "Something went wrong. Please check your connection and try again.",
-      );
+    } catch (err) {
+      console.error("Sign up error:", err);
+      toast.error("Something went wrong. Please check your connection.");
     } finally {
       setIsLoading(false);
     }
@@ -90,12 +93,12 @@ const SignUp = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
           className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl rounded-3xl p-8 sm:p-10 border border-zinc-200/80 dark:border-zinc-800 shadow-2xl relative overflow-hidden"
         >
-          {/* Top Brand Tag/Logo */}
+          {/* Header */}
           <div className="text-center mb-8">
-            <Link href="/" className="inline-block">
+            <Link href="/" className="inline-block focus:outline-none">
               <h1 className="font-serif text-3xl font-black text-[#3b1a83] dark:text-indigo-400 tracking-tight">
                 PROBITY
               </h1>
@@ -109,7 +112,7 @@ const SignUp = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Name Input */}
+            {/* Full Name */}
             <div>
               <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2">
                 Full Name
@@ -130,7 +133,7 @@ const SignUp = () => {
               </div>
             </div>
 
-            {/* Email Input */}
+            {/* Email */}
             <div>
               <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2">
                 Email Address
@@ -151,7 +154,7 @@ const SignUp = () => {
               </div>
             </div>
 
-            {/* Password Input */}
+            {/* Password */}
             <div>
               <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2">
                 Password
@@ -172,7 +175,8 @@ const SignUp = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors focus:outline-none"
                 >
                   {showPassword ? (
                     <EyeOff className="w-4 h-4" />
@@ -183,52 +187,47 @@ const SignUp = () => {
               </div>
             </div>
 
-            {/* Image URL Input with Live Preview */}
+            {/* Profile Image URL Input with Live Preview */}
             <div>
               <label className="block text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2">
-                Profile Image URL
+                Profile Image URL (Optional)
               </label>
-              <div className="relative flex items-start gap-3">
+              <div className="flex items-start gap-3">
                 <div className="relative flex-1">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-400">
                     <ImageIcon className="w-4 h-4" />
                   </div>
                   <input
-                    type="text"
+                    type="url"
                     name="image"
                     value={formData.image}
                     onChange={handleChange}
                     placeholder="https://example.com/avatar.jpg"
                     className={`w-full pl-10 pr-4 py-3 bg-zinc-50 dark:bg-zinc-800/60 border ${
                       imageError
-                        ? "border-red-400 focus:ring-red-400"
+                        ? "border-red-500 focus:ring-red-500"
                         : "border-zinc-200 dark:border-zinc-700/80 focus:ring-[#3b1a83]"
                     } rounded-2xl text-xs sm:text-sm text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:border-transparent transition-all`}
                   />
                   {imageError && (
                     <p className="mt-2 text-xs text-red-500 flex items-center gap-1">
-                      <span>⚠</span>
-                      {imageError}
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>Invalid image URL. Please check the link.</span>
                     </p>
                   )}
                 </div>
 
-                {/* Avatar Preview */}
+                {/* Avatar Preview using Next Image */}
                 <div className="w-11 h-11 rounded-2xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 overflow-hidden flex items-center justify-center shrink-0 relative">
-                  {formData.image ? (
-                    <img
+                  {formData.image && !imageError ? (
+                    <Image
                       src={formData.image}
                       alt="Avatar Preview"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.style.display = "none";
-                        setImageError(
-                          "Invalid image URL. Please enter a valid image URL.",
-                        );
-                      }}
-                      onLoad={() => {
-                        setImageError("");
-                      }}
+                      fill
+                      sizes="44px"
+                      unoptimized
+                      className="object-cover"
+                      onError={() => setImageError(true)}
                     />
                   ) : (
                     <User className="w-5 h-5 text-zinc-400" />
@@ -241,7 +240,7 @@ const SignUp = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full mt-2 bg-[#3b1a83] hover:bg-[#2c1363] text-white text-xs sm:text-sm font-bold py-3.5 px-6 rounded-2xl transition-all shadow-lg hover:shadow-xl active:scale-[0.98] flex items-center justify-center gap-2 group disabled:opacity-70"
+              className="w-full mt-2 bg-[#3b1a83] hover:bg-[#2c1363] text-white text-xs sm:text-sm font-bold py-3.5 px-6 rounded-2xl transition-all shadow-lg hover:shadow-xl active:scale-[0.98] flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -254,7 +253,7 @@ const SignUp = () => {
             </button>
           </form>
 
-          {/* Already have an account / Sign In Link */}
+          {/* Footer Navigation */}
           <div className="mt-8 pt-6 border-t border-zinc-200/80 dark:border-zinc-800 text-center">
             <p className="text-xs text-zinc-600 dark:text-zinc-400">
               Already have an account?{" "}

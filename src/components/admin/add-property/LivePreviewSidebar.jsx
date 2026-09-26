@@ -1,23 +1,43 @@
 "use client";
 
 import React from "react";
-import { Building2, MapPin, Sparkles, Loader2, Images, Map } from "lucide-react";
+import Image from "next/image";
+import {
+  Building2,
+  MapPin,
+  Sparkles,
+  Loader2,
+  Images,
+  Map,
+} from "lucide-react";
+
+/**
+ * Helper function to safely extract image URL
+ */
+const getImageUrl = (image) => {
+  if (!image) return null;
+  if (typeof image === "string") return image;
+  return image.url || image.secure_url || null;
+};
 
 const LivePreviewSidebar = ({
-  formData,
-  uploadedImages,
-  galleryImages,
-  brochureFile,
-  selectedAmenities,
-  isSubmitting,
+  formData = {},
+  uploadedImages = [],
+  galleryImages = [],
+  brochureFile = null,
+  selectedAmenities = [],
+  isSubmitting = false,
   handleSubmit,
 }) => {
+  const coverImage = getImageUrl(uploadedImages[0]);
+
   return (
     <div className="lg:col-span-4 space-y-6">
-      <div className="sticky top-40 bg-white dark:bg-zinc-900 rounded-3xl p-6 border border-zinc-200/80 dark:border-zinc-800 shadow-sm space-y-5">
-        <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-zinc-800">
+      <div className="sticky top-40 space-y-5 rounded-3xl border border-zinc-200/80 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-zinc-100 pb-3 dark:border-zinc-800">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-emerald-500" />
             <h3 className="font-sans text-sm font-bold text-zinc-900 dark:text-white">
               Live Listing Card Preview
             </h3>
@@ -26,57 +46,57 @@ const LivePreviewSidebar = ({
         </div>
 
         {/* Property Card Visual */}
-        <div className="overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm transition-all hover:shadow-lg">
+        <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-950">
           {/* Image Cover Preview */}
-          <div className="relative h-48 w-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
-            {uploadedImages.length > 0 ? (
-              <img
-                src={
-                  typeof uploadedImages[0] === "string"
-                    ? uploadedImages[0]
-                    : uploadedImages[0]?.url || uploadedImages[0]?.secure_url
+          <div className="relative h-48 w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+            {coverImage ? (
+              <Image
+                src={coverImage}
+                alt={formData.title || "Property Cover"}
+                fill
+                sizes="(max-width: 1024px) 100vw, 33vw"
+                className="object-cover transition-transform duration-500 hover:scale-105"
+                unoptimized={
+                  coverImage.startsWith("blob:") ||
+                  coverImage.startsWith("data:")
                 }
-                alt="Property Cover"
-                className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
               />
             ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center text-zinc-400 gap-2">
-                <Building2 className="w-8 h-8 stroke-1" />
+              <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-zinc-400">
+                <Building2 className="h-8 w-8 stroke-1" />
                 <span className="text-xs">No Cover Image Uploaded</span>
               </div>
             )}
 
             {/* Status Badge */}
-            <span className="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-[#3b1a83] text-white shadow-md">
+            <span className="absolute left-3 top-3 rounded-full bg-[#3b1a83] px-3 py-1 text-[10px] font-bold tracking-wider text-white uppercase shadow-md">
               {formData.status || "STATUS"}
             </span>
 
-            {/* Tag Badge */}
+            {/* Property Type Badge */}
             {formData.propertyType && (
-              <span className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-[10px] font-semibold bg-white/90 dark:bg-zinc-900/90 text-zinc-800 dark:text-zinc-200 backdrop-blur-xs">
+              <span className="absolute bottom-3 left-3 rounded-lg bg-white/90 px-2.5 py-1 text-[10px] font-semibold text-zinc-800 backdrop-blur-xs dark:bg-zinc-900/90 dark:text-zinc-200">
                 {formData.propertyType}
               </span>
             )}
           </div>
 
           {/* Card Body */}
-          <div className="p-4 space-y-3">
+          <div className="space-y-3 p-4">
             <div>
-              <h4 className="font-serif text-base font-bold text-zinc-900 dark:text-white line-clamp-1">
+              <h4 className="line-clamp-1 font-serif text-base font-bold text-zinc-900 dark:text-white">
                 {formData.title || "Project Title Preview"}
               </h4>
-              <div className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 mt-1">
-                <MapPin className="w-3.5 h-3.5 text-[#3b1a83] shrink-0" />
+              <div className="mt-1 flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
+                <MapPin className="h-3.5 w-3.5 shrink-0 text-[#3b1a83]" />
                 <span className="truncate">
-                  {formData.locationName ||
-                    formData.address ||
-                    "Location Name"}
+                  {formData.locationName || formData.address || "Location Name"}
                 </span>
               </div>
             </div>
 
             {/* Specifications Grid */}
-            <div className="grid grid-cols-3 gap-2 py-2 px-3 bg-zinc-50 dark:bg-zinc-900/60 rounded-xl text-center text-xs border border-zinc-100 dark:border-zinc-800/80">
+            <div className="grid grid-cols-3 gap-2 rounded-xl border border-zinc-100 bg-zinc-50 px-3 py-2 text-center text-xs dark:border-zinc-800/80 dark:bg-zinc-900/60">
               <div>
                 <span className="block text-[10px] text-zinc-400 uppercase">
                   Beds
@@ -97,57 +117,61 @@ const LivePreviewSidebar = ({
                 <span className="block text-[10px] text-zinc-400 uppercase">
                   Size
                 </span>
-                <strong className="font-bold text-zinc-800 dark:text-zinc-200 truncate block">
+                <strong className="block truncate font-bold text-zinc-800 dark:text-zinc-200">
                   {formData.flatSize || "-"}
                 </strong>
               </div>
             </div>
 
             {/* Extended Summary Badges */}
-            <div className="space-y-1.5 text-xs text-zinc-600 dark:text-zinc-400 pt-1">
-              {formData.landArea && (
-                <div className="flex justify-between items-center text-[11px]">
-                  <span className="text-zinc-400">Land Area:</span>
-                  <span className="font-semibold text-zinc-700 dark:text-zinc-300">
-                    {formData.landArea}
-                  </span>
-                </div>
-              )}
-              {formData.buildingHeight && (
-                <div className="flex justify-between items-center text-[11px]">
-                  <span className="text-zinc-400">Height:</span>
-                  <span className="font-semibold text-zinc-700 dark:text-zinc-300">
-                    {formData.buildingHeight}
-                  </span>
-                </div>
-              )}
-              {formData.apartments && (
-                <div className="flex justify-between items-center text-[11px]">
-                  <span className="text-zinc-400">Apartments:</span>
-                  <span className="font-semibold text-zinc-700 dark:text-zinc-300">
-                    {formData.apartments} Units
-                  </span>
-                </div>
-              )}
-            </div>
+            {(formData.landArea ||
+              formData.buildingHeight ||
+              formData.apartments) && (
+              <div className="space-y-1.5 pt-1 text-xs text-zinc-600 dark:text-zinc-400">
+                {formData.landArea && (
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-zinc-400">Land Area:</span>
+                    <span className="font-semibold text-zinc-700 dark:text-zinc-300">
+                      {formData.landArea}
+                    </span>
+                  </div>
+                )}
+                {formData.buildingHeight && (
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-zinc-400">Height:</span>
+                    <span className="font-semibold text-zinc-700 dark:text-zinc-300">
+                      {formData.buildingHeight}
+                    </span>
+                  </div>
+                )}
+                {formData.apartments && (
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-zinc-400">Apartments:</span>
+                    <span className="font-semibold text-zinc-700 dark:text-zinc-300">
+                      {formData.apartments} Units
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Selected Amenities Pills Preview */}
             {selectedAmenities.length > 0 && (
-              <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800">
-                <span className="block text-[10px] font-bold text-zinc-400 uppercase mb-1.5">
+              <div className="border-t border-zinc-100 pt-2 dark:border-zinc-800">
+                <span className="mb-1.5 block text-[10px] font-bold text-zinc-400 uppercase">
                   Key Amenities ({selectedAmenities.length})
                 </span>
                 <div className="flex flex-wrap gap-1">
                   {selectedAmenities.slice(0, 4).map((amenity, idx) => (
                     <span
-                      key={idx}
-                      className="text-[10px] px-2 py-0.5 bg-[#3b1a83]/10 text-[#3b1a83] dark:bg-[#3b1a83]/30 dark:text-purple-300 rounded-md font-medium"
+                      key={`${amenity}-${idx}`}
+                      className="rounded-md bg-[#3b1a83]/10 px-2 py-0.5 text-[10px] font-medium text-[#3b1a83] dark:bg-[#3b1a83]/30 dark:text-purple-300"
                     >
                       {amenity}
                     </span>
                   ))}
                   {selectedAmenities.length > 4 && (
-                    <span className="text-[10px] px-1.5 py-0.5 bg-zinc-100 text-zinc-500 rounded-md font-semibold">
+                    <span className="rounded-md bg-zinc-100 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
                       +{selectedAmenities.length - 4} more
                     </span>
                   )}
@@ -158,46 +182,46 @@ const LivePreviewSidebar = ({
         </div>
 
         {/* Form Submission Quick Summary Notice */}
-        <div className="p-4 bg-zinc-50 dark:bg-zinc-950 rounded-2xl border border-zinc-200/80 dark:border-zinc-800 text-xs text-zinc-500 dark:text-zinc-400 space-y-2">
-          <div className="flex items-center justify-between text-zinc-700 dark:text-zinc-300 font-semibold">
+        <div className="space-y-2 rounded-2xl border border-zinc-200/80 bg-zinc-50 p-4 text-xs text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-400">
+          <div className="flex items-center justify-between font-semibold text-zinc-700 dark:text-zinc-300">
             <span className="flex items-center gap-1.5">
-              <Map className="w-3.5 h-3.5 text-[#3b1a83]" />
+              <Map className="h-3.5 w-3.5 text-[#3b1a83]" />
               Map Location:
             </span>
             <span>{formData.mapLocation ? "Configured" : "Not set"}</span>
           </div>
-          <div className="flex items-center justify-between text-zinc-700 dark:text-zinc-300 font-semibold">
+          <div className="flex items-center justify-between font-semibold text-zinc-700 dark:text-zinc-300">
             <span>Brochure Attached:</span>
             <span>{brochureFile ? "Yes (PDF)" : "No"}</span>
           </div>
-          <div className="flex items-center justify-between text-zinc-700 dark:text-zinc-300 font-semibold">
+          <div className="flex items-center justify-between font-semibold text-zinc-700 dark:text-zinc-300">
             <span>Cover/Main Photos:</span>
             <span>{uploadedImages.length} Images</span>
           </div>
-          <div className="flex items-center justify-between text-zinc-700 dark:text-zinc-300 font-semibold">
+          <div className="flex items-center justify-between font-semibold text-zinc-700 dark:text-zinc-300">
             <span className="flex items-center gap-1.5">
-              <Images className="w-3.5 h-3.5 text-[#3b1a83]" />
+              <Images className="h-3.5 w-3.5 text-[#3b1a83]" />
               Gallery Photos:
             </span>
             <span>{galleryImages.length} Images</span>
           </div>
         </div>
 
-        {/* Action Button inside Sidebar for convenience */}
+        {/* Action Button */}
         <button
           type="submit"
           onClick={handleSubmit}
           disabled={isSubmitting}
-          className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-[#3b1a83] hover:bg-[#2e1467] text-white text-sm font-bold shadow-md shadow-[#3b1a83]/20 hover:shadow-lg transition-all disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#3b1a83] py-3 text-sm font-bold text-white shadow-md shadow-[#3b1a83]/20 transition-all hover:bg-[#2e1467] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isSubmitting ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
               <span>Publishing...</span>
             </>
           ) : (
             <>
-              <Sparkles className="w-4 h-4" />
+              <Sparkles className="h-4 w-4" />
               <span>Publish Property</span>
             </>
           )}

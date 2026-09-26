@@ -224,19 +224,17 @@ function BlueprintTower({ reduceMotion }) {
 /* ---------------------------------------------------------------------- */
 
 function FloatingMotes() {
-  const [motes, setMotes] = useState([]);
-
-  useEffect(() => {
-    setMotes(
-      Array.from({ length: 14 }).map((_, i) => ({
-        id: i,
-        left: Math.random() * 100,
-        delay: Math.random() * 6,
-        duration: 8 + Math.random() * 10,
-        size: 2 + Math.random() * 3,
-      })),
-    );
-  }, []);
+  const [motes] = useState(() =>
+    typeof window !== "undefined"
+      ? Array.from({ length: 14 }).map((_, i) => ({
+          id: i,
+          left: Math.random() * 100,
+          delay: Math.random() * 6,
+          duration: 8 + Math.random() * 10,
+          size: 2 + Math.random() * 3,
+        }))
+      : [],
+  );
 
   return (
     <div
@@ -275,7 +273,7 @@ export default function ComingSoon() {
   const { days, hours, minutes, seconds } = useCountdown(LAUNCH_DATE);
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("idle");
-  const [year, setYear] = useState(null);
+  const year = new Date().getFullYear();
 
   useEffect(() => {
     setYear(new Date().getFullYear());

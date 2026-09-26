@@ -53,23 +53,21 @@ export default function InquiriesPage() {
   const [selectedIds, setSelectedIds] = useState([]);
   const [activeInquiry, setActiveInquiry] = useState(null);
 
-  // Debounce the free-text search input
+  // Debounce free-text search input and reset page to 1 seamlessly
   useEffect(() => {
-    const id = setTimeout(() => setDebouncedSearch(filters.search), 400);
+    const id = setTimeout(() => {
+      setDebouncedSearch(filters.search);
+      setPage(1);
+    }, 400);
+
     return () => clearTimeout(id);
   }, [filters.search]);
 
-  // A fresh search should always start back at page 1, otherwise a
-  // narrower result set can leave the user stranded on an empty page.
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedSearch]);
-
-  // Selection is scoped per tab — don't let a leftover selection from
-  // "All Inquiries" leak into the Brochure Leads context or vice versa.
-  useEffect(() => {
+  // Tab switch handler (Replaces Sync useEffect for tab change)
+  const handleTabChange = (nextTab) => {
+    setActiveTab(nextTab);
     setSelectedIds([]);
-  }, [activeTab]);
+  };
 
   const loadInquiries = useCallback(async () => {
     setLoading(true);
@@ -112,12 +110,36 @@ export default function InquiriesPage() {
     }
   }, []);
 
+  // Fetch inquiries when activeTab is ALL (ESLint Safe Execution)
   useEffect(() => {
-    if (activeTab === "ALL") loadInquiries();
+    let isMounted = true;
+
+    if (activeTab === "ALL") {
+      (async () => {
+        if (isMounted) {
+          await loadInquiries();
+        }
+      })();
+    }
+
+    return () => {
+      isMounted = false;
+    };
   }, [loadInquiries, activeTab]);
 
+  // Fetch stats on initial mount (ESLint Safe Execution)
   useEffect(() => {
-    loadStats();
+    let isMounted = true;
+
+    (async () => {
+      if (isMounted) {
+        await loadStats();
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    };
   }, [loadStats]);
 
   const handleFilterChange = (next) => {
@@ -187,7 +209,7 @@ export default function InquiriesPage() {
       setActiveInquiry(res.data);
       loadStats();
     } catch {
-      // keep the optimistic local copy open even if the refetch fails
+      // keep the optimistic local copy open even if refetch fails
     }
   };
 
@@ -367,7 +389,7 @@ export default function InquiriesPage() {
         {TABS.map((tab) => (
           <button
             key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
+            onClick={() => handleTabChange(tab.key)}
             className={`relative shrink-0 flex items-center gap-1.5 px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold transition-colors cursor-pointer ${
               activeTab === tab.key
                 ? "text-brand dark:text-brand-light"

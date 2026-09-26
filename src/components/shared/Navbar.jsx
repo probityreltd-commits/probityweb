@@ -19,9 +19,19 @@ import { authClient } from "@/lib/auth-client";
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [prevPathname, setPrevPathname] = useState(null);
+
   const dropdownRef = useRef(null);
   const router = useRouter();
   const pathname = usePathname();
+
+  // Reset mobile menu on route change during render
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
+    if (mobileMenuOpen) {
+      setMobileMenuOpen(false);
+    }
+  }
 
   const { user, isLoading } = useAuth();
   const isAdmin = user?.role === "admin";
@@ -48,11 +58,6 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [pathname]);
-
   const signOut = async () => {
     await authClient.signOut({
       fetchOptions: {
@@ -71,10 +76,7 @@ const Navbar = () => {
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="max-w-7xl mx-auto bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md rounded-full pl-3 pr-2.5 sm:pl-4 sm:pr-3 md:px-6 py-1.5 sm:py-2 shadow-lg border border-zinc-200/60 dark:border-zinc-800 flex items-center justify-between gap-2 transition-colors duration-300"
       >
-        {/* 1. Brand Logo & Name — container reshaped to the logo's own
-            (portrait/square) proportions instead of a short, wide box that
-            was forcing object-contain to shrink it down and leave dead
-            space to the right */}
+        {/* 1. Brand Logo & Name */}
         <Link href="/" className="flex items-center shrink-0 group">
           <div className="relative w-[110px] sm:w-[130px] md:w-[150px] h-12 sm:h-14 md:h-16">
             <Image

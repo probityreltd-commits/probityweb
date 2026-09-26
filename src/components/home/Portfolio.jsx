@@ -83,20 +83,7 @@ const Portfolio = () => {
     );
   }, [properties, activeTab]);
 
-  useEffect(() => {
-    if (filteredProperties.length > 0) {
-      const isStillAvailable = filteredProperties.some(
-        (p) => (p._id || p.slug) === activePropertyId,
-      );
-      if (!isStillAvailable) {
-        setActivePropertyId(
-          filteredProperties[0]._id || filteredProperties[0].slug,
-        );
-        setCurrentImageIndex(0);
-      }
-    }
-  }, [filteredProperties, activePropertyId]);
-
+  // Derive the active property directly during render
   const activeProperty = useMemo(() => {
     return (
       filteredProperties.find((p) => (p._id || p.slug) === activePropertyId) ||
@@ -174,6 +161,23 @@ const Portfolio = () => {
     );
   };
 
+  const handleTabSelect = (tabId) => {
+    setActiveTab(tabId);
+    setCurrentImageIndex(0);
+
+    // Calculate next filtered list to select the first item of the new tab
+    const nextFiltered =
+      tabId === "ALL"
+        ? properties
+        : properties.filter(
+            (p) => p.status?.toUpperCase() === tabId.toUpperCase(),
+          );
+
+    if (nextFiltered.length > 0) {
+      setActivePropertyId(nextFiltered[0]._id || nextFiltered[0].slug);
+    }
+  };
+
   if (loading) {
     return (
       <section className="bg-[#f5f1ff] dark:bg-[#070913] py-10 sm:py-16 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
@@ -210,7 +214,7 @@ const Portfolio = () => {
           </p>
         </div>
 
-        {/* Primary Status Filter (Horizontal Scroll Bar for Mobile) */}
+        {/* Primary Status Filter */}
         <div className="w-full overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden py-1 mb-4 sm:mb-6">
           <div className="flex justify-start sm:justify-center min-w-max mx-auto px-1">
             <div className="inline-flex items-center p-1 sm:p-1.5 bg-[#eee9f8] dark:bg-zinc-800/80 rounded-full gap-1 shadow-inner">
@@ -220,10 +224,7 @@ const Portfolio = () => {
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => {
-                      setActiveTab(tab.id);
-                      setCurrentImageIndex(0);
-                    }}
+                    onClick={() => handleTabSelect(tab.id)}
                     className={`relative px-4 py-1.5 sm:px-5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-300 ${
                       isActive
                         ? "text-white shadow-md"
@@ -249,7 +250,7 @@ const Portfolio = () => {
           </div>
         </div>
 
-        {/* Secondary Project Selector (Horizontal Scroll Bar for Mobile) */}
+        {/* Secondary Project Selector */}
         {filteredProperties.length > 1 && (
           <div className="w-full overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden py-1 mb-6 sm:mb-8">
             <div className="flex items-center justify-start sm:justify-center gap-1.5 sm:gap-2 min-w-max px-1">
@@ -407,16 +408,6 @@ const Portfolio = () => {
                       <span>View Details</span>
                       <ArrowUpRight className="w-3.5 h-3.5" />
                     </a>
-
-                    {/* <a
-                      href={activeProperty.projectBrochure || "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 sm:flex-none bg-[#eee9f8] dark:bg-zinc-800 hover:bg-[#e3dafa] text-[#3b1a83] dark:text-[#ffb703] font-semibold text-xs px-4 py-2.5 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-1.5"
-                    >
-                      <FileText className="w-3.5 h-3.5" />
-                      <span>Request Floor Plan</span>
-                    </a> */}
                   </div>
 
                   <div className="text-left sm:text-right mt-1 sm:mt-0">

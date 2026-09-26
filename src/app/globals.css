@@ -56,7 +56,7 @@
   }
 
   html {
-    @apply font-sans antialiased scroll-smooth;
+    @apply font-sans antialiased;
   }
 
   body {

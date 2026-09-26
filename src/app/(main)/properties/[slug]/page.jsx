@@ -32,7 +32,6 @@ export async function generateMetadata({ params }) {
       address,
       propertyType,
       status,
-      flatSize,
       bedrooms,
     } = property;
 

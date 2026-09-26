@@ -38,6 +38,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
+      data-scroll-behavior="smooth"
       className={`${fraunces.variable} ${inter.variable} ${plexMono.variable} antialiased`}
     >
       <body className="min-h-screen bg-background text-foreground font-sans antialiased flex flex-col selection:bg-[#3b1a83] selection:text-white">

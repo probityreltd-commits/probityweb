@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { AlertDialog, Button } from "@heroui/react";
 import { Trash2 } from "lucide-react";
 import React, { useState } from "react";
@@ -118,11 +119,15 @@ const AlertDialogProperty = ({ property, onDeleted }) => {
                   <div className="flex items-start gap-3">
                     {/* Cover Image */}
                     {property.coverImage && (
-                      <img
-                        src={property.coverImage}
-                        alt={property.title}
-                        className="w-16 h-16 rounded-lg object-cover shrink-0"
-                      />
+                      <div className="relative w-16 h-16 shrink-0 rounded-lg overflow-hidden">
+                        <Image
+                          src={property.coverImage}
+                          alt={property.title || "Property Cover"}
+                          width={64}
+                          height={64}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
                     )}
 
                     <div className="min-w-0 space-y-1">
