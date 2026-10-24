@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { getPropertys } from "@/services/api/property";
+import { trackEvent } from "@/lib/gtm";
 
 const Portfolio = () => {
   const [activeTab, setActiveTab] = useState("ALL");
@@ -398,6 +399,14 @@ const Portfolio = () => {
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 pt-3 border-t border-zinc-100 dark:border-zinc-800">
                   <div className="flex flex-wrap items-center gap-2">
                     <a
+                      onClick={() =>
+                        trackEvent("select_item", {
+                          project_name: activeProperty.title,
+                          location: activeProperty.locationName,
+                          status: activeProperty.status,
+                          item_list_name: "home_portfolio",
+                        })
+                      }
                       href={
                         activeProperty.slug
                           ? `/properties/${activeProperty.slug}`

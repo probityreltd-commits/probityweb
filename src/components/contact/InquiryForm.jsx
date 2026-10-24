@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Loader2, Send, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { addInquiries } from "@/services/action/inquiries";
+import { trackEvent, createEventId } from "@/lib/gtm";
 
 export default function InquiryForm() {
   const [formData, setFormData] = useState({
@@ -16,6 +17,18 @@ export default function InquiryForm() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  // GTM: begin_form (প্রথম focus-এ একবার)
+  const formStarted = useRef(false);
+  const handleFormStart = () => {
+    if (formStarted.current) return;
+    formStarted.current = true;
+    trackEvent("begin_form", {
+      form_type: "contact",
+      form_id: "contact_page",
+      project_name: "(not set)",
+    });
+  };
 
   const handleChange = (field) => (e) =>
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
@@ -51,6 +64,15 @@ export default function InquiryForm() {
       if (body?.success === false) {
         throw new Error(body.message || "Submission failed.");
       }
+
+      trackEvent("generate_lead", {
+        form_type: "contact",
+        form_id: "contact_page",
+        project_name: "(not set)",
+        interest_type: formData.propertyType,
+        event_id: createEventId(),
+      });
+      formStarted.current = false;
 
       toast.success(
         "Thank you! We have received your message. Our team will call you soon.",
@@ -92,7 +114,11 @@ export default function InquiryForm() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        onFocus={handleFormStart}
+        className="space-y-3.5 sm:space-y-4"
+      >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
           <div className="space-y-1">
             <label className={labelCls}>FULL NAME</label>

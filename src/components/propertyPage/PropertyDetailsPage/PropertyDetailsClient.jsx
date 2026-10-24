@@ -1,8 +1,14 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { toast } from "sonner";
 import { addInquiries } from "@/services/action/inquiries";
+import {
+  trackEvent,
+  createEventId,
+  getProjectParams,
+  getFileNameFromUrl,
+} from "@/lib/gtm";
 import { LandPlot, Building2, Home, Car } from "lucide-react";
 
 import TopBar from "./TopBar";
@@ -47,6 +53,27 @@ const PropertyDetailsClient = ({ property }) => {
 
   const [submitted, setSubmitted] = useState(false);
 
+  // ---- GTM tracking ----
+  const startedForms = useRef({});
+
+  // view_item: project details page load
+  useEffect(() => {
+    if (!property?._id) return;
+    trackEvent("view_item", getProjectParams(property));
+  }, [property]);
+
+  // begin_form: form-এর যেকোনো field-এ প্রথম focus (প্রতি form_type-এ একবার)
+  const handleFormStart = () => {
+    const formType = activeTab === "BROCHURE" ? "brochure" : "site_visit";
+    if (startedForms.current[formType]) return;
+    startedForms.current[formType] = true;
+    trackEvent("begin_form", {
+      form_type: formType,
+      form_id: `action_card_${formType}`,
+      project_name: property?.title,
+    });
+  };
+
   const handleFieldChange = (field) => (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -73,6 +100,12 @@ const PropertyDetailsClient = ({ property }) => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    // file_download: lead submit-এর পর brochure download শুরু হলে
+    trackEvent("file_download", {
+      project_name: property?.title,
+      file_name: getFileNameFromUrl(property.projectBrochure, link.download),
+    });
   };
 
   const handleFormSubmit = async (e) => {
@@ -108,6 +141,14 @@ const PropertyDetailsClient = ({ property }) => {
         if (body?.success === false) {
           throw new Error(body.message || "Submission failed.");
         }
+
+        trackEvent("generate_lead", {
+          form_type: "brochure",
+          form_id: "action_card_brochure",
+          project_name: property?.title,
+          event_id: createEventId(),
+        });
+        startedForms.current.brochure = false;
 
         triggerBrochureDownload();
 
@@ -163,6 +204,14 @@ const PropertyDetailsClient = ({ property }) => {
       if (body?.success === false) {
         throw new Error(body.message || "Submission failed.");
       }
+
+      trackEvent("generate_lead", {
+        form_type: "site_visit",
+        form_id: "action_card_site_visit",
+        project_name: property?.title,
+        event_id: createEventId(),
+      });
+      startedForms.current.site_visit = false;
 
       toast.success("Tour request sent successfully!");
 
@@ -346,6 +395,7 @@ const PropertyDetailsClient = ({ property }) => {
             handleFormSubmit={handleFormSubmit}
             isSubmitting={isSubmitting}
             submitted={submitted}
+            onFormStart={handleFormStart}
           />
         </div>
       </div>

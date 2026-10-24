@@ -12,6 +12,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { getPropertys } from "@/services/api/property";
+import { trackEvent } from "@/lib/gtm";
 
 const THEME = {
   floating: {
@@ -227,6 +228,16 @@ const PropertySearch = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // GTM: property_search (কমপক্ষে একটা filter বাছলে)
+    if (selectedLocation || selectedProject || selectedType) {
+      trackEvent("property_search", {
+        search_location: selectedLocation,
+        search_project: selectedProject,
+        search_type: selectedType,
+        search_source: variant,
+      });
+    }
 
     runSearch({
       location: selectedLocation,

@@ -144,7 +144,11 @@ const PropertiesSection = () => {
             >
               {properties.map((property) => (
                 <SwiperSlide key={property._id}>
-                  <PropertyCard property={property} alwaysExpanded />
+                  <PropertyCard
+                    property={property}
+                    alwaysExpanded
+                    listName="home_featured"
+                  />
                 </SwiperSlide>
               ))}
             </Swiper>
