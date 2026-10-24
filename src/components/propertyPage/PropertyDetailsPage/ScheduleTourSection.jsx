@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Loader2, Send, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { addInquiries } from "@/services/action/inquiries";
+import { trackEvent, createEventId } from "@/lib/gtm";
 
 const ScheduleTourSection = ({ property }) => {
   const [formData, setFormData] = useState({
@@ -15,6 +16,18 @@ const ScheduleTourSection = ({ property }) => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  // GTM: begin_form (প্রথম focus-এ একবার)
+  const formStarted = useRef(false);
+  const handleFormStart = () => {
+    if (formStarted.current) return;
+    formStarted.current = true;
+    trackEvent("begin_form", {
+      form_type: "site_visit",
+      form_id: "schedule_tour_section",
+      project_name: property?.title,
+    });
+  };
 
   const handleChange = (field) => (e) =>
     setFormData((prev) => ({
@@ -62,6 +75,14 @@ const ScheduleTourSection = ({ property }) => {
         throw new Error(body.message || "Submission failed.");
       }
 
+      trackEvent("generate_lead", {
+        form_type: "site_visit",
+        form_id: "schedule_tour_section",
+        project_name: property?.title,
+        event_id: createEventId(),
+      });
+      formStarted.current = false;
+
       toast.success("Tour request sent successfully!");
 
       setIsSuccess(true);
@@ -107,7 +128,11 @@ const ScheduleTourSection = ({ property }) => {
             visit.
           </p>
 
-          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-8">
+          <form
+            onSubmit={handleSubmit}
+            onFocus={handleFormStart}
+            className="space-y-4 sm:space-y-8"
+          >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-x-10 sm:gap-y-7">
               {/* Name */}
               <input

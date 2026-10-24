@@ -13,6 +13,7 @@ const ActionCard = ({
   handleFormSubmit,
   isSubmitting,
   submitted,
+  onFormStart,
 }) => {
   const inputCls =
     "w-full px-3.5 sm:px-4 py-2.5 sm:py-3 bg-brand/5 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl sm:rounded-2xl text-xs text-zinc-900 dark:text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand transition-all";
@@ -81,7 +82,11 @@ const ActionCard = ({
       </div>
 
       {/* Form */}
-      <form onSubmit={handleFormSubmit} className="space-y-3 sm:space-y-3.5">
+      <form
+        onSubmit={handleFormSubmit}
+        onFocus={onFormStart}
+        className="space-y-3 sm:space-y-3.5"
+      >
         {activeTab === "BROCHURE" ? (
           <>
             {/* Name */}

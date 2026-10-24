@@ -123,7 +123,11 @@ const OurFeatureProject = () => {
             >
               {properties.map((property) => (
                 <SwiperSlide key={property._id}>
-                  <PropertyCard property={property} alwaysExpanded />
+                  <PropertyCard
+                    property={property}
+                    alwaysExpanded
+                    listName="more_projects"
+                  />
                 </SwiperSlide>
               ))}
             </Swiper>

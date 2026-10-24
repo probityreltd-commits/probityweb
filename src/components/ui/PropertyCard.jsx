@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -9,6 +11,7 @@ import {
   Layers3,
   MapPin,
 } from "lucide-react";
+import { trackEvent } from "@/lib/gtm";
 
 const FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80";
@@ -19,6 +22,7 @@ export const PropertyCard = ({
   property,
   viewMode = "grid",
   alwaysExpanded = false,
+  listName = "properties_page",
 }) => {
   const {
     title,
@@ -37,6 +41,14 @@ export const PropertyCard = ({
     coverImage,
     images,
   } = property || {};
+
+  const handleSelect = () =>
+    trackEvent("select_item", {
+      project_name: title,
+      location: locationName,
+      status,
+      item_list_name: listName,
+    });
 
   const displayImage = coverImage || images?.[0] || FALLBACK_IMAGE;
 
@@ -93,6 +105,7 @@ export const PropertyCard = ({
     return (
       <Link
         href={`/properties/${propertySlug}`}
+        onClick={handleSelect}
         className="block h-full"
         aria-label={`View ${title || "property"} details`}
       >
@@ -196,6 +209,7 @@ export const PropertyCard = ({
   return (
     <Link
       href={`/properties/${propertySlug}`}
+        onClick={handleSelect}
       className="block h-full"
       aria-label={`View ${title || "property"} details`}
     >

@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { SlidersHorizontal, Grid, List } from "lucide-react";
 import { PropertyCard } from "@/components/ui/PropertyCard";
 import PropertySearch from "@/components/shared/PropertySearch";
+import { trackEvent } from "@/lib/gtm";
 
 const PropertiesClient = ({
   properties = [],
@@ -21,6 +22,11 @@ const PropertiesClient = ({
     propertyType: initialType,
   });
   const [viewMode, setViewMode] = useState("grid");
+
+  // GTM: view_item_list
+  useEffect(() => {
+    trackEvent("view_item_list", { item_list_name: "properties_page" });
+  }, []);
 
   const handleSearch = useCallback(
     (payload) => {

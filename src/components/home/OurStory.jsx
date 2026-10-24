@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, X, Calendar, Phone, Quote } from "lucide-react";
+import { trackEvent } from "@/lib/gtm";
 
 const OurStory = () => {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
@@ -120,7 +121,14 @@ const OurStory = () => {
           className="lg:col-span-6"
         >
           <button
-            onClick={() => setIsVideoOpen(true)}
+            onClick={() => {
+              setIsVideoOpen(true);
+              trackEvent("video_open", {
+                video_title: "Probity Real Estate story",
+                video_id: YOUTUBE_ID,
+                video_location: "home_our_story",
+              });
+            }}
             aria-label="Play the Probity Real Estate story video"
             className="group relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-2xl focus:outline-none focus:ring-2 focus:ring-[#3b1a83] focus:ring-offset-2 focus:ring-offset-[#020b18]"
           >
