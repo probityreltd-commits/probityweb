@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { addInquiries } from "@/services/action/inquiries";
 import {
   trackEvent,
-  createEventId,
+  trackLead,
   getProjectParams,
   getFileNameFromUrl,
 } from "@/lib/gtm";
@@ -142,12 +142,14 @@ const PropertyDetailsClient = ({ property }) => {
           throw new Error(body.message || "Submission failed.");
         }
 
-        trackEvent("generate_lead", {
-          form_type: "brochure",
-          form_id: "action_card_brochure",
-          project_name: property?.title,
-          event_id: createEventId(),
-        });
+        await trackLead(
+          {
+            form_type: "brochure",
+            form_id: "action_card_brochure",
+            project_name: property?.title,
+          },
+          { name, phone },
+        );
         startedForms.current.brochure = false;
 
         triggerBrochureDownload();
@@ -205,12 +207,14 @@ const PropertyDetailsClient = ({ property }) => {
         throw new Error(body.message || "Submission failed.");
       }
 
-      trackEvent("generate_lead", {
-        form_type: "site_visit",
-        form_id: "action_card_site_visit",
-        project_name: property?.title,
-        event_id: createEventId(),
-      });
+      await trackLead(
+        {
+          form_type: "site_visit",
+          form_id: "action_card_site_visit",
+          project_name: property?.title,
+        },
+        { name, phone },
+      );
       startedForms.current.site_visit = false;
 
       toast.success("Tour request sent successfully!");

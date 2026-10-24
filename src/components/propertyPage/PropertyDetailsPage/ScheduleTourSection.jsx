@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { Loader2, Send, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { addInquiries } from "@/services/action/inquiries";
-import { trackEvent, createEventId } from "@/lib/gtm";
+import { trackEvent, trackLead } from "@/lib/gtm";
 
 const ScheduleTourSection = ({ property }) => {
   const [formData, setFormData] = useState({
@@ -75,12 +75,14 @@ const ScheduleTourSection = ({ property }) => {
         throw new Error(body.message || "Submission failed.");
       }
 
-      trackEvent("generate_lead", {
-        form_type: "site_visit",
-        form_id: "schedule_tour_section",
-        project_name: property?.title,
-        event_id: createEventId(),
-      });
+      await trackLead(
+        {
+          form_type: "site_visit",
+          form_id: "schedule_tour_section",
+          project_name: property?.title,
+        },
+        { name, phone },
+      );
       formStarted.current = false;
 
       toast.success("Tour request sent successfully!");

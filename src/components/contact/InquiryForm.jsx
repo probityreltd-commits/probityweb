@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { Loader2, Send, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { addInquiries } from "@/services/action/inquiries";
-import { trackEvent, createEventId } from "@/lib/gtm";
+import { trackEvent, trackLead } from "@/lib/gtm";
 
 export default function InquiryForm() {
   const [formData, setFormData] = useState({
@@ -65,13 +65,15 @@ export default function InquiryForm() {
         throw new Error(body.message || "Submission failed.");
       }
 
-      trackEvent("generate_lead", {
-        form_type: "contact",
-        form_id: "contact_page",
-        project_name: "(not set)",
-        interest_type: formData.propertyType,
-        event_id: createEventId(),
-      });
+      await trackLead(
+        {
+          form_type: "contact",
+          form_id: "contact_page",
+          project_name: "(not set)",
+          interest_type: formData.propertyType,
+        },
+        { name: fullName, email, phone },
+      );
       formStarted.current = false;
 
       toast.success(
