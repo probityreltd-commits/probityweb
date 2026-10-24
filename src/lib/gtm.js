@@ -1,3 +1,4 @@
+
 /**
  * GTM / dataLayer helpers
  * -----------------------
@@ -27,8 +28,12 @@ function cleanParams(params = {}) {
   return clean;
 }
 
+// প্রতিটা event-এ event_id যায় (Meta Pixel + Server-side CAPI dedupe-এর জন্য)।
 export function trackEvent(event, params = {}) {
-  pushToDataLayer({ event, ...cleanParams(params) });
+  pushToDataLayer({
+    event,
+    ...cleanParams({ event_id: createEventId(), ...params }),
+  });
 }
 
 // Meta Pixel + Conversions API dedupe-এর জন্য
